@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "CSC",
+    " C "
+  ],
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "powergrid:lv_wire_coil",
+    "count": 4
+  }
+}

@@ -1,0 +1,71 @@
+# COMPRESSED TECHNICAL BLUEPRINT: POWER GRID (Minecraft 26.3 NeoForge)
+
+## 1. Project Metadata & Environment
+- **Mod ID**: `powergrid` (Version: 1.0.0)
+- **Target Platform**: Minecraft 26.3 | NeoForge 26.3.0.48-beta | Java 25 (Java 21+ compatible)
+- **Mod Name**: Power Grid
+- **Workspace Directory**: `C:\Users\andg_\OneDrive\Desktop\minecraft\PowerGrid`
+- **Output Jar**: `build/libs/powergrid-1.0.0.jar`
+- **Core Inspiration**: Immersive Engineering electrical transmission, overhead catenary wires, transformers, and multiblock generation.
+- **Documentation Policy**: Follow `agents.md` rules: bump version, maintain `CHANGELOG.md`, keep `README.md` and `CURSEFORGE.md` synchronized.
+
+---
+
+## 2. Core Architecture & Package Layout
+- `com.powergrid.PowerGridMod`: Central registration (Blocks, Items, BlockEntityTypes, CreativeModeTabs, Capabilities).
+- `com.powergrid.PowerGridClient`: Client-side initialization.
+- `com.powergrid.grid.WireType`: Voltage tiers (LV: 400 FE/t, MV: 2,048 FE/t, HV: 16,384 FE/t), max distances, resistance loss rates.
+- `com.powergrid.grid.WireConnection`: Endpoint representation for node-to-node overhead catenary wires.
+- `com.powergrid.grid.IWireNode`: Universal interface for wire endpoints (connectors, relays, breakers).
+- `com.powergrid.block`:
+  - `TreatedWoodPoleBlock`, `SteelTrussPoleBlock`, `PoleCrossarmBlock` (overhead line infrastructure).
+  - `WireConnectorBlock` (3 tiers: LV, MV, HV; interfaces directly with block energy capabilities).
+  - `WireRelayBlock` (3 tiers: LV, MV, HV; pass-through junction nodes).
+  - `TransformerBlock` (steps voltage tiers with realistic 98% efficiency).
+  - `BreakerSwitchBlock` (redstone and manual inline circuit breaker).
+  - `HeavyAccumulatorBlock` (industrial 4,000,000 FE capacitor bank).
+  - `PowerPlantControllerBlock`, `GeneratorCasingBlock`, `AlternatorCoilBlock`, `TurbineRotorBlock`, `ExhaustStackBlock` (3x3x3 multiblock generator).
+- `com.powergrid.block.entity`:
+  - `WireConnectorBlockEntity`: Transfers FE to/from adjacent blocks and transmits power through connected wire lines.
+  - `WireRelayBlockEntity`: High-density branch insulator.
+  - `TransformerBlockEntity`: Substation step-up / step-down.
+  - `BreakerSwitchBlockEntity`: Switched wire circuit.
+  - `HeavyAccumulatorBlockEntity`: Buffer storage with auto-export.
+  - `PowerPlantControllerBlockEntity`: 3x3x3 multiblock detection and 4,096 FE/t generation.
+- `com.powergrid.item`:
+  - `WireCoilItem` (LV, MV, HV): Right-click click-to-connect tool for overhead wire lines.
+  - `VoltmeterItem`: Live diagnostic reader for voltage, FE buffer, throughput, and connection topology.
+  - `EngineerHammerItem`: Multiblock assembly and block rotation.
+  - `WireCuttersItem`: Clean wire severance.
+  - Materials: `TreatedWoodItem`, `CopperWireItem`, `ElectrumWireItem`, `SteelCableItem`, `InsulatorItem`.
+
+---
+
+## 3. Technology Systems & Mechanics
+
+### A. Voltage Tiers
+- **LV (Low Voltage)**:
+  - Wire: LV Copper Wire Coil
+  - Max Rate: 400 FE/t
+  - Max Distance: 16 blocks
+  - Loss: 2.0% per block
+  - Typical use: Local machine power, small generators, homesteads.
+- **MV (Medium Voltage)**:
+  - Wire: MV Electrum Wire Coil
+  - Max Rate: 2,048 FE/t
+  - Max Distance: 32 blocks
+  - Loss: 1.0% per block
+  - Typical use: Factory distribution, moderate distances, multiblock machinery.
+- **HV (High Voltage)**:
+  - Wire: HV Steel-Core Cable Coil
+  - Max Rate: 16,384 FE/t
+  - Max Distance: 64 blocks
+  - Loss: 0.5% per block
+  - Typical use: Long-distance transmission across biomes, heavy power plant exports.
+
+### B. Multiblock Power Plant (3x3x3)
+- Forms via the Grid Engineer's Hammer right-clicked on the front `PowerPlantControllerBlock`.
+- Core: Center Alternator Coil or Turbine Rotor.
+- Base: Generator Casing foundation.
+- Exhaust: Top industrial stack.
+- Generates 4,096 FE/t continuous industrial power with visible exhaust smoke and audio feedback.

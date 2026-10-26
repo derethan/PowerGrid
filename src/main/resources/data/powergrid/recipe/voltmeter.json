@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "RGR",
+    " I "
+  ],
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "R": "minecraft:redstone",
+    "G": "minecraft:glass_pane",
+    "I": "minecraft:iron_ingot"
+  },
+  "result": {
+    "id": "powergrid:voltmeter",
+    "count": 1
+  }
+}

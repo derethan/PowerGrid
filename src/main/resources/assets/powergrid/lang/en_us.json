@@ -1,0 +1,77 @@
+{
+  "itemGroup.powergrid": "Power Grid",
+
+  "block.powergrid.treated_wood_pole": "Treated Wood Power Pole",
+  "block.powergrid.steel_truss_pole": "Steel Truss High-Voltage Tower",
+  "block.powergrid.pole_crossarm": "Power Pole Crossarm",
+
+  "block.powergrid.lv_wire_connector": "LV Wire Connector",
+  "block.powergrid.mv_wire_connector": "MV Wire Connector",
+  "block.powergrid.hv_wire_connector": "HV Wire Connector",
+
+  "block.powergrid.lv_wire_relay": "LV Wire Relay",
+  "block.powergrid.mv_wire_relay": "MV Wire Relay",
+  "block.powergrid.hv_wire_relay": "HV Wire Relay",
+
+  "block.powergrid.transformer": "Substation Transformer",
+  "block.powergrid.breaker_switch": "High Voltage Breaker Switch",
+  "block.powergrid.heavy_accumulator": "Heavy Accumulator Bank",
+
+  "block.powergrid.power_plant_controller": "Power Plant Controller",
+  "block.powergrid.generator_casing": "Power Plant Generator Casing",
+  "block.powergrid.alternator_coil": "Heavy Alternator Copper Coil",
+  "block.powergrid.turbine_rotor": "Heavy Turbine Rotor",
+  "block.powergrid.exhaust_stack": "Power Plant Industrial Exhaust Stack",
+
+  "item.powergrid.engineer_hammer": "Grid Engineer's Hammer",
+  "item.powergrid.voltmeter": "Grid Voltmeter",
+  "item.powergrid.wire_cutters": "Insulated Wire Cutters",
+
+  "item.powergrid.lv_wire_coil": "LV Copper Wire Coil",
+  "item.powergrid.mv_wire_coil": "MV Electrum Wire Coil",
+  "item.powergrid.hv_wire_coil": "HV Steel-Core Cable Coil",
+
+  "item.powergrid.treated_wood": "Treated Wood Planks",
+  "item.powergrid.copper_wire": "Copper Wire Strand",
+  "item.powergrid.electrum_wire": "Electrum Wire Strand",
+  "item.powergrid.steel_strand": "Reinforced Steel Strand",
+  "item.powergrid.ceramic_insulator": "Ceramic High-Voltage Insulator",
+
+  "tooltip.powergrid.wire_tier": "§7Voltage Tier: §e%s§r",
+  "tooltip.powergrid.wire_max_rate": "§7Throughput Limit: §6%s FE/t§r",
+  "tooltip.powergrid.wire_max_dist": "§7Maximum Span: §b%s blocks§r",
+
+  "tooltip.powergrid.hammer.desc_1": "§7Right-click: Rotate directional grid blocks.§r",
+  "tooltip.powergrid.hammer.desc_2": "§7Right-click Power Plant Controller: Assemble/Disassemble 3x3x3 multiblock.§r",
+
+  "tooltip.powergrid.voltmeter.desc": "§7Right-click on connectors, poles, or batteries to inspect voltage, throughput, and grid topology.§r",
+  "tooltip.powergrid.cutters.desc": "§7Right-click a connector or relay to cleanly sever all attached wire connections.§r",
+
+  "tooltip.powergrid.treated_wood.desc": "§7Creosote-treated durable lumber for utility poles and crossarms.§r",
+  "tooltip.powergrid.copper_wire.desc": "§7Conductive copper wire for Low Voltage (LV) distribution.§r",
+  "tooltip.powergrid.electrum_wire.desc": "§7High-conductivity gold-silver alloy wire for Medium Voltage (MV) transmission.§r",
+  "tooltip.powergrid.steel_strand.desc": "§7High-tensile steel core for High Voltage (HV) long-distance cables.§r",
+  "tooltip.powergrid.ceramic_insulator.desc": "§7Weather-resistant ceramic bushing preventing arc grounding.§r",
+
+  "message.powergrid.wire_start": "§6[Power Grid]§r Wire run started from [%s, %s, %s]. Click destination connector or relay.",
+  "message.powergrid.wire_connected": "§a[Power Grid]§r Successfully strung %s blocks of %s wire!",
+  "message.powergrid.wire_cancelled": "§e[Power Grid]§r Wire stringing cancelled.",
+  "message.powergrid.wire_too_long": "§c[Power Grid]§r Span too long! Distance is %s blocks (max: %s).",
+  "message.powergrid.cannot_connect": "§c[Power Grid]§r Cannot connect wire: incompatible node or maximum connections reached.",
+  "message.powergrid.cannot_connect_tier": "§c[Power Grid]§r Node does not support %s wire!",
+  "message.powergrid.wire_invalid_start": "§c[Power Grid]§r Starting node is no longer valid.",
+  "message.powergrid.no_wires_to_cut": "§7[Power Grid]§r No connected wires to cut.",
+  "message.powergrid.wires_severed": "§c[Power Grid]§r Severed %s wire connection(s).",
+
+  "message.powergrid.voltmeter_header": "§6===== [Power Grid Diagnostic] =====§r",
+  "message.powergrid.voltmeter_node_tier": "§7Node Tier: §e%s§r",
+  "message.powergrid.voltmeter_conn_count": "§7Active Connections: §f%s§r",
+  "message.powergrid.voltmeter_conn_line": " §8-§r Target: §b%s§r (§f%s blocks§r, %s)",
+  "message.powergrid.voltmeter_energy": "§7Stored Energy: §6%s / %s FE§r",
+  "message.powergrid.voltmeter_plant_status": "§7Power Plant Status: %s",
+  "message.powergrid.voltmeter_no_data": "§7[Power Grid] No grid or energy data found at target.",
+
+  "message.powergrid.plant_assembled": "§a[Power Plant] Multiblock successfully assembled and ready for generation!§r",
+  "message.powergrid.plant_disassembled": "§c[Power Plant] Multiblock disassembled.§r",
+  "message.powergrid.plant_incomplete": "§e[Power Plant] Structure incomplete! Requires 3x3x3 footprint with generator casing base, center coil/rotor, and exhaust."
+}
