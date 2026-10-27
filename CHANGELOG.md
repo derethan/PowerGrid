@@ -4,6 +4,17 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.0.1] - 2026-10-26
+
+### Fixed
+- **Missing UI Icons & Textures (Purple/Black Checkered Blocks)**:
+  - Added complete Minecraft 26.3 item definition files in `assets/powergrid/items/` for all 17 blocks and 11 items.
+  - Added full item models (`models/item/`), block models (`models/block/`), and multi-state blockstates (`blockstates/`).
+  - Added 16x16 pixel art textures for all utility poles, steel lattice towers, crossarms, wire connectors, relays, transformers, accumulators, multiblock components, tools, and wire coils.
+  - Updated `build.bat` to automatically sync the compiled jar to the active CurseForge client profile (`Andrew/mods`).
+
+---
+
 ## [1.0.0] - 2026-10-25
 
 ### Added

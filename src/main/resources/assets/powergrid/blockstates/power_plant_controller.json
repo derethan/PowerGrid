@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "active=false,assembled=false,facing=north": {
+      "model": "powergrid:block/power_plant_controller"
+    },
+    "active=false,assembled=false,facing=south": {
+      "model": "powergrid:block/power_plant_controller",
+      "y": 180
+    },
+    "active=false,assembled=false,facing=west": {
+      "model": "powergrid:block/power_plant_controller",
+      "y": 270
+    },
+    "active=false,assembled=false,facing=east": {
+      "model": "powergrid:block/power_plant_controller",
+      "y": 90
+    },
+    "active=false,assembled=true,facing=north": {
+      "model": "powergrid:block/power_plant_controller"
+    },
+    "active=false,assembled=true,facing=south": {
+      "model": "powergrid:block/power_plant_controller",
+      "y": 180
+    },
+    "active=false,assembled=true,facing=west": {
+      "model": "powergrid:block/power_plant_controller",
+      "y": 270
+    },
+    "active=false,assembled=true,facing=east": {
+      "model": "powergrid:block/power_plant_controller",
+      "y": 90
+    },
+    "active=true,assembled=false,facing=north": {
+      "model": "powergrid:block/power_plant_controller"
+    },
+    "active=true,assembled=false,facing=south": {
+      "model": "powergrid:block/power_plant_controller",
+      "y": 180
+    },
+    "active=true,assembled=false,facing=west": {
+      "model": "powergrid:block/power_plant_controller",
+      "y": 270
+    },
+    "active=true,assembled=false,facing=east": {
+      "model": "powergrid:block/power_plant_controller",
+      "y": 90
+    },
+    "active=true,assembled=true,facing=north": {
+      "model": "powergrid:block/power_plant_controller"
+    },
+    "active=true,assembled=true,facing=south": {
+      "model": "powergrid:block/power_plant_controller",
+      "y": 180
+    },
+    "active=true,assembled=true,facing=west": {
+      "model": "powergrid:block/power_plant_controller",
+      "y": 270
+    },
+    "active=true,assembled=true,facing=east": {
+      "model": "powergrid:block/power_plant_controller",
+      "y": 90
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "powergrid:block/steel_truss_pole"
+    }
+  }
+}

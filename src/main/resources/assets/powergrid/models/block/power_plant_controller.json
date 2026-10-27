@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_directional",
+  "textures": {
+    "particle": "powergrid:block/generator_casing",
+    "up": "powergrid:block/generator_casing",
+    "down": "powergrid:block/generator_casing",
+    "north": "powergrid:block/power_plant_controller",
+    "south": "powergrid:block/generator_casing",
+    "east": "powergrid:block/generator_casing",
+    "west": "powergrid:block/generator_casing"
+  }
+}

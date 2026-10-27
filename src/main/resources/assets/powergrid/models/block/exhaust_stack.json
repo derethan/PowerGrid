@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "powergrid:block/exhaust_stack_top",
+    "side": "powergrid:block/exhaust_stack_side"
+  }
+}

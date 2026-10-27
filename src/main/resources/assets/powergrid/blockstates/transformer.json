@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "powergrid:block/transformer",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "powergrid:block/transformer",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "powergrid:block/transformer",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "powergrid:block/transformer",
+      "y": 270
+    }
+  }
+}

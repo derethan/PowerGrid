@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "powergrid:block/hv_wire_connector",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "powergrid:block/hv_wire_connector"
+    },
+    "facing=north": {
+      "model": "powergrid:block/hv_wire_connector",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "powergrid:block/hv_wire_connector",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "powergrid:block/hv_wire_connector",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east": {
+      "model": "powergrid:block/hv_wire_connector",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

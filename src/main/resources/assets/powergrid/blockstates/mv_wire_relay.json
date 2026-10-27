@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "powergrid:block/mv_wire_relay",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "powergrid:block/mv_wire_relay"
+    },
+    "facing=north": {
+      "model": "powergrid:block/mv_wire_relay",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "powergrid:block/mv_wire_relay",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "powergrid:block/mv_wire_relay",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east": {
+      "model": "powergrid:block/mv_wire_relay",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

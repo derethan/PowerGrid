@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "powergrid:block/heavy_accumulator_top",
+    "side": "powergrid:block/heavy_accumulator_side"
+  }
+}

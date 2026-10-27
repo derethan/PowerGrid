@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_directional",
+  "textures": {
+    "particle": "powergrid:block/transformer_side",
+    "up": "powergrid:block/transformer_top",
+    "down": "powergrid:block/transformer_top",
+    "north": "powergrid:block/transformer_front",
+    "south": "powergrid:block/transformer_side",
+    "east": "powergrid:block/transformer_side",
+    "west": "powergrid:block/transformer_side"
+  }
+}
