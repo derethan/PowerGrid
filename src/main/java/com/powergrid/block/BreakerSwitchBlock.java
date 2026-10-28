@@ -34,10 +34,13 @@ public class BreakerSwitchBlock extends Block implements EntityBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
 
-    private static final VoxelShape SHAPE = Block.box(3.0, 2.0, 3.0, 13.0, 14.0, 13.0);
+    private static final VoxelShape SHAPE_NORTH = Block.box(3.0, 1.0, 10.0, 14.5, 16.0, 16.0);
+    private static final VoxelShape SHAPE_SOUTH = Block.box(1.5, 1.0, 0.0, 13.0, 16.0, 6.0);
+    private static final VoxelShape SHAPE_WEST  = Block.box(10.0, 1.0, 1.5, 16.0, 16.0, 13.0);
+    private static final VoxelShape SHAPE_EAST  = Block.box(0.0, 1.0, 3.0, 6.0, 16.0, 14.5);
 
     public BreakerSwitchBlock(Properties properties) {
-        super(properties.strength(2.0f, 4.0f).sound(SoundType.COPPER).noOcclusion());
+        super(properties.strength(2.0f, 4.0f).sound(SoundType.NETHERITE_BLOCK).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
                 .setValue(POWERED, false)
@@ -52,14 +55,28 @@ public class BreakerSwitchBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Direction clickedFace = context.getClickedFace();
+        Direction facing;
+        if (clickedFace.getAxis().isHorizontal()) {
+            facing = clickedFace;
+        } else {
+            facing = context.getHorizontalDirection().getOpposite();
+        }
         return this.defaultBlockState()
-                .setValue(FACING, context.getHorizontalDirection())
-                .setValue(POWERED, context.getLevel().hasNeighborSignal(context.getClickedPos()));
+                .setValue(FACING, facing)
+                .setValue(POWERED, context.getLevel().hasNeighborSignal(context.getClickedPos()))
+                .setValue(OPEN, false);
     }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPE;
+        return switch (state.getValue(FACING)) {
+            case NORTH -> SHAPE_NORTH;
+            case SOUTH -> SHAPE_SOUTH;
+            case WEST  -> SHAPE_WEST;
+            case EAST  -> SHAPE_EAST;
+            default    -> SHAPE_NORTH;
+        };
     }
 
     @Override

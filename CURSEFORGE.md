@@ -66,7 +66,7 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 - **Wire Connectors**: Placed directly on machines, batteries, or generators. Automatically interfaces with NeoForge's standard `Capabilities.Energy.BLOCK` to push or pull line energy.
 - **Wire Relays**: High-density pass-through insulators designed to turn corners and route branches without tapping into a block's internal buffer.
 - **Substation Transformers**: High-efficiency (98%) step-up and step-down transformers connecting LV ⇄ MV and MV ⇄ HV networks.
-- **In-Line Breaker Switches**: Heavy knife switches that cut power to entire branches manually or automatically when triggered by Redstone.
+- **Heavy Duty Safety Disconnect Switches**: Wall-mounted industrial disconnect safety switches modeled after commercial Siemens/Square-D enclosures. Features a throw switch with an animated red safety handle that physically flips between ON (UP) and OFF (DOWN) when toggled or driven by Redstone.
 - **Heavy Accumulator Banks**: Industrial multi-cell capacitor storage units buffering up to **4,000,000 FE** each with rapid charge/discharge capabilities.
 
 ### 5. Multiblock Heavy Power Plant (3x3x3)
@@ -89,7 +89,20 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.0.3)
+## 📦 Recent Release Notes (v1.0.5)
+- **Heavy Duty Safety Switch / Disconnect Enclosure Redesign**:
+  - Replaced the solid 16x16 cube with an authentic wall-mounted industrial disconnect safety switch modeled directly after commercial Siemens/Square-D heavy-duty enclosures.
+  - **3D Sheet Metal Cabinet Geometry**: Features a slim wall-mounted NEMA enclosure with beveled overlapping hinged front door, stamped raised center panel, left barrel hinges, padlockable door latch clasp, and top/bottom threaded conduit hubs.
+  - **Animated Red Disconnect Lever**: Equipped with a side-mounted steel pivot linkage and bright red molded safety grip handle that physically snaps between the **UP** position (Circuit Closed / Power ON) and the **DOWN** position (Circuit Open / Power OFF) when toggled or triggered by Redstone.
+  - **Industrial Placard & Indicator Art**: High-visibility front door safety placard with bold ON/OFF status badges, "HEAVY DUTY SAFETY SWITCH", 600V rating, and high-voltage DANGER arc flash warning banner. Available in both 32x32 default pixel art and 1024x1024 photorealistic Ultra-HD.
+  - **Wall-Mount VoxelShapes**: Aligned directional collision boxes for North, South, East, and West facings so the safety switch sits flush against walls.
+  - **Intelligent Placement**: Automatically mounts against the clicked wall face or faces the player if placed on floor or ceiling.
+- **Resource Pack Version Compatibility (Minecraft 26.3)**:
+  - Updated `(v1.0) 1024x Power Grid.zip` `pack.mcmeta` with `pack_format: 84`, `supported_formats: [15, 255]`, `min_format: 15`, and `max_format: 255` matching your other working 1024x resource packs, resolving the "Made for an older version of Minecraft" warning.
+
+---
+
+## 📦 Previous Release Notes (v1.0.3)
 - **32x32 Default Textures**: Upgraded all block and item textures to rich 32x32 pixel art with creosote grain, metallic specular highlights, and ceramic porcelain sheens.
 - **1024x1024 Ultra-HD Resource Pack**: Added `(v1.0) 1024x Power Grid.zip` in `resourcepacks/` (and synced to CurseForge profile) for players who want photorealistic ultra-HD graphics.
 - **Round Wooden Telephone Poles**: Replaced solid cubes with authentic 8-sided cylindrical telephone poles with steel bands and climbing steps. Supports right-click auto-stacking!

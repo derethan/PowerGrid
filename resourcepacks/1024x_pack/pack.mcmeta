@@ -1,6 +1,12 @@
 {
   "pack": {
-    "pack_format": 61,
-    "description": "Power Grid 1024x Ultra-HD Textures (v1.0.3)"
+    "pack_format": 84,
+    "supported_formats": [
+      15,
+      255
+    ],
+    "min_format": 15,
+    "max_format": 255,
+    "description": "\u00a76Power Grid \u00a7f- 1024x Ultra-HD Pack"
   }
 }

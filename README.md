@@ -154,11 +154,12 @@ $$\text{Net Received} = \text{Transmitted FE} \times \left(1 - (\text{Distance} 
 - Built with internal laminated silicon-steel cores providing a **98% power conversion efficiency**.
 - Equipped with a 64,000 FE high-speed balancing buffer.
 
-### High-Voltage Breaker Switches
-- Wall-mounted and pole-mounted heavy-duty disconnect switches.
-- **Manual Operation**: Right-click to flip the heavy copper knife switch with an audible metallic clack.
-- **Redstone Automation**: Connect redstone dust or a lever to automatically trip the breaker when power surges, storage levels drop, or defenses require instant grid lockdown.
-- Acts as a switched gate between two connected wire nodes.
+### Heavy-Duty Safety Disconnect Switches (Breaker Switch)
+- Authentic **wall-mounted industrial disconnect safety switch** modeled after commercial Siemens/Square-D heavy-duty enclosures.
+- **3D Sheet Metal Cabinet**: Slim wall-mounted enclosure featuring a beveled hinged front door, stamped raised panel, left barrel hinges, padlockable latch clasp, and top/bottom threaded conduit hubs.
+- **Animated Red Disconnect Lever**: Features a side-mounted steel pivot arm with a bright red molded safety grip handle. When toggled, the handle physically snaps between **UP** (Circuit Closed / Power ON) and **DOWN** (Circuit Open / Power OFF).
+- **Manual & Redstone Operation**: Right-click to throw the disconnect switch with a resonant industrial metallic clack, or connect a redstone signal to automate circuit cutoffs during grid surges or emergencies.
+- Acts as a switchable gate between two connected wire nodes.
 
 ### Heavy Accumulator Banks
 - Massive industrial capacitor banks storing up to **4,000,000 FE** per unit.

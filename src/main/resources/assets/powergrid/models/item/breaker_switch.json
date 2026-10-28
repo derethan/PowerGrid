@@ -1,5 +1,5 @@
 {
-  "parent": "powergrid:block/breaker_switch",
+  "parent": "powergrid:block/breaker_switch_on",
   "display": {
     "gui": {
       "rotation": [
