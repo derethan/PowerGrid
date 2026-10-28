@@ -1,20 +1,92 @@
 {
-  "variants": {
-    "facing=north": {
-      "model": "powergrid:block/pole_crossarm",
-      "y": 0
+  "multipart": [
+    {
+      "when": {
+        "axis": "x"
+      },
+      "apply": {
+        "model": "powergrid:block/pole_crossarm_beam_x"
+      }
     },
-    "facing=east": {
-      "model": "powergrid:block/pole_crossarm",
-      "y": 90
+    {
+      "when": {
+        "axis": "z"
+      },
+      "apply": {
+        "model": "powergrid:block/pole_crossarm_beam_z"
+      }
     },
-    "facing=south": {
-      "model": "powergrid:block/pole_crossarm",
-      "y": 180
+    {
+      "when": {
+        "axis": "x",
+        "neg_pole": "true"
+      },
+      "apply": {
+        "model": "powergrid:block/pole_crossarm_bracket_neg_x"
+      }
     },
-    "facing=west": {
-      "model": "powergrid:block/pole_crossarm",
-      "y": 270
+    {
+      "when": {
+        "axis": "x",
+        "pos_pole": "true"
+      },
+      "apply": {
+        "model": "powergrid:block/pole_crossarm_bracket_pos_x"
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "neg_pole": "true"
+      },
+      "apply": {
+        "model": "powergrid:block/pole_crossarm_bracket_neg_z"
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "pos_pole": "true"
+      },
+      "apply": {
+        "model": "powergrid:block/pole_crossarm_bracket_pos_z"
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "neg_end": "true"
+      },
+      "apply": {
+        "model": "powergrid:block/pole_crossarm_end_neg_x"
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "pos_end": "true"
+      },
+      "apply": {
+        "model": "powergrid:block/pole_crossarm_end_pos_x"
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "neg_end": "true"
+      },
+      "apply": {
+        "model": "powergrid:block/pole_crossarm_end_neg_z"
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "pos_end": "true"
+      },
+      "apply": {
+        "model": "powergrid:block/pole_crossarm_end_pos_z"
+      }
     }
-  }
+  ]
 }

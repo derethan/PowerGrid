@@ -1,387 +1,1084 @@
 import os
 import json
-from PIL import Image, ImageDraw
+import zipfile
+import shutil
+from PIL import Image, ImageDraw, ImageFilter
 
 BASE_DIR = r"C:\Users\andg_\OneDrive\Desktop\minecraft\PowerGrid\src\main\resources\assets\powergrid"
-
-BLOCKS_DIR = os.path.join(BASE_DIR, "textures", "block")
-ITEMS_DIR = os.path.join(BASE_DIR, "textures", "item")
+BLOCKS_DIR_32 = os.path.join(BASE_DIR, "textures", "block")
+ITEMS_DIR_32 = os.path.join(BASE_DIR, "textures", "item")
 MODELS_BLOCK = os.path.join(BASE_DIR, "models", "block")
 MODELS_ITEM = os.path.join(BASE_DIR, "models", "item")
 BLOCKSTATES = os.path.join(BASE_DIR, "blockstates")
 ITEM_DEFS = os.path.join(BASE_DIR, "items")
 
-for d in [BLOCKS_DIR, ITEMS_DIR, MODELS_BLOCK, MODELS_ITEM, BLOCKSTATES, ITEM_DEFS]:
+PACK_DIR = r"C:\Users\andg_\OneDrive\Desktop\minecraft\PowerGrid\resourcepacks\1024x_pack"
+PACK_BLOCKS_DIR_1024 = os.path.join(PACK_DIR, "assets", "powergrid", "textures", "block")
+PACK_ITEMS_DIR_1024 = os.path.join(PACK_DIR, "assets", "powergrid", "textures", "item")
+
+OUTPUT_ZIP = r"C:\Users\andg_\OneDrive\Desktop\minecraft\PowerGrid\resourcepacks\(v1.0) 1024x Power Grid.zip"
+CURSEFORGE_RP_DIR = r"C:\Users\andg_\curseforge\minecraft\Instances\Andrew\resourcepacks"
+
+for d in [BLOCKS_DIR_32, ITEMS_DIR_32, MODELS_BLOCK, MODELS_ITEM, BLOCKSTATES, ITEM_DEFS, PACK_BLOCKS_DIR_1024, PACK_ITEMS_DIR_1024]:
     os.makedirs(d, exist_ok=True)
 
 def write_json(path, data):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
 
-def new_img():
-    return Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+# ==============================================================================
+# PARAMETRIC TEXTURE RENDERING (Supports 32x32 and 1024x1024)
+# Coordinates are expressed in standard Minecraft 16.0 grid units.
+# ==============================================================================
 
-# --- TEXTURE GENERATION HELPERS ---
+def sc(val, size):
+    return int(round(val * size / 16.0))
 
-def make_treated_wood_pole():
-    im = Image.new("RGBA", (16, 16), (45, 30, 20, 255))
+def rgb_clamp(c):
+    return max(0, min(255, int(c)))
+
+def color_mult(col, factor):
+    return (rgb_clamp(col[0] * factor), rgb_clamp(col[1] * factor), rgb_clamp(col[2] * factor), col[3] if len(col) > 3 else 255)
+
+def color_add(col, delta):
+    return (rgb_clamp(col[0] + delta), rgb_clamp(col[1] + delta), rgb_clamp(col[2] + delta), col[3] if len(col) > 3 else 255)
+
+def draw_rect(d, size, x1, y1, x2, y2, fill=None, outline=None, width=1):
+    sx1, sy1 = sc(x1, size), sc(y1, size)
+    sx2, sy2 = sc(x2, size), sc(y2, size)
+    w = max(1, sc(width, size) if width > 1 else (1 if size == 32 else max(2, int(size / 256))))
+    d.rectangle([sx1, sy1, sx2, sy2], fill=fill, outline=outline, width=w if outline else 0)
+
+def draw_ellipse(d, size, x1, y1, x2, y2, fill=None, outline=None, width=1):
+    sx1, sy1 = sc(x1, size), sc(y1, size)
+    sx2, sy2 = sc(x2, size), sc(y2, size)
+    w = max(1, sc(width, size) if width > 1 else (1 if size == 32 else max(2, int(size / 256))))
+    d.ellipse([sx1, sy1, sx2, sy2], fill=fill, outline=outline, width=w if outline else 0)
+
+def draw_line(d, size, x1, y1, x2, y2, fill, width=1):
+    sx1, sy1 = sc(x1, size), sc(y1, size)
+    sx2, sy2 = sc(x2, size), sc(y2, size)
+    w = max(1, int(round(width * size / 16.0)))
+    d.line([(sx1, sy1), (sx2, sy2)], fill=fill, width=w)
+
+# --- TEXTURE GENERATORS ---
+
+def render_treated_wood_pole(size):
+    im = Image.new("RGBA", (size, size), (46, 31, 20, 255))
     d = ImageDraw.Draw(im)
-    # Wood grain
-    for y in range(16):
-        c = (55, 38, 25) if y % 3 == 0 else ((40, 26, 17) if y % 3 == 1 else (48, 33, 22))
-        d.line([(0, y), (15, y)], fill=c)
-    # Dark creosote stains
-    d.line([(3, 0), (3, 15)], fill=(32, 20, 12))
-    d.line([(12, 0), (12, 15)], fill=(35, 22, 14))
-    # Metal reinforcing bands at y=3 and y=12
-    for by in [3, 12]:
-        d.line([(0, by), (15, by)], fill=(70, 75, 80))
-        d.line([(0, by+1), (15, by+1)], fill=(50, 55, 60))
-        d.point([(2, by), (8, by), (13, by)], fill=(120, 125, 130))
-    im.save(os.path.join(BLOCKS_DIR, "treated_wood_pole.png"))
+    steps = size
+    # Vertical wood grain lines with creosote shading
+    for x in range(steps):
+        fx = x / float(steps)
+        # Noise/grain wave
+        val = int(fx * 37) % 5
+        shade = -8 if val == 0 else (6 if val == 1 else (-4 if val == 2 else (4 if val == 3 else 0)))
+        # Creosote dark streaks on edges and center
+        if fx < 0.15 or fx > 0.85 or (0.45 < fx < 0.55):
+            shade -= 12
+        col = color_add((48, 32, 21), shade)
+        d.line([(x, 0), (x, size - 1)], fill=col)
 
-def make_steel_truss_pole():
-    im = Image.new("RGBA", (16, 16), (30, 32, 36, 255))
+    # Steel reinforcement bands at y=3..4 and y=12..13
+    for y_band in [3.0, 12.0]:
+        draw_rect(d, size, 0, y_band, 16, y_band + 1.2, fill=(65, 70, 78))
+        draw_line(d, size, 0, y_band, 16, y_band, fill=(90, 98, 108), width=0.3)
+        draw_line(d, size, 0, y_band + 1.2, 16, y_band + 1.2, fill=(40, 44, 50), width=0.3)
+        # Rivets / bolts on bands
+        for rx in [2.5, 8.0, 13.5]:
+            draw_ellipse(d, size, rx - 0.4, y_band + 0.2, rx + 0.4, y_band + 1.0, fill=(140, 150, 165), outline=(30, 32, 36))
+
+    # Alternating climbing rungs (iron steps)
+    # Step at y=6 on right side
+    draw_rect(d, size, 12.5, 6.0, 15.5, 6.8, fill=(80, 85, 95), outline=(35, 38, 42))
+    draw_ellipse(d, size, 12.0, 5.8, 13.0, 7.0, fill=(130, 140, 155))
+    # Step at y=10 on left side
+    draw_rect(d, size, 0.5, 10.0, 3.5, 10.8, fill=(80, 85, 95), outline=(35, 38, 42))
+    draw_ellipse(d, size, 3.0, 9.8, 4.0, 11.0, fill=(130, 140, 155))
+    return im
+
+def render_treated_wood_pole_end(size):
+    im = Image.new("RGBA", (size, size), (42, 28, 18, 255))
     d = ImageDraw.Draw(im)
-    # Outer steel beams
-    d.rectangle([0, 0, 15, 15], outline=(65, 70, 78))
-    d.rectangle([1, 1, 14, 14], outline=(45, 48, 54))
-    # Diagonal truss cross-struts
-    d.line([(2, 2), (13, 13)], fill=(75, 82, 92), width=1)
-    d.line([(2, 13), (13, 2)], fill=(75, 82, 92), width=1)
-    d.line([(3, 2), (14, 13)], fill=(45, 48, 54), width=1)
-    # Center junction plate with rivet
-    d.rectangle([6, 6, 9, 9], fill=(60, 65, 72))
-    d.point([(7, 7), (8, 8)], fill=(120, 130, 140))
-    # Corner rivets
-    for rx, ry in [(1, 1), (14, 1), (1, 14), (14, 14)]:
-        d.point([(rx, ry)], fill=(130, 140, 155))
-    im.save(os.path.join(BLOCKS_DIR, "steel_truss_pole.png"))
+    # Concentric heartwood tree rings
+    for r in range(int(size * 0.48), 0, -max(1, int(size / 16))):
+        c = (52, 35, 23) if (r // max(1, int(size / 32))) % 2 == 0 else (38, 25, 16)
+        d.ellipse([size/2 - r, size/2 - r, size/2 + r, size/2 + r], outline=c, width=max(1, int(size/64)))
+    # Dark creosote soaked center
+    cr = int(size * 0.15)
+    d.ellipse([size/2 - cr, size/2 - cr, size/2 + cr, size/2 + cr], fill=(26, 17, 11))
+    # Galvanized outer circular metal band
+    draw_ellipse(d, size, 0.5, 0.5, 15.5, 15.5, outline=(75, 82, 92), width=1.0)
+    return im
 
-def make_pole_crossarm():
-    im = Image.new("RGBA", (16, 16), (48, 33, 22, 255))
+def render_pole_crossarm(size):
+    im = Image.new("RGBA", (size, size), (50, 34, 22, 255))
     d = ImageDraw.Draw(im)
     # Horizontal wood grain
-    for x in range(16):
-        c = (56, 39, 26) if x % 4 == 0 else (44, 29, 19)
-        d.line([(x, 0), (x, 15)], fill=c)
-    # Steel end-caps and mounting brackets
-    d.rectangle([0, 0, 2, 15], fill=(60, 65, 72))
-    d.rectangle([13, 0, 15, 15], fill=(60, 65, 72))
-    d.rectangle([6, 4, 9, 11], fill=(50, 55, 62)) # center bracket
-    d.point([(1, 4), (1, 11), (14, 4), (14, 11), (7, 7), (8, 8)], fill=(130, 140, 155))
-    im.save(os.path.join(BLOCKS_DIR, "pole_crossarm.png"))
+    for y in range(size):
+        fy = y / float(size)
+        val = int(fy * 33) % 4
+        shade = -7 if val == 0 else (6 if val == 1 else (-3 if val == 2 else 3))
+        col = color_add((50, 34, 22), shade)
+        d.line([(0, y), (size - 1, y)], fill=col)
 
-def make_connector(name, plate_col, insul_col, highlight_col):
-    im = Image.new("RGBA", (16, 16), (35, 38, 42, 255))
+    # Steel joining plates and central mounting bracket
+    draw_rect(d, size, 6.0, 0, 10.0, 16, fill=(55, 60, 68), outline=(38, 42, 48))
+    draw_line(d, size, 6.0, 0, 6.0, 16, fill=(85, 95, 105), width=0.4)
+    draw_line(d, size, 10.0, 0, 10.0, 16, fill=(35, 38, 44), width=0.4)
+
+    # Steel end straps on left and right
+    draw_rect(d, size, 0, 0, 1.8, 16, fill=(58, 64, 72), outline=(35, 38, 44))
+    draw_rect(d, size, 14.2, 0, 16, 16, fill=(58, 64, 72), outline=(35, 38, 44))
+
+    # Mounting bolts on central bracket and ends
+    for bx, by in [(7.0, 4.0), (9.0, 4.0), (7.0, 12.0), (9.0, 12.0), (0.9, 8.0), (15.1, 8.0)]:
+        draw_ellipse(d, size, bx - 0.5, by - 0.5, bx + 0.5, by + 0.5, fill=(140, 150, 165), outline=(30, 34, 40))
+    return im
+
+def render_pole_crossarm_end(size):
+    im = Image.new("RGBA", (size, size), (46, 31, 20, 255))
     d = ImageDraw.Draw(im)
-    # Heavy base plate
-    d.rectangle([0, 0, 15, 15], outline=(55, 60, 66))
-    d.rectangle([2, 2, 13, 13], fill=(28, 30, 34))
-    # Ceramic insulator ribs
-    d.rectangle([4, 4, 11, 11], fill=insul_col)
-    d.rectangle([5, 5, 10, 10], outline=(insul_col[0]-30, insul_col[1]-30, insul_col[2]-30))
-    # Metallic terminal core
-    d.rectangle([6, 6, 9, 9], fill=plate_col)
-    d.point([(7, 7), (8, 7)], fill=highlight_col)
-    # Corner mounting bolts
-    for rx, ry in [(1, 1), (14, 1), (1, 14), (14, 14)]:
-        d.point([(rx, ry)], fill=(120, 130, 145))
-    im.save(os.path.join(BLOCKS_DIR, f"{name}.png"))
-
-def make_relay(name, insul_col, tip_col):
-    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
-    d = ImageDraw.Draw(im)
-    # Standoff bracket
-    d.rectangle([4, 11, 11, 15], fill=(45, 48, 54))
-    d.line([(4, 11), (11, 11)], fill=(75, 80, 90))
-    # Ribbed insulator bell
-    d.rectangle([3, 5, 12, 10], fill=insul_col)
-    d.line([(2, 7), (13, 7)], fill=(insul_col[0]+25, insul_col[1]+25, insul_col[2]+25))
-    d.line([(3, 9), (12, 9)], fill=(insul_col[0]-30, insul_col[1]-30, insul_col[2]-30))
-    # Top wire saddle clamp
-    d.rectangle([5, 1, 10, 4], fill=tip_col)
-    d.point([(7, 2), (8, 2)], fill=(255, 255, 255))
-    im.save(os.path.join(BLOCKS_DIR, f"{name}.png"))
-
-def make_transformer():
-    # Transformer Side
-    im = Image.new("RGBA", (16, 16), (42, 45, 50, 255))
-    d = ImageDraw.Draw(im)
-    d.rectangle([0, 0, 15, 15], outline=(65, 70, 78))
-    # Vertical oil cooling radiator fins
-    for x in range(2, 14, 2):
-        d.line([(x, 2), (x, 13)], fill=(30, 32, 36))
-        d.line([(x+1, 2), (x+1, 13)], fill=(55, 60, 68))
-    im.save(os.path.join(BLOCKS_DIR, "transformer_side.png"))
-
-    # Transformer Top
-    im2 = Image.new("RGBA", (16, 16), (48, 52, 58, 255))
-    d2 = ImageDraw.Draw(im2)
-    d2.rectangle([0, 0, 15, 15], outline=(70, 76, 85))
-    # Bushing mount terminals (LV side & HV side)
-    d2.rectangle([2, 4, 5, 11], fill=(180, 110, 50)) # copper LV
-    d2.rectangle([10, 3, 14, 12], fill=(210, 215, 220)) # ceramic HV
-    d2.point([(3, 7), (4, 8)], fill=(255, 180, 80))
-    d2.point([(12, 7), (12, 8)], fill=(255, 255, 255))
-    im2.save(os.path.join(BLOCKS_DIR, "transformer_top.png"))
-
-    # Transformer Front
-    im3 = im.copy()
-    d3 = ImageDraw.Draw(im3)
-    # Rating plaque & oil level sight glass
-    d3.rectangle([4, 4, 11, 9], fill=(160, 140, 70)) # brass plate
-    d3.rectangle([5, 5, 10, 8], fill=(120, 100, 45))
-    d3.line([(7, 11), (7, 14)], fill=(100, 180, 220)) # sight glass
-    im3.save(os.path.join(BLOCKS_DIR, "transformer_front.png"))
-
-def make_breaker_switch():
-    im = Image.new("RGBA", (16, 16), (36, 38, 42, 255))
-    d = ImageDraw.Draw(im)
-    d.rectangle([0, 0, 15, 15], outline=(60, 65, 72))
-    # Slate backing plate
-    d.rectangle([2, 2, 13, 13], fill=(24, 26, 30))
-    # Copper knife blade (closed)
-    d.rectangle([6, 3, 9, 12], fill=(190, 100, 45))
-    d.line([(7, 4), (7, 11)], fill=(235, 140, 75))
-    d.point([(7, 3), (8, 3), (7, 12), (8, 12)], fill=(255, 180, 90))
-    # Insulated handle
-    d.rectangle([5, 1, 10, 3], fill=(160, 30, 30))
-    im.save(os.path.join(BLOCKS_DIR, "breaker_switch.png"))
-
-def make_heavy_accumulator():
-    # Side
-    im = Image.new("RGBA", (16, 16), (34, 37, 42, 255))
-    d = ImageDraw.Draw(im)
-    d.rectangle([0, 0, 15, 15], outline=(55, 60, 68))
-    # Heavy battery cell slits
-    d.rectangle([2, 3, 13, 6], fill=(22, 24, 28))
-    d.rectangle([2, 9, 13, 12], fill=(22, 24, 28))
-    # Glowing cyan charge LED bar
-    d.rectangle([3, 7, 12, 8], fill=(20, 120, 140))
-    d.line([(4, 7), (10, 7)], fill=(60, 220, 255))
-    im.save(os.path.join(BLOCKS_DIR, "heavy_accumulator_side.png"))
-
-    # Top
-    im2 = Image.new("RGBA", (16, 16), (40, 44, 50, 255))
-    d2 = ImageDraw.Draw(im2)
-    d2.rectangle([0, 0, 15, 15], outline=(65, 72, 82))
-    # Positive (+) terminal brass, Negative (-) terminal steel
-    d2.rectangle([2, 5, 6, 10], fill=(190, 130, 40)) # + brass
-    d2.point([(4, 7), (4, 8)], fill=(255, 200, 80))
-    d2.rectangle([9, 5, 13, 10], fill=(100, 110, 125)) # - steel
-    d2.point([(11, 7), (11, 8)], fill=(180, 195, 215))
-    im2.save(os.path.join(BLOCKS_DIR, "heavy_accumulator_top.png"))
-
-def make_generator_casing():
-    im = Image.new("RGBA", (16, 16), (42, 46, 52, 255))
-    d = ImageDraw.Draw(im)
-    # Beveled heavy steel frame
-    d.rectangle([0, 0, 15, 15], outline=(68, 75, 85))
-    d.rectangle([1, 1, 14, 14], outline=(30, 33, 38))
-    d.rectangle([2, 2, 13, 13], fill=(38, 42, 48))
+    # End grain rings
+    for r in range(int(size * 0.45), 0, -max(1, int(size / 16))):
+        c = (56, 38, 25) if (r // max(1, int(size / 32))) % 2 == 0 else (40, 27, 18)
+        d.ellipse([size/2 - r, size/2 - r, size/2 + r, size/2 + r], outline=c, width=max(1, int(size/64)))
+    # Outer steel square retaining rim
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(70, 76, 85), width=1.2)
     # Corner rivets
-    for rx, ry in [(2, 2), (13, 2), (2, 13), (13, 13)]:
-        d.point([(rx, ry)], fill=(135, 145, 160))
-    # Center seam
-    d.line([(2, 8), (13, 8)], fill=(26, 29, 33))
-    d.line([(2, 9), (13, 9)], fill=(52, 58, 66))
-    im.save(os.path.join(BLOCKS_DIR, "generator_casing.png"))
+    for rx, ry in [(1.8, 1.8), (14.2, 1.8), (1.8, 14.2), (14.2, 14.2)]:
+        draw_ellipse(d, size, rx - 0.4, ry - 0.4, rx + 0.4, ry + 0.4, fill=(135, 145, 160))
+    return im
 
-def make_alternator_coil():
-    im = Image.new("RGBA", (16, 16), (35, 38, 44, 255))
+def render_steel_bracket(size):
+    im = Image.new("RGBA", (size, size), (52, 57, 65, 255))
     d = ImageDraw.Draw(im)
-    d.rectangle([0, 0, 15, 15], outline=(55, 60, 68))
-    # Dense copper winding grooves
-    for y in range(2, 14, 2):
-        d.line([(2, y), (13, y)], fill=(210, 115, 50))
-        d.line([(2, y+1), (13, y+1)], fill=(160, 80, 35))
-        d.point([(4, y), (8, y), (11, y)], fill=(255, 175, 95))
-    im.save(os.path.join(BLOCKS_DIR, "alternator_coil.png"))
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(75, 82, 92), width=1.0)
+    draw_line(d, size, 0.5, 0.5, 15.5, 0.5, fill=(100, 110, 125), width=1.0)
+    draw_line(d, size, 0.5, 15.5, 15.5, 15.5, fill=(30, 33, 38), width=1.0)
+    # Hex nut / bolt in center
+    draw_ellipse(d, size, 5.5, 5.5, 10.5, 10.5, fill=(40, 44, 50), outline=(85, 95, 110))
+    draw_ellipse(d, size, 7.0, 7.0, 9.0, 9.0, fill=(130, 140, 155))
+    return im
 
-def make_turbine_rotor():
-    im = Image.new("RGBA", (16, 16), (32, 35, 40, 255))
+def render_steel_truss_pole(size):
+    im = Image.new("RGBA", (size, size), (28, 30, 35, 255))
     d = ImageDraw.Draw(im)
-    d.rectangle([0, 0, 15, 15], outline=(58, 64, 72))
-    # Circular shroud
-    d.ellipse([2, 2, 13, 13], outline=(75, 82, 95))
-    d.ellipse([3, 3, 12, 12], fill=(20, 22, 26))
-    # Curved rotor blades
-    d.line([(4, 4), (11, 11)], fill=(120, 130, 145))
-    d.line([(4, 11), (11, 4)], fill=(120, 130, 145))
-    d.line([(7, 3), (7, 12)], fill=(140, 150, 165))
-    d.line([(3, 7), (12, 7)], fill=(140, 150, 165))
-    # Center hub spinner
-    d.ellipse([6, 6, 9, 9], fill=(180, 190, 205))
-    d.point([(7, 7)], fill=(255, 255, 255))
-    im.save(os.path.join(BLOCKS_DIR, "turbine_rotor.png"))
+    # Heavy outer corner angle-irons
+    draw_rect(d, size, 0, 0, 16, 16, outline=(65, 72, 82), width=1.5)
+    draw_rect(d, size, 1.8, 1.8, 14.2, 14.2, outline=(42, 46, 52), width=1.0)
+    # Diagonal truss bracing (X-pattern)
+    draw_line(d, size, 2.5, 2.5, 13.5, 13.5, fill=(72, 80, 92), width=1.2)
+    draw_line(d, size, 2.5, 13.5, 13.5, 2.5, fill=(72, 80, 92), width=1.2)
+    # Center junction gusset plate with heavy rivet
+    draw_rect(d, size, 6.0, 6.0, 10.0, 10.0, fill=(52, 58, 66), outline=(80, 90, 102))
+    draw_ellipse(d, size, 7.2, 7.2, 8.8, 8.8, fill=(140, 150, 165), outline=(35, 38, 44))
+    # Corner rivets
+    for rx, ry in [(1.2, 1.2), (14.8, 1.2), (1.2, 14.8), (14.8, 14.8)]:
+        draw_ellipse(d, size, rx - 0.4, ry - 0.4, rx + 0.4, ry + 0.4, fill=(130, 140, 155))
+    return im
 
-def make_exhaust_stack():
-    # Side
-    im = Image.new("RGBA", (16, 16), (36, 39, 44, 255))
+def render_relay_bracket(size):
+    im = Image.new("RGBA", (size, size), (42, 45, 52, 255))
     d = ImageDraw.Draw(im)
-    d.rectangle([0, 0, 15, 15], outline=(55, 60, 68))
-    # Vertical flue ridges
-    for x in range(3, 14, 3):
-        d.line([(x, 0), (x, 15)], fill=(28, 30, 34))
-        d.line([(x+1, 0), (x+1, 15)], fill=(58, 64, 72))
-    # Reinforcing collar at top & bottom
-    d.line([(0, 2), (15, 2)], fill=(80, 88, 100))
-    d.line([(0, 13), (15, 13)], fill=(80, 88, 100))
-    im.save(os.path.join(BLOCKS_DIR, "exhaust_stack_side.png"))
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(65, 72, 82), width=1.0)
+    draw_rect(d, size, 2.0, 2.0, 14.0, 14.0, fill=(35, 38, 44))
+    # 4 corner mounting bolt holes
+    for bx, by in [(3.5, 3.5), (12.5, 3.5), (3.5, 12.5), (12.5, 12.5)]:
+        draw_ellipse(d, size, bx - 1.2, by - 1.2, bx + 1.2, by + 1.2, fill=(20, 22, 25), outline=(80, 90, 105))
+        draw_ellipse(d, size, bx - 0.5, by - 0.5, bx + 0.5, by + 0.5, fill=(130, 140, 155))
+    # Center mounting boss
+    draw_ellipse(d, size, 6.0, 6.0, 10.0, 10.0, fill=(55, 60, 70), outline=(85, 95, 110))
+    return im
 
-    # Top (dark vent grille)
-    im2 = Image.new("RGBA", (16, 16), (38, 42, 48, 255))
-    d2 = ImageDraw.Draw(im2)
-    d2.rectangle([0, 0, 15, 15], outline=(65, 72, 82))
-    d2.ellipse([2, 2, 13, 13], fill=(12, 14, 16))
-    d2.line([(4, 7), (11, 7)], fill=(40, 45, 52))
-    d2.line([(7, 4), (7, 11)], fill=(40, 45, 52))
-    im2.save(os.path.join(BLOCKS_DIR, "exhaust_stack_top.png"))
-
-def make_power_plant_controller():
-    im = Image.new("RGBA", (16, 16), (42, 46, 52, 255))
+def render_insulator(size, base_col, highlight_col, shadow_col):
+    im = Image.new("RGBA", (size, size), base_col)
     d = ImageDraw.Draw(im)
-    d.rectangle([0, 0, 15, 15], outline=(68, 75, 85))
-    d.rectangle([1, 1, 14, 14], fill=(32, 35, 40))
-    # Round analog gauge (needle dial)
-    d.ellipse([3, 3, 8, 8], fill=(225, 220, 200), outline=(85, 90, 100))
-    d.line([(5, 6), (7, 4)], fill=(180, 30, 30)) # needle
-    # Amber/Green status lights
-    d.ellipse([11, 3, 13, 5], fill=(70, 220, 80)) # green running
-    d.ellipse([11, 7, 13, 9], fill=(230, 160, 30)) # amber ready
-    # Emergency Stop switch & breaker handle
-    d.rectangle([3, 11, 6, 13], fill=(200, 35, 35)) # red E-stop
-    d.rectangle([8, 11, 13, 13], fill=(55, 60, 68))
-    d.line([(10, 10), (12, 10)], fill=(190, 130, 50))
-    im.save(os.path.join(BLOCKS_DIR, "power_plant_controller.png"))
+    # Concentric glazed ceramic rib rings and glossy highlight
+    for y in range(size):
+        fy = y / float(size)
+        # Glazed horizontal ribs
+        rib = int(fy * 16) % 4
+        if rib == 0:
+            c = highlight_col
+        elif rib == 1:
+            c = base_col
+        else:
+            c = shadow_col
+        d.line([(0, y), (size - 1, y)], fill=c)
 
-# --- ITEM TEXTURE GENERATION ---
+    # Vertical glossy ceramic specular sheen (reflection highlight)
+    spec_w = max(1, int(size * 0.15))
+    spec_x = int(size * 0.28)
+    for x in range(spec_x, spec_x + spec_w):
+        col = color_add(highlight_col, 35)
+        d.line([(x, 0), (x, size - 1)], fill=col)
+    return im
 
-def make_engineer_hammer():
-    im = new_img()
+def render_wire_clamp(size, base_col, highlight_col):
+    im = Image.new("RGBA", (size, size), base_col)
     d = ImageDraw.Draw(im)
-    # Wooden handle diagonally from (2,13) to (9,6)
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=color_add(base_col, -30), width=1.0)
+    # Cable groove indentation through center
+    draw_rect(d, size, 0, 6.0, 16, 10.0, fill=color_add(base_col, -40))
+    draw_line(d, size, 0, 6.0, 16, 6.0, fill=highlight_col, width=0.5)
+    draw_line(d, size, 0, 10.0, 16, 10.0, fill=color_add(base_col, -60), width=0.5)
+    # Clamping bolt heads
+    draw_ellipse(d, size, 3.5, 7.0, 5.5, 9.0, fill=highlight_col, outline=(25, 25, 25))
+    draw_ellipse(d, size, 10.5, 7.0, 12.5, 9.0, fill=highlight_col, outline=(25, 25, 25))
+    return im
+
+def render_connector_base(size):
+    im = Image.new("RGBA", (size, size), (38, 42, 48, 255))
+    d = ImageDraw.Draw(im)
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(70, 78, 90), width=1.0)
+    draw_rect(d, size, 2.5, 2.5, 13.5, 13.5, fill=(28, 31, 36))
+    # Circular mounting collar in center
+    draw_ellipse(d, size, 4.5, 4.5, 11.5, 11.5, fill=(50, 55, 65), outline=(90, 100, 115))
+    # Corner heavy hex nuts
+    for bx, by in [(2.0, 2.0), (14.0, 2.0), (2.0, 14.0), (14.0, 14.0)]:
+        draw_ellipse(d, size, bx - 1.0, by - 1.0, bx + 1.0, by + 1.0, fill=(130, 140, 155), outline=(25, 28, 32))
+    return im
+
+def render_connector_terminal(size):
+    im = Image.new("RGBA", (size, size), (190, 120, 50, 255))
+    d = ImageDraw.Draw(im)
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(140, 80, 30), width=1.0)
+    # Threaded terminal post (horizontal threads)
+    for y in range(0, size, max(1, int(size / 16))):
+        c = (230, 160, 80) if (y // max(1, int(size / 32))) % 2 == 0 else (160, 95, 35)
+        d.line([(0, y), (size - 1, y)], fill=c)
+    # Heavy brass clamping hex nut in center
+    draw_ellipse(d, size, 3.5, 3.5, 12.5, 12.5, fill=(215, 155, 60), outline=(100, 60, 20))
+    draw_ellipse(d, size, 6.0, 6.0, 10.0, 10.0, fill=(255, 200, 100))
+    return im
+
+def render_transformer_front(size):
+    im = Image.new("RGBA", (size, size), (45, 50, 58, 255))
+    d = ImageDraw.Draw(im)
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(75, 84, 98), width=1.0)
+    draw_rect(d, size, 1.5, 1.5, 14.5, 14.5, fill=(35, 38, 45))
+    # Brass specification rating plate
+    draw_rect(d, size, 3.0, 3.0, 13.0, 7.5, fill=(185, 150, 75), outline=(95, 75, 35))
+    draw_line(d, size, 4.5, 4.5, 11.5, 4.5, fill=(50, 40, 20), width=0.4)
+    draw_line(d, size, 4.5, 6.0, 11.5, 6.0, fill=(50, 40, 20), width=0.4)
+    # Analog temperature / oil gauge
+    draw_ellipse(d, size, 5.0, 9.0, 11.0, 15.0, fill=(225, 220, 205), outline=(70, 78, 90))
+    draw_line(d, size, 8.0, 12.0, 10.0, 10.2, fill=(180, 30, 30), width=0.6) # Red needle
+    draw_ellipse(d, size, 7.5, 11.5, 8.5, 12.5, fill=(30, 30, 30))
+    return im
+
+def render_transformer_side(size):
+    im = Image.new("RGBA", (size, size), (42, 46, 54, 255))
+    d = ImageDraw.Draw(im)
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(72, 80, 94), width=1.0)
+    # Corrugated cooling radiator fins
+    fin_count = 8
+    fin_w = size / float(fin_count)
+    for i in range(fin_count):
+        x_start = int(i * fin_w)
+        x_mid = int(x_start + fin_w * 0.45)
+        x_end = int(x_start + fin_w)
+        d.rectangle([x_start, sc(2.0, size), x_mid, sc(14.0, size)], fill=(65, 72, 84))
+        d.rectangle([x_mid, sc(2.0, size), x_end, sc(14.0, size)], fill=(28, 30, 36))
+    return im
+
+def render_transformer_top(size):
+    im = Image.new("RGBA", (size, size), (48, 54, 62, 255))
+    d = ImageDraw.Draw(im)
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(78, 86, 100), width=1.0)
+    # Round inspection manhole cover
+    draw_ellipse(d, size, 3.5, 3.5, 12.5, 12.5, fill=(38, 42, 50), outline=(85, 95, 110))
+    # Bolt circle
     for i in range(8):
-        d.point([(2+i, 13-i)], fill=(110, 70, 40))
-        d.point([(3+i, 13-i)], fill=(140, 95, 55))
-    # Brass ferrule
-    d.point([(9, 6), (10, 5)], fill=(200, 150, 50))
-    # Heavy forged hammer head (10, 2) to (14, 6)
-    d.rectangle([9, 2, 14, 5], fill=(60, 65, 75))
-    d.rectangle([8, 1, 15, 4], fill=(85, 95, 110))
-    d.line([(9, 1), (14, 1)], fill=(140, 155, 175))
-    d.line([(8, 4), (15, 4)], fill=(40, 45, 52))
-    im.save(os.path.join(ITEMS_DIR, "engineer_hammer.png"))
+        import math
+        ang = i * (math.pi / 4)
+        bx = 8.0 + 3.3 * math.cos(ang)
+        by = 8.0 + 3.3 * math.sin(ang)
+        draw_ellipse(d, size, bx - 0.4, by - 0.4, bx + 0.4, by + 0.4, fill=(135, 145, 160))
+    return im
 
-def make_voltmeter():
-    im = new_img()
+def render_breaker_switch(size):
+    im = Image.new("RGBA", (size, size), (32, 35, 42, 255))
     d = ImageDraw.Draw(im)
-    # Brass circular meter body
-    d.ellipse([2, 3, 13, 14], fill=(180, 140, 50), outline=(220, 185, 80))
-    d.ellipse([4, 5, 11, 12], fill=(235, 230, 215))
-    # Dial markings & needle
-    d.arc([5, 6, 10, 11], start=180, end=0, fill=(70, 70, 70))
-    d.line([(7, 10), (9, 7)], fill=(190, 30, 30))
-    # Probe leads (Red & Black) extending upwards
-    d.line([(5, 3), (3, 0)], fill=(200, 40, 40))
-    d.line([(10, 3), (12, 0)], fill=(30, 30, 30))
-    d.point([(3, 0), (12, 0)], fill=(210, 215, 225)) # metal tips
-    im.save(os.path.join(ITEMS_DIR, "voltmeter.png"))
+    # Slate / ceramic switchboard base
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(60, 68, 80), width=1.0)
+    # Heavy copper knife jaws (stationary contacts)
+    draw_rect(d, size, 3.0, 2.0, 6.0, 5.0, fill=(215, 130, 50), outline=(130, 70, 25))
+    draw_rect(d, size, 10.0, 2.0, 13.0, 5.0, fill=(215, 130, 50), outline=(130, 70, 25))
+    draw_rect(d, size, 3.0, 11.0, 6.0, 14.0, fill=(215, 130, 50), outline=(130, 70, 25))
+    draw_rect(d, size, 10.0, 11.0, 13.0, 14.0, fill=(215, 130, 50), outline=(130, 70, 25))
+    # Movable switch knife blades
+    draw_rect(d, size, 3.5, 4.0, 5.5, 12.0, fill=(240, 160, 70))
+    draw_rect(d, size, 10.5, 4.0, 12.5, 12.0, fill=(240, 160, 70))
+    # Insulated red operating crossbar handle
+    draw_rect(d, size, 2.0, 7.0, 14.0, 9.0, fill=(185, 30, 30), outline=(110, 18, 18))
+    draw_rect(d, size, 6.5, 5.5, 9.5, 10.5, fill=(220, 45, 45), outline=(130, 20, 20))
+    return im
 
-def make_wire_cutters():
-    im = new_img()
+def render_heavy_accumulator_side(size):
+    im = Image.new("RGBA", (size, size), (44, 48, 56, 255))
     d = ImageDraw.Draw(im)
-    # Insulated red/yellow rubber handles
-    for i in range(7):
-        d.point([(2+i, 14-i)], fill=(210, 40, 40))
-        d.point([(1+i, 14-i)], fill=(240, 80, 80))
-        d.point([(13-i, 14-i)], fill=(210, 40, 40))
-        d.point([(14-i, 14-i)], fill=(160, 25, 25))
-    # Center pivot bolt
-    d.ellipse([6, 6, 9, 9], fill=(130, 140, 155), outline=(60, 65, 75))
-    # Hardened steel cutting blades
-    d.polygon([(5, 5), (3, 1), (7, 4)], fill=(150, 160, 175))
-    d.polygon([(10, 5), (12, 1), (8, 4)], fill=(120, 130, 145))
-    d.line([(3, 1), (5, 5)], fill=(210, 220, 235))
-    im.save(os.path.join(ITEMS_DIR, "wire_cutters.png"))
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(75, 82, 95), width=1.0)
+    # Industrial hazard warning stripes on lower band
+    sw = size / 8.0
+    for i in range(8):
+        c = (235, 195, 35) if i % 2 == 0 else (28, 30, 35)
+        d.polygon([(i*sw, sc(12.0, size)), ((i+1)*sw, sc(12.0, size)), ((i+0.5)*sw, sc(15.5, size)), ((i-0.5)*sw, sc(15.5, size))], fill=c)
+    # Liquid electrolyte level sight glass
+    draw_rect(d, size, 11.5, 2.5, 13.5, 10.5, fill=(18, 20, 24), outline=(85, 95, 110))
+    draw_rect(d, size, 12.0, 5.0, 13.0, 10.0, fill=(45, 180, 225)) # Cyan acid level
+    # Voltmeter meter face on side
+    draw_ellipse(d, size, 3.5, 3.5, 8.5, 8.5, fill=(225, 220, 205), outline=(70, 78, 90))
+    draw_line(d, size, 6.0, 6.0, 7.5, 4.8, fill=(180, 30, 30), width=0.5)
+    return im
 
-def make_wire_coil(name, wire_col, highlight_col, spool_steel=False):
-    im = new_img()
+def render_heavy_accumulator_top(size):
+    im = Image.new("RGBA", (size, size), (46, 50, 58, 255))
     d = ImageDraw.Draw(im)
-    flange_col = (70, 75, 85) if spool_steel else (105, 68, 38)
-    flange_hi = (110, 120, 135) if spool_steel else (145, 95, 55)
-    # Wooden/Steel spool flanges
-    d.ellipse([1, 4, 6, 12], fill=flange_col, outline=flange_hi)
-    d.ellipse([10, 4, 15, 12], fill=flange_col, outline=flange_hi)
-    # Wound wire core
-    d.rectangle([4, 5, 12, 11], fill=wire_col)
-    for x in range(5, 12, 2):
-        d.line([(x, 5), (x, 11)], fill=highlight_col)
-    # Center spindle axle hole
-    d.ellipse([2, 7, 4, 9], fill=(20, 20, 24))
-    d.ellipse([11, 7, 13, 9], fill=(20, 20, 24))
-    im.save(os.path.join(ITEMS_DIR, f"{name}.png"))
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(78, 86, 98), width=1.0)
+    # Positive terminal (Red ring, brass post)
+    draw_ellipse(d, size, 2.5, 6.0, 6.5, 10.0, fill=(180, 30, 30), outline=(90, 15, 15))
+    draw_ellipse(d, size, 3.5, 7.0, 5.5, 9.0, fill=(235, 175, 60))
+    # Negative terminal (Black ring, lead post)
+    draw_ellipse(d, size, 9.5, 6.0, 13.5, 10.0, fill=(25, 28, 32), outline=(65, 72, 82))
+    draw_ellipse(d, size, 10.5, 7.0, 12.5, 9.0, fill=(150, 160, 175))
+    # Central gas relief vent valve
+    draw_ellipse(d, size, 6.5, 6.5, 9.5, 9.5, fill=(60, 66, 76), outline=(90, 100, 115))
+    return im
 
-def make_material_item(name, color_palette):
-    im = new_img()
+def render_power_plant_controller(size):
+    im = Image.new("RGBA", (size, size), (38, 42, 50, 255))
     d = ImageDraw.Draw(im)
-    if name == "treated_wood":
-        d.rectangle([2, 4, 13, 11], fill=(55, 38, 25), outline=(35, 22, 14))
-        d.line([(3, 6), (12, 6)], fill=(68, 48, 32))
-        d.line([(3, 9), (12, 9)], fill=(44, 29, 19))
-    elif "wire" in name or "strand" in name:
-        base, hi = color_palette
-        for i in range(12):
-            d.point([(2+i, 13-i)], fill=base)
-            d.point([(3+i, 13-i)], fill=hi)
-            d.point([(1+i, 14-i)], fill=(base[0]-30, base[1]-30, base[2]-30))
-    elif name == "ceramic_insulator":
-        d.rectangle([5, 2, 10, 13], fill=(230, 235, 240))
-        d.line([(4, 4), (11, 4)], fill=(255, 255, 255))
-        d.line([(4, 7), (11, 7)], fill=(255, 255, 255))
-        d.line([(4, 10), (11, 10)], fill=(255, 255, 255))
-        d.line([(5, 5), (10, 5)], fill=(180, 185, 195))
-        d.line([(5, 8), (10, 8)], fill=(180, 185, 195))
-        d.line([(5, 11), (10, 11)], fill=(180, 185, 195))
-    im.save(os.path.join(ITEMS_DIR, f"{name}.png"))
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(72, 80, 95), width=1.0)
+    draw_rect(d, size, 1.5, 1.5, 14.5, 14.5, fill=(28, 32, 38))
+    # Dual round analog meters (Volts & Amps)
+    draw_ellipse(d, size, 2.5, 2.5, 7.5, 7.5, fill=(230, 225, 210), outline=(80, 90, 105))
+    draw_line(d, size, 5.0, 5.0, 6.5, 3.8, fill=(190, 25, 25), width=0.5)
+    draw_ellipse(d, size, 8.5, 2.5, 13.5, 7.5, fill=(230, 225, 210), outline=(80, 90, 105))
+    draw_line(d, size, 11.0, 5.0, 12.2, 4.0, fill=(190, 25, 25), width=0.5)
+    # LED status indicator lamps (Green, Amber, Red)
+    draw_ellipse(d, size, 3.0, 9.5, 5.0, 11.5, fill=(40, 215, 60), outline=(15, 90, 25))
+    draw_ellipse(d, size, 7.0, 9.5, 9.0, 11.5, fill=(245, 185, 30), outline=(110, 80, 12))
+    draw_ellipse(d, size, 11.0, 9.5, 13.0, 11.5, fill=(225, 35, 35), outline=(100, 15, 15))
+    # Rotary master governor switch
+    draw_ellipse(d, size, 6.0, 12.5, 10.0, 15.5, fill=(50, 55, 65), outline=(95, 105, 120))
+    draw_rect(d, size, 7.5, 12.0, 8.5, 16.0, fill=(185, 145, 60))
+    return im
 
-# Run all texture generators
-make_treated_wood_pole()
-make_steel_truss_pole()
-make_pole_crossarm()
-make_connector("lv_wire_connector", (200, 105, 45), (215, 205, 190), (255, 160, 85))
-make_connector("mv_wire_connector", (225, 185, 50), (180, 120, 85), (255, 225, 110))
-make_connector("hv_wire_connector", (90, 100, 115), (235, 240, 245), (150, 165, 185))
-make_relay("lv_wire_relay", (215, 205, 190), (200, 105, 45))
-make_relay("mv_wire_relay", (180, 120, 85), (225, 185, 50))
-make_relay("hv_wire_relay", (235, 240, 245), (90, 100, 115))
-make_transformer()
-make_breaker_switch()
-make_heavy_accumulator()
-make_generator_casing()
-make_alternator_coil()
-make_turbine_rotor()
-make_exhaust_stack()
-make_power_plant_controller()
+def render_generator_casing(size):
+    im = Image.new("RGBA", (size, size), (45, 48, 55, 255))
+    d = ImageDraw.Draw(im)
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(75, 82, 95), width=1.0)
+    # Heavy machine inspection hatch
+    draw_rect(d, size, 2.5, 2.5, 13.5, 13.5, fill=(35, 38, 44), outline=(60, 66, 78))
+    # Ventilation louvers
+    for ly in [4.5, 6.5, 8.5, 10.5]:
+        draw_rect(d, size, 4.0, ly, 12.0, ly + 1.0, fill=(20, 22, 26))
+        draw_line(d, size, 4.0, ly, 12.0, ly, fill=(65, 72, 85), width=0.4)
+    # Perimeter casing bolts
+    for bx, by in [(1.5, 1.5), (14.5, 1.5), (1.5, 14.5), (14.5, 14.5), (8.0, 1.5), (8.0, 14.5)]:
+        draw_ellipse(d, size, bx - 0.4, by - 0.4, bx + 0.4, by + 0.4, fill=(130, 140, 155))
+    return im
 
-make_engineer_hammer()
-make_voltmeter()
-make_wire_cutters()
-make_wire_coil("lv_wire_coil", (195, 100, 40), (245, 145, 75), spool_steel=False)
-make_wire_coil("mv_wire_coil", (220, 175, 45), (255, 215, 95), spool_steel=False)
-make_wire_coil("hv_wire_coil", (120, 130, 145), (185, 195, 210), spool_steel=True)
-make_material_item("treated_wood", None)
-make_material_item("copper_wire", ((200, 105, 45), (245, 145, 75)))
-make_material_item("electrum_wire", ((225, 185, 50), (255, 225, 110)))
-make_material_item("steel_strand", ((130, 140, 155), (185, 195, 210)))
-make_material_item("ceramic_insulator", None)
+def render_alternator_coil(size):
+    im = Image.new("RGBA", (size, size), (32, 34, 40, 255))
+    d = ImageDraw.Draw(im)
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(65, 72, 84), width=1.0)
+    # Dense copper winding coils
+    coil_count = 10
+    step = 14.0 / coil_count
+    for i in range(coil_count):
+        y = 1.0 + i * step
+        draw_rect(d, size, 2.0, y, 14.0, y + step * 0.85, fill=(205, 115, 45), outline=(130, 65, 20))
+        draw_line(d, size, 2.0, y + step * 0.2, 14.0, y + step * 0.2, fill=(255, 170, 85), width=0.4)
+    return im
 
-print("All textures created!")
+def render_turbine_rotor(size):
+    im = Image.new("RGBA", (size, size), (36, 40, 48, 255))
+    d = ImageDraw.Draw(im)
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(70, 78, 92), width=1.0)
+    # Curved impeller / turbine blade swirl
+    for i in range(8):
+        import math
+        ang = i * (math.pi / 4)
+        x1 = 8.0 + 2.0 * math.cos(ang)
+        y1 = 8.0 + 2.0 * math.sin(ang)
+        x2 = 8.0 + 6.5 * math.cos(ang + 0.4)
+        y2 = 8.0 + 6.5 * math.sin(ang + 0.4)
+        draw_line(d, size, x1, y1, x2, y2, fill=(150, 165, 185), width=1.2)
+        draw_line(d, size, x1, y1, x2, y2, fill=(80, 90, 105), width=0.5)
+    # Central rotor hub
+    draw_ellipse(d, size, 5.5, 5.5, 10.5, 10.5, fill=(55, 62, 72), outline=(95, 105, 122))
+    draw_ellipse(d, size, 7.0, 7.0, 9.0, 9.0, fill=(130, 140, 155))
+    return im
 
-# --- BLOCK MODEL & BLOCKSTATE GENERATION ---
+def render_exhaust_stack_side(size):
+    im = Image.new("RGBA", (size, size), (28, 30, 35, 255))
+    d = ImageDraw.Draw(im)
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(60, 66, 76), width=1.0)
+    # Rolled steel plate horizontal seams and rivet lines
+    for y_seam in [5.0, 11.0]:
+        draw_line(d, size, 0, y_seam, 16, y_seam, fill=(75, 82, 95), width=0.8)
+        draw_line(d, size, 0, y_seam + 0.8, 16, y_seam + 0.8, fill=(15, 16, 20), width=0.5)
+        for rx in [1.5, 4.5, 8.0, 11.5, 14.5]:
+            draw_ellipse(d, size, rx - 0.4, y_seam - 0.4, rx + 0.4, y_seam + 0.4, fill=(120, 130, 145))
+    return im
 
-BLOCKS = [
+def render_exhaust_stack_top(size):
+    im = Image.new("RGBA", (size, size), (32, 35, 42, 255))
+    d = ImageDraw.Draw(im)
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(65, 72, 84), width=1.0)
+    # Flue bore opening
+    draw_ellipse(d, size, 2.0, 2.0, 14.0, 14.0, fill=(12, 14, 18), outline=(80, 90, 105))
+    # Interior dark soot gradient
+    draw_ellipse(d, size, 4.0, 4.0, 12.0, 12.0, fill=(5, 6, 8))
+    # Protective metal spark arrestor cross-grid
+    draw_line(d, size, 2.0, 8.0, 14.0, 8.0, fill=(60, 68, 78), width=0.6)
+    draw_line(d, size, 8.0, 2.0, 8.0, 14.0, fill=(60, 68, 78), width=0.6)
+    return im
+
+# --- ITEM TEXTURES ---
+
+def render_engineer_hammer(size):
+    im = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    # Hickory wood handle running diagonally
+    draw_line(d, size, 3.0, 13.0, 11.0, 5.0, fill=(145, 95, 55), width=1.5)
+    draw_line(d, size, 3.0, 13.0, 11.0, 5.0, fill=(195, 135, 85), width=0.6)
+    # Brass ferrule collar
+    draw_line(d, size, 9.5, 6.5, 11.5, 4.5, fill=(215, 160, 60), width=1.8)
+    # Heavy forged cross-peen hammer head
+    draw_line(d, size, 8.0, 2.5, 13.5, 8.0, fill=(75, 82, 94), width=3.0)
+    draw_line(d, size, 7.5, 2.0, 14.0, 8.5, fill=(130, 140, 155), width=1.0)
+    # Striking faces
+    draw_ellipse(d, size, 6.5, 1.5, 9.0, 4.0, fill=(160, 172, 190))
+    draw_ellipse(d, size, 12.0, 7.0, 14.5, 9.5, fill=(160, 172, 190))
+    return im
+
+def render_voltmeter(size):
+    im = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    # Brass/Bakelite instrument enclosure
+    draw_rect(d, size, 2.5, 2.0, 13.5, 14.0, fill=(50, 36, 25), outline=(180, 135, 55))
+    # Round meter face
+    draw_ellipse(d, size, 4.0, 3.5, 12.0, 9.5, fill=(235, 230, 215), outline=(85, 95, 110))
+    # Scale arc & needle
+    draw_line(d, size, 8.0, 8.0, 10.5, 5.0, fill=(190, 25, 25), width=0.8)
+    draw_ellipse(d, size, 7.5, 7.5, 8.5, 8.5, fill=(30, 30, 30))
+    # Binding jacks (+ Red, - Black)
+    draw_ellipse(d, size, 4.5, 11.0, 6.5, 13.0, fill=(200, 35, 35), outline=(60, 10, 10))
+    draw_ellipse(d, size, 9.5, 11.0, 11.5, 13.0, fill=(30, 32, 38), outline=(70, 78, 88))
+    return im
+
+def render_wire_cutters(size):
+    im = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    # Dipped insulated red handles
+    draw_line(d, size, 2.5, 13.5, 7.0, 8.5, fill=(205, 35, 35), width=2.0)
+    draw_line(d, size, 13.5, 13.5, 9.0, 8.5, fill=(205, 35, 35), width=2.0)
+    draw_line(d, size, 2.5, 13.5, 7.0, 8.5, fill=(245, 75, 75), width=0.8)
+    draw_line(d, size, 13.5, 13.5, 9.0, 8.5, fill=(245, 75, 75), width=0.8)
+    # Heavy pivot pivot bolt
+    draw_ellipse(d, size, 6.8, 6.8, 9.2, 9.2, fill=(60, 66, 76), outline=(130, 140, 155))
+    # Steel cutting jaws
+    draw_polygon = d.polygon
+    draw_line(d, size, 7.0, 7.0, 5.0, 2.5, fill=(140, 150, 165), width=2.2)
+    draw_line(d, size, 9.0, 7.0, 11.0, 2.5, fill=(140, 150, 165), width=2.2)
+    # Polished carbide cutting edges
+    draw_line(d, size, 6.5, 6.0, 5.5, 2.5, fill=(225, 235, 245), width=0.8)
+    draw_line(d, size, 9.5, 6.0, 10.5, 2.5, fill=(225, 235, 245), width=0.8)
+    return im
+
+def render_wire_coil(size, wire_col, wire_hi, steel_spool=False):
+    im = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    # Spool flanges (wood or steel)
+    flange_col = (55, 60, 70) if steel_spool else (85, 55, 32)
+    flange_edge = (90, 100, 115) if steel_spool else (125, 80, 48)
+    draw_ellipse(d, size, 1.5, 1.5, 14.5, 6.5, fill=flange_col, outline=flange_edge)
+    draw_ellipse(d, size, 1.5, 9.5, 14.5, 14.5, fill=flange_col, outline=flange_edge)
+    # Spool core wound with wire coils
+    draw_rect(d, size, 2.5, 4.0, 13.5, 12.0, fill=wire_col)
+    # Individual wound strands
+    for y in range(sc(4.0, size), sc(12.0, size), max(1, int(size / 16))):
+        c = wire_hi if (y // max(1, int(size / 32))) % 2 == 0 else wire_col
+        d.line([(sc(2.5, size), y), (sc(13.5, size), y)], fill=c)
+    # Center arbor hole
+    draw_ellipse(d, size, 6.5, 3.0, 9.5, 5.0, fill=(20, 22, 26))
+    return im
+
+def render_material_item(size, item_name):
+    im = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    if item_name == "treated_wood":
+        # Stack of creosote timber planks
+        draw_rect(d, size, 2.0, 4.0, 14.0, 8.0, fill=(48, 32, 20), outline=(26, 17, 10))
+        draw_line(d, size, 2.0, 4.0, 14.0, 4.0, fill=(75, 50, 32), width=0.6)
+        draw_rect(d, size, 2.0, 9.0, 14.0, 13.0, fill=(48, 32, 20), outline=(26, 17, 10))
+        draw_line(d, size, 2.0, 9.0, 14.0, 9.0, fill=(75, 50, 32), width=0.6)
+    elif item_name == "copper_wire":
+        # Braided copper wire strand loop
+        draw_ellipse(d, size, 3.0, 3.0, 13.0, 13.0, outline=(215, 125, 45), width=2.0)
+        draw_ellipse(d, size, 3.5, 3.5, 12.5, 12.5, outline=(255, 170, 80), width=0.8)
+    elif item_name == "electrum_wire":
+        # Lustrous electrum strand loop
+        draw_ellipse(d, size, 3.0, 3.0, 13.0, 13.0, outline=(225, 185, 45), width=2.0)
+        draw_ellipse(d, size, 3.5, 3.5, 12.5, 12.5, outline=(255, 230, 110), width=0.8)
+    elif item_name == "steel_strand":
+        # High tensile steel cable loop
+        draw_ellipse(d, size, 3.0, 3.0, 13.0, 13.0, outline=(90, 100, 115), width=2.2)
+        draw_ellipse(d, size, 3.5, 3.5, 12.5, 12.5, outline=(155, 170, 190), width=0.8)
+    elif item_name == "ceramic_insulator":
+        # Standalone porcelain insulator component
+        draw_ellipse(d, size, 3.5, 8.0, 12.5, 13.0, fill=(230, 225, 215), outline=(130, 130, 130))
+        draw_ellipse(d, size, 5.0, 4.0, 11.0, 9.0, fill=(245, 240, 230), outline=(130, 130, 130))
+        draw_ellipse(d, size, 6.5, 2.0, 9.5, 5.0, fill=(75, 82, 92))
+    return im
+
+# --- PACK ICON GENERATOR ---
+
+def render_pack_icon():
+    size = 1024
+    im = Image.new("RGBA", (size, size), (24, 28, 36, 255))
+    d = ImageDraw.Draw(im)
+    # Atmospheric twilight industrial sky gradient
+    for y in range(size):
+        fy = y / float(size)
+        r = int(35 * (1 - fy) + 210 * fy * (1 - fy) * 2 + 15 * fy)
+        g = int(38 * (1 - fy) + 120 * fy * (1 - fy) * 2 + 20 * fy)
+        b = int(55 * (1 - fy) + 60 * fy * (1 - fy) * 2 + 35 * fy)
+        d.line([(0, y), (size - 1, y)], fill=(r, g, b))
+
+    # Center power pole silhouette with crossarms
+    px = size // 2
+    d.rectangle([px - 28, int(size * 0.22), px + 28, size], fill=(32, 22, 15))
+    # Crossarms
+    for cy in [int(size * 0.30), int(size * 0.44)]:
+        d.rectangle([px - 380, cy - 22, px + 380, cy + 22], fill=(42, 28, 18))
+        # Insulators on crossarms
+        for ix in [px - 340, px - 180, px + 180, px + 340]:
+            d.rectangle([ix - 18, cy - 65, ix + 18, cy - 22], fill=(230, 225, 215))
+
+    # High-voltage catenary power lines stretching across the screen
+    for cy, sag in [(int(size * 0.25), 60), (int(size * 0.39), 55)]:
+        for ix in [px - 340, px - 180, px + 180, px + 340]:
+            # Arc curve
+            points = [(0, cy - 40), (ix // 2, cy + sag), (ix, cy), ((ix + size) // 2, cy + sag), (size, cy - 40)]
+            d.line(points, fill=(20, 22, 25), width=8)
+
+    # High-voltage electric arc spark glow
+    d.ellipse([px - 180 - 30, int(size * 0.25) - 30, px - 180 + 30, int(size * 0.25) + 30], fill=(120, 220, 255, 160))
+    d.ellipse([px - 180 - 10, int(size * 0.25) - 10, px - 180 + 10, int(size * 0.25) + 10], fill=(255, 255, 255, 255))
+
+    # Badge overlay banner at bottom
+    d.rectangle([0, int(size * 0.76), size, int(size * 0.96)], fill=(16, 18, 22, 240))
+    d.line([(0, int(size * 0.76)), (size, int(size * 0.76))], fill=(245, 175, 45), width=10)
+    d.line([(0, int(size * 0.96)), (size, int(size * 0.96))], fill=(245, 175, 45), width=10)
+
+    return im
+
+# ==============================================================================
+# BATCH GENERATION OF TEXTURES (32x32 & 1024x1024)
+# ==============================================================================
+
+TEXTURE_DEFS = {
+    "block": [
+        ("treated_wood_pole", render_treated_wood_pole),
+        ("treated_wood_pole_end", render_treated_wood_pole_end),
+        ("pole_crossarm", render_pole_crossarm),
+        ("pole_crossarm_end", render_pole_crossarm_end),
+        ("steel_bracket", render_steel_bracket),
+        ("steel_truss_pole", render_steel_truss_pole),
+        ("relay_bracket", render_relay_bracket),
+        ("relay_insulator_lv", lambda s: render_insulator(s, (230, 225, 215), (255, 250, 242), (180, 175, 165))),
+        ("relay_insulator_mv", lambda s: render_insulator(s, (190, 115, 65), (235, 155, 95), (140, 75, 35))),
+        ("relay_insulator_hv", lambda s: render_insulator(s, (120, 135, 155), (175, 190, 210), (75, 90, 110))),
+        ("wire_clamp_lv", lambda s: render_wire_clamp(s, (205, 110, 45), (255, 165, 90))),
+        ("wire_clamp_mv", lambda s: render_wire_clamp(s, (225, 180, 50), (255, 220, 110))),
+        ("wire_clamp_hv", lambda s: render_wire_clamp(s, (110, 120, 135), (175, 185, 200))),
+        ("connector_base", render_connector_base),
+        ("connector_bushing_lv", lambda s: render_insulator(s, (220, 215, 205), (250, 245, 235), (170, 165, 155))),
+        ("connector_bushing_mv", lambda s: render_insulator(s, (185, 110, 60), (230, 150, 90), (135, 70, 30))),
+        ("connector_bushing_hv", lambda s: render_insulator(s, (115, 130, 150), (170, 185, 205), (70, 85, 105))),
+        ("connector_terminal", render_connector_terminal),
+        ("transformer_front", render_transformer_front),
+        ("transformer_side", render_transformer_side),
+        ("transformer_top", render_transformer_top),
+        ("breaker_switch", render_breaker_switch),
+        ("heavy_accumulator_side", render_heavy_accumulator_side),
+        ("heavy_accumulator_top", render_heavy_accumulator_top),
+        ("power_plant_controller", render_power_plant_controller),
+        ("generator_casing", render_generator_casing),
+        ("alternator_coil", render_alternator_coil),
+        ("turbine_rotor", render_turbine_rotor),
+        ("exhaust_stack_side", render_exhaust_stack_side),
+        ("exhaust_stack_top", render_exhaust_stack_top),
+    ],
+    "item": [
+        ("engineer_hammer", render_engineer_hammer),
+        ("voltmeter", render_voltmeter),
+        ("wire_cutters", render_wire_cutters),
+        ("lv_wire_coil", lambda s: render_wire_coil(s, (205, 110, 45), (255, 165, 90), steel_spool=False)),
+        ("mv_wire_coil", lambda s: render_wire_coil(s, (225, 180, 50), (255, 220, 110), steel_spool=False)),
+        ("hv_wire_coil", lambda s: render_wire_coil(s, (130, 140, 155), (190, 200, 215), steel_spool=True)),
+        ("treated_wood", lambda s: render_material_item(s, "treated_wood")),
+        ("copper_wire", lambda s: render_material_item(s, "copper_wire")),
+        ("electrum_wire", lambda s: render_material_item(s, "electrum_wire")),
+        ("steel_strand", lambda s: render_material_item(s, "steel_strand")),
+        ("ceramic_insulator", lambda s: render_material_item(s, "ceramic_insulator")),
+    ]
+}
+
+print("Rendering 32x32 textures for default mod...")
+for category, items in TEXTURE_DEFS.items():
+    out_dir = BLOCKS_DIR_32 if category == "block" else ITEMS_DIR_32
+    for name, func in items:
+        im32 = func(32)
+        im32.save(os.path.join(out_dir, f"{name}.png"))
+
+print("Rendering 1024x1024 textures for Ultra-HD resource pack...")
+for category, items in TEXTURE_DEFS.items():
+    out_dir = PACK_BLOCKS_DIR_1024 if category == "block" else PACK_ITEMS_DIR_1024
+    for name, func in items:
+        im1024 = func(1024)
+        im1024.save(os.path.join(out_dir, f"{name}.png"))
+
+# Create pack.mcmeta and pack.png for 1024x Resource Pack
+pack_meta = {
+    "pack": {
+        "pack_format": 61,
+        "description": "Power Grid 1024x Ultra-HD Textures (v1.0.3)"
+    }
+}
+write_json(os.path.join(PACK_DIR, "pack.mcmeta"), pack_meta)
+pack_icon = render_pack_icon()
+pack_icon.save(os.path.join(PACK_DIR, "pack.png"))
+
+print("Zipping 1024x resource pack...")
+os.makedirs(os.path.dirname(OUTPUT_ZIP), exist_ok=True)
+with zipfile.ZipFile(OUTPUT_ZIP, "w", zipfile.ZIP_DEFLATED) as zipf:
+    for root, dirs, files in os.walk(PACK_DIR):
+        for file in files:
+            full_p = os.path.join(root, file)
+            rel_p = os.path.relpath(full_p, PACK_DIR)
+            zipf.write(full_p, rel_p)
+
+# Copy to CurseForge Andrew profile resourcepacks folder if present
+if os.path.exists(CURSEFORGE_RP_DIR):
+    shutil.copy2(OUTPUT_ZIP, os.path.join(CURSEFORGE_RP_DIR, os.path.basename(OUTPUT_ZIP)))
+    print(f"Copied resource pack to {CURSEFORGE_RP_DIR}")
+
+# ==============================================================================
+# 3D BLOCK MODEL JSON BUILDERS
+# ==============================================================================
+
+def make_element(x1, y1, z1, x2, y2, z2, tex, uv=None, cullface=None):
+    if uv is None:
+        u1, v1 = min(x1, z1), min(y1, z1)
+        u2, v2 = max(x2, z2), max(y2, z2)
+    faces = {}
+    for face in ["down", "up", "north", "south", "west", "east"]:
+        f_data = {"texture": f"#{tex}"}
+        if cullface and face in cullface:
+            f_data["cullface"] = face
+        faces[face] = f_data
+    return {
+        "from": [x1, y1, z1],
+        "to": [x2, y2, z2],
+        "faces": faces
+    }
+
+# 1. Treated Wood Pole Models (Rounded 8-sided column with steel bands & steps)
+def build_pole_elements(top_cap=False, bottom_base=False):
+    elements = [
+        # Octagonal column core
+        make_element(4.5, 0, 5.0, 11.5, 16, 11.0, "pole"),
+        make_element(5.0, 0, 4.5, 11.0, 16, 11.5, "pole"),
+        # Steel reinforcement collars
+        make_element(4.2, 3.0, 4.7, 11.8, 4.0, 11.3, "bracket"),
+        make_element(4.7, 3.0, 4.2, 11.3, 4.0, 11.8, "bracket"),
+        make_element(4.2, 12.0, 4.7, 11.8, 13.0, 11.3, "bracket"),
+        make_element(4.7, 12.0, 4.2, 11.3, 13.0, 11.8, "bracket"),
+        # Climbing rungs
+        make_element(11.5, 6.0, 7.5, 13.5, 6.8, 8.5, "bracket"),
+        make_element(2.5, 10.0, 7.5, 4.5, 10.8, 8.5, "bracket")
+    ]
+    if top_cap:
+        elements.append(make_element(4.8, 15.8, 4.8, 11.2, 16.3, 11.2, "end", cullface=["up"]))
+    if bottom_base:
+        elements.append(make_element(4.0, 0.0, 4.0, 12.0, 2.0, 12.0, "bracket", cullface=["down"]))
+    return elements
+
+pole_textures = {
+    "particle": "powergrid:block/treated_wood_pole",
+    "pole": "powergrid:block/treated_wood_pole",
+    "end": "powergrid:block/treated_wood_pole_end",
+    "bracket": "powergrid:block/steel_bracket"
+}
+
+write_json(os.path.join(MODELS_BLOCK, "treated_wood_pole.json"), {
+    "textures": pole_textures,
+    "elements": build_pole_elements(False, False)
+})
+write_json(os.path.join(MODELS_BLOCK, "treated_wood_pole_top.json"), {
+    "textures": pole_textures,
+    "elements": build_pole_elements(True, False)
+})
+write_json(os.path.join(MODELS_BLOCK, "treated_wood_pole_bottom.json"), {
+    "textures": pole_textures,
+    "elements": build_pole_elements(False, True)
+})
+write_json(os.path.join(MODELS_BLOCK, "treated_wood_pole_single.json"), {
+    "textures": pole_textures,
+    "elements": build_pole_elements(True, True)
+})
+
+# 2. Power Pole Crossarm Models (Multipart Beam + Brackets + Endcaps)
+crossarm_textures = {
+    "particle": "powergrid:block/pole_crossarm",
+    "wood": "powergrid:block/pole_crossarm",
+    "end": "powergrid:block/pole_crossarm_end",
+    "bracket": "powergrid:block/steel_bracket"
+}
+
+# Beams along X and Z
+write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_beam_x.json"), {
+    "textures": crossarm_textures,
+    "elements": [
+        # Octagonal horizontal beam along X
+        make_element(0.0, 10.5, 5.0, 16.0, 15.5, 11.0, "wood"),
+        make_element(0.0, 10.0, 5.5, 16.0, 16.0, 10.5, "wood"),
+        # Central reinforcement strap
+        make_element(7.2, 9.8, 4.8, 8.8, 16.2, 11.2, "bracket")
+    ]
+})
+
+write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_beam_z.json"), {
+    "textures": crossarm_textures,
+    "elements": [
+        # Octagonal horizontal beam along Z
+        make_element(5.0, 10.5, 0.0, 11.0, 15.5, 16.0, "wood"),
+        make_element(5.5, 10.0, 0.0, 10.5, 16.0, 16.0, "wood"),
+        # Central reinforcement strap
+        make_element(4.8, 9.8, 7.2, 11.2, 16.2, 8.8, "bracket")
+    ]
+})
+
+# Pole mounting brackets
+write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_bracket_neg_x.json"), {
+    "textures": crossarm_textures,
+    "elements": [
+        make_element(0.0, 9.0, 4.5, 2.0, 16.5, 11.5, "bracket"),
+        make_element(-2.0, 10.0, 4.2, 0.0, 16.0, 11.8, "bracket"),
+        make_element(2.0, 12.0, 5.0, 2.6, 13.5, 6.0, "bracket"),
+        make_element(2.0, 12.0, 10.0, 2.6, 13.5, 11.0, "bracket")
+    ]
+})
+write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_bracket_pos_x.json"), {
+    "textures": crossarm_textures,
+    "elements": [
+        make_element(14.0, 9.0, 4.5, 16.0, 16.5, 11.5, "bracket"),
+        make_element(16.0, 10.0, 4.2, 18.0, 16.0, 11.8, "bracket"),
+        make_element(13.4, 12.0, 5.0, 14.0, 13.5, 6.0, "bracket"),
+        make_element(13.4, 12.0, 10.0, 14.0, 13.5, 11.0, "bracket")
+    ]
+})
+write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_bracket_neg_z.json"), {
+    "textures": crossarm_textures,
+    "elements": [
+        make_element(4.5, 9.0, 0.0, 11.5, 16.5, 2.0, "bracket"),
+        make_element(4.2, 10.0, -2.0, 11.8, 16.0, 0.0, "bracket"),
+        make_element(5.0, 12.0, 2.0, 6.0, 13.5, 2.6, "bracket"),
+        make_element(10.0, 12.0, 2.0, 11.0, 13.5, 2.6, "bracket")
+    ]
+})
+write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_bracket_pos_z.json"), {
+    "textures": crossarm_textures,
+    "elements": [
+        make_element(4.5, 9.0, 14.0, 11.5, 16.5, 16.0, "bracket"),
+        make_element(4.2, 10.0, 16.0, 11.8, 16.0, 18.0, "bracket"),
+        make_element(5.0, 12.0, 13.4, 6.0, 13.5, 14.0, "bracket"),
+        make_element(10.0, 12.0, 13.4, 11.0, 13.5, 14.0, "bracket")
+    ]
+})
+
+# End caps
+write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_end_neg_x.json"), {
+    "textures": crossarm_textures,
+    "elements": [
+        make_element(0.0, 9.8, 4.8, 1.2, 16.2, 11.2, "bracket"),
+        make_element(2.0, 16.0, 7.2, 3.5, 17.5, 8.8, "bracket") # Insulator mounting pin
+    ]
+})
+write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_end_pos_x.json"), {
+    "textures": crossarm_textures,
+    "elements": [
+        make_element(14.8, 9.8, 4.8, 16.0, 16.2, 11.2, "bracket"),
+        make_element(12.5, 16.0, 7.2, 14.0, 17.5, 8.8, "bracket")
+    ]
+})
+write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_end_neg_z.json"), {
+    "textures": crossarm_textures,
+    "elements": [
+        make_element(4.8, 9.8, 0.0, 11.2, 16.2, 1.2, "bracket"),
+        make_element(7.2, 16.0, 2.0, 8.8, 17.5, 3.5, "bracket")
+    ]
+})
+write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_end_pos_z.json"), {
+    "textures": crossarm_textures,
+    "elements": [
+        make_element(4.8, 9.8, 14.8, 11.2, 16.2, 16.0, "bracket"),
+        make_element(7.2, 16.0, 12.5, 8.8, 17.5, 14.0, "bracket")
+    ]
+})
+
+# 3. Steel Truss Pole Model
+write_json(os.path.join(MODELS_BLOCK, "steel_truss_pole.json"), {
+    "textures": {
+        "particle": "powergrid:block/steel_truss_pole",
+        "truss": "powergrid:block/steel_truss_pole",
+        "bracket": "powergrid:block/steel_bracket"
+    },
+    "elements": [
+        # 4 Corner angle iron posts
+        make_element(4.0, 0.0, 4.0, 5.5, 16.0, 5.5, "bracket"),
+        make_element(10.5, 0.0, 4.0, 12.0, 16.0, 5.5, "bracket"),
+        make_element(4.0, 0.0, 10.5, 5.5, 16.0, 12.0, "bracket"),
+        make_element(10.5, 0.0, 10.5, 12.0, 16.0, 12.0, "bracket"),
+        # Center gusset plates and cross-lacing
+        make_element(5.0, 0.0, 5.0, 11.0, 16.0, 11.0, "truss")
+    ]
+})
+
+# 4. Wire Relay 3D Models (LV, MV, HV)
+def build_relay_model(tier, insul_tex, clamp_tex):
+    if tier == "lv":
+        elements = [
+            make_element(5.0, 0.0, 5.0, 11.0, 1.0, 11.0, "bracket", cullface=["down"]),
+            make_element(7.0, 1.0, 7.0, 9.0, 2.5, 9.0, "bracket"),
+            make_element(5.0, 2.5, 5.0, 11.0, 4.5, 11.0, "insulator"),
+            make_element(6.0, 4.5, 6.0, 10.0, 6.0, 10.0, "insulator"),
+            make_element(5.5, 6.0, 6.5, 10.5, 7.5, 9.5, "clamp"),
+            make_element(7.5, 7.5, 7.5, 8.5, 8.2, 8.5, "clamp")
+        ]
+    elif tier == "mv":
+        elements = [
+            make_element(4.5, 0.0, 4.5, 11.5, 1.0, 11.5, "bracket", cullface=["down"]),
+            make_element(7.0, 1.0, 7.0, 9.0, 2.0, 9.0, "bracket"),
+            make_element(4.0, 2.0, 4.0, 12.0, 4.0, 12.0, "insulator"),
+            make_element(6.0, 4.0, 6.0, 10.0, 4.8, 10.0, "bracket"),
+            make_element(5.0, 4.8, 5.0, 11.0, 6.8, 11.0, "insulator"),
+            make_element(6.0, 6.8, 6.0, 10.0, 8.0, 10.0, "insulator"),
+            make_element(5.0, 8.0, 6.0, 11.0, 9.5, 10.0, "clamp"),
+            make_element(6.5, 9.5, 7.5, 9.5, 10.2, 8.5, "clamp")
+        ]
+    else: # hv
+        elements = [
+            make_element(4.0, 0.0, 4.0, 12.0, 1.2, 12.0, "bracket", cullface=["down"]),
+            make_element(3.5, 1.2, 3.5, 12.5, 3.5, 12.5, "insulator"),
+            make_element(6.0, 3.5, 6.0, 10.0, 4.2, 10.0, "bracket"),
+            make_element(4.5, 4.2, 4.5, 11.5, 6.5, 11.5, "insulator"),
+            make_element(6.0, 6.5, 6.0, 10.0, 7.2, 10.0, "bracket"),
+            make_element(5.0, 7.2, 5.0, 11.0, 9.5, 11.0, "insulator"),
+            make_element(4.5, 9.5, 5.5, 11.5, 11.5, 10.5, "clamp"),
+            make_element(5.5, 11.5, 6.5, 10.5, 12.5, 9.5, "clamp")
+        ]
+    return {
+        "textures": {
+            "particle": f"powergrid:block/{insul_tex}",
+            "bracket": "powergrid:block/relay_bracket",
+            "insulator": f"powergrid:block/{insul_tex}",
+            "clamp": f"powergrid:block/{clamp_tex}"
+        },
+        "elements": elements
+    }
+
+write_json(os.path.join(MODELS_BLOCK, "lv_wire_relay.json"), build_relay_model("lv", "relay_insulator_lv", "wire_clamp_lv"))
+write_json(os.path.join(MODELS_BLOCK, "mv_wire_relay.json"), build_relay_model("mv", "relay_insulator_mv", "wire_clamp_mv"))
+write_json(os.path.join(MODELS_BLOCK, "hv_wire_relay.json"), build_relay_model("hv", "relay_insulator_hv", "wire_clamp_hv"))
+
+# 5. Wire Connector 3D Models (LV, MV, HV)
+def build_connector_model(tier, insul_tex):
+    if tier == "lv":
+        elements = [
+            make_element(4.0, 0.0, 4.0, 12.0, 1.5, 12.0, "base", cullface=["down"]),
+            make_element(5.5, 1.5, 5.5, 10.5, 3.0, 10.5, "base"),
+            make_element(5.0, 3.0, 5.0, 11.0, 6.0, 11.0, "bushing"),
+            make_element(6.0, 6.0, 6.0, 10.0, 8.0, 10.0, "terminal"),
+            make_element(7.0, 8.0, 7.0, 9.0, 9.0, 9.0, "terminal")
+        ]
+    elif tier == "mv":
+        elements = [
+            make_element(3.5, 0.0, 3.5, 12.5, 1.5, 12.5, "base", cullface=["down"]),
+            make_element(5.0, 1.5, 5.0, 11.0, 3.2, 11.0, "base"),
+            make_element(4.5, 3.2, 4.5, 11.5, 5.5, 11.5, "bushing"),
+            make_element(5.0, 5.5, 5.0, 11.0, 7.5, 11.0, "bushing"),
+            make_element(5.5, 7.5, 5.5, 10.5, 9.5, 10.5, "terminal"),
+            make_element(6.5, 9.5, 6.5, 9.5, 10.5, 9.5, "terminal")
+        ]
+    else: # hv
+        elements = [
+            make_element(3.0, 0.0, 3.0, 13.0, 1.8, 13.0, "base", cullface=["down"]),
+            make_element(4.5, 1.8, 4.5, 11.5, 3.8, 11.5, "base"),
+            make_element(4.0, 3.8, 4.0, 12.0, 8.5, 12.0, "bushing"),
+            make_element(5.0, 8.5, 5.0, 11.0, 10.0, 11.0, "base"),
+            make_element(5.0, 10.0, 5.0, 11.0, 12.0, 11.0, "terminal"),
+            make_element(4.5, 12.0, 4.5, 11.5, 13.0, 11.5, "terminal")
+        ]
+    return {
+        "textures": {
+            "particle": "powergrid:block/connector_base",
+            "base": "powergrid:block/connector_base",
+            "bushing": f"powergrid:block/{insul_tex}",
+            "terminal": "powergrid:block/connector_terminal"
+        },
+        "elements": elements
+    }
+
+write_json(os.path.join(MODELS_BLOCK, "lv_wire_connector.json"), build_connector_model("lv", "connector_bushing_lv"))
+write_json(os.path.join(MODELS_BLOCK, "mv_wire_connector.json"), build_connector_model("mv", "connector_bushing_mv"))
+write_json(os.path.join(MODELS_BLOCK, "hv_wire_connector.json"), build_connector_model("hv", "connector_bushing_hv"))
+
+# 6. Industrial Blocks Models
+standard_cubes = [
+    ("generator_casing", "generator_casing"),
+    ("alternator_coil", "alternator_coil"),
+    ("turbine_rotor", "turbine_rotor"),
+    ("breaker_switch", "breaker_switch")
+]
+for name, tex in standard_cubes:
+    write_json(os.path.join(MODELS_BLOCK, f"{name}.json"), {
+        "parent": "minecraft:block/cube_all",
+        "textures": {"all": f"powergrid:block/{tex}"}
+    })
+
+write_json(os.path.join(MODELS_BLOCK, "transformer.json"), {
+    "parent": "minecraft:block/cube_directional",
+    "textures": {
+        "particle": "powergrid:block/transformer_side",
+        "up": "powergrid:block/transformer_top",
+        "down": "powergrid:block/transformer_top",
+        "north": "powergrid:block/transformer_front",
+        "south": "powergrid:block/transformer_side",
+        "east": "powergrid:block/transformer_side",
+        "west": "powergrid:block/transformer_side"
+    }
+})
+
+write_json(os.path.join(MODELS_BLOCK, "heavy_accumulator.json"), {
+    "parent": "minecraft:block/cube_column",
+    "textures": {
+        "end": "powergrid:block/heavy_accumulator_top",
+        "side": "powergrid:block/heavy_accumulator_side"
+    }
+})
+
+write_json(os.path.join(MODELS_BLOCK, "exhaust_stack.json"), {
+    "parent": "minecraft:block/cube_column",
+    "textures": {
+        "end": "powergrid:block/exhaust_stack_top",
+        "side": "powergrid:block/exhaust_stack_side"
+    }
+})
+
+write_json(os.path.join(MODELS_BLOCK, "power_plant_controller.json"), {
+    "parent": "minecraft:block/cube_directional",
+    "textures": {
+        "particle": "powergrid:block/generator_casing",
+        "up": "powergrid:block/generator_casing",
+        "down": "powergrid:block/generator_casing",
+        "north": "powergrid:block/power_plant_controller",
+        "south": "powergrid:block/generator_casing",
+        "east": "powergrid:block/generator_casing",
+        "west": "powergrid:block/generator_casing"
+    }
+})
+
+# ==============================================================================
+# BLOCKSTATES
+# ==============================================================================
+
+# Treated Wood Pole Blockstate (up/down connectivity)
+write_json(os.path.join(BLOCKSTATES, "treated_wood_pole.json"), {
+    "variants": {
+        "down=false,up=false": {"model": "powergrid:block/treated_wood_pole_single"},
+        "down=false,up=true":  {"model": "powergrid:block/treated_wood_pole_bottom"},
+        "down=true,up=false":   {"model": "powergrid:block/treated_wood_pole_top"},
+        "down=true,up=true":    {"model": "powergrid:block/treated_wood_pole"}
+    }
+})
+
+# Pole Crossarm Multipart Blockstate
+write_json(os.path.join(BLOCKSTATES, "pole_crossarm.json"), {
+    "multipart": [
+        # Beams
+        {"when": {"axis": "x"}, "apply": {"model": "powergrid:block/pole_crossarm_beam_x"}},
+        {"when": {"axis": "z"}, "apply": {"model": "powergrid:block/pole_crossarm_beam_z"}},
+        # Brackets
+        {"when": {"axis": "x", "neg_pole": "true"}, "apply": {"model": "powergrid:block/pole_crossarm_bracket_neg_x"}},
+        {"when": {"axis": "x", "pos_pole": "true"}, "apply": {"model": "powergrid:block/pole_crossarm_bracket_pos_x"}},
+        {"when": {"axis": "z", "neg_pole": "true"}, "apply": {"model": "powergrid:block/pole_crossarm_bracket_neg_z"}},
+        {"when": {"axis": "z", "pos_pole": "true"}, "apply": {"model": "powergrid:block/pole_crossarm_bracket_pos_z"}},
+        # End Caps
+        {"when": {"axis": "x", "neg_end": "true"}, "apply": {"model": "powergrid:block/pole_crossarm_end_neg_x"}},
+        {"when": {"axis": "x", "pos_end": "true"}, "apply": {"model": "powergrid:block/pole_crossarm_end_pos_x"}},
+        {"when": {"axis": "z", "neg_end": "true"}, "apply": {"model": "powergrid:block/pole_crossarm_end_neg_z"}},
+        {"when": {"axis": "z", "pos_end": "true"}, "apply": {"model": "powergrid:block/pole_crossarm_end_pos_z"}}
+    ]
+})
+
+# Steel Truss Pole Blockstate
+write_json(os.path.join(BLOCKSTATES, "steel_truss_pole.json"), {
+    "variants": {"": {"model": "powergrid:block/steel_truss_pole"}}
+})
+
+# Wire Relays and Connectors Blockstates (Directional 6-facing)
+directional_devices = [
+    "lv_wire_relay", "mv_wire_relay", "hv_wire_relay",
+    "lv_wire_connector", "mv_wire_connector", "hv_wire_connector"
+]
+for dev in directional_devices:
+    write_json(os.path.join(BLOCKSTATES, f"{dev}.json"), {
+        "variants": {
+            "facing=down":  {"model": f"powergrid:block/{dev}", "x": 180},
+            "facing=up":    {"model": f"powergrid:block/{dev}"},
+            "facing=north": {"model": f"powergrid:block/{dev}", "x": 90},
+            "facing=south": {"model": f"powergrid:block/{dev}", "x": 90, "y": 180},
+            "facing=west":  {"model": f"powergrid:block/{dev}", "x": 90, "y": 270},
+            "facing=east":  {"model": f"powergrid:block/{dev}", "x": 90, "y": 90}
+        }
+    })
+
+# Transformer & Machine Blockstates
+write_json(os.path.join(BLOCKSTATES, "transformer.json"), {
+    "variants": {
+        "facing=north": {"model": "powergrid:block/transformer"},
+        "facing=east":  {"model": "powergrid:block/transformer", "y": 90},
+        "facing=south": {"model": "powergrid:block/transformer", "y": 180},
+        "facing=west":  {"model": "powergrid:block/transformer", "y": 270}
+    }
+})
+
+for b in ["heavy_accumulator", "generator_casing", "alternator_coil", "turbine_rotor", "exhaust_stack", "breaker_switch"]:
+    write_json(os.path.join(BLOCKSTATES, f"{b}.json"), {
+        "variants": {"": {"model": f"powergrid:block/{b}"}}
+    })
+
+write_json(os.path.join(BLOCKSTATES, "power_plant_controller.json"), {
+    "variants": {
+        "facing=north": {"model": "powergrid:block/power_plant_controller"},
+        "facing=east":  {"model": "powergrid:block/power_plant_controller", "y": 90},
+        "facing=south": {"model": "powergrid:block/power_plant_controller", "y": 180},
+        "facing=west":  {"model": "powergrid:block/power_plant_controller", "y": 270}
+    }
+})
+
+# ==============================================================================
+# ITEM MODELS & ITEM DEFINITIONS (Modern 26.3 Specification)
+# ==============================================================================
+
+ALL_BLOCKS = [
     "treated_wood_pole", "steel_truss_pole", "pole_crossarm",
     "lv_wire_connector", "mv_wire_connector", "hv_wire_connector",
     "lv_wire_relay", "mv_wire_relay", "hv_wire_relay",
@@ -390,163 +1087,31 @@ BLOCKS = [
     "turbine_rotor", "exhaust_stack"
 ]
 
-ITEMS = [
+ALL_ITEMS = [
     "engineer_hammer", "voltmeter", "wire_cutters",
     "lv_wire_coil", "mv_wire_coil", "hv_wire_coil",
     "treated_wood", "copper_wire", "electrum_wire", "steel_strand", "ceramic_insulator"
 ]
 
-for b in BLOCKS:
-    # 1. Block Model
-    if b in ["treated_wood_pole", "steel_truss_pole", "generator_casing", "alternator_coil", "turbine_rotor"]:
-        bm = {
-            "parent": "minecraft:block/cube_all",
-            "textures": {
-                "all": f"powergrid:block/{b}"
-            }
-        }
+display_transform = {
+    "gui": {"rotation": [30, 225, 0], "translation": [0, 0, 0], "scale": [0.625, 0.625, 0.625]},
+    "ground": {"rotation": [0, 0, 0], "translation": [0, 3, 0], "scale": [0.25, 0.25, 0.25]},
+    "fixed": {"rotation": [0, 0, 0], "translation": [0, 0, 0], "scale": [0.5, 0.5, 0.5]},
+    "thirdperson_righthand": {"rotation": [75, 45, 0], "translation": [0, 2.5, 0], "scale": [0.375, 0.375, 0.375]},
+    "firstperson_righthand": {"rotation": [0, 45, 0], "translation": [0, 0, 0], "scale": [0.4, 0.4, 0.4]}
+}
+
+for b in ALL_BLOCKS:
+    target_model = f"powergrid:block/{b}"
+    if b == "treated_wood_pole":
+        target_model = "powergrid:block/treated_wood_pole_single"
     elif b == "pole_crossarm":
-        bm = {
-            "parent": "minecraft:block/cube_all",
-            "textures": {
-                "all": "powergrid:block/pole_crossarm"
-            }
-        }
-    elif "wire_connector" in b or "wire_relay" in b:
-        bm = {
-            "parent": "minecraft:block/cube_all",
-            "textures": {
-                "all": f"powergrid:block/{b}"
-            }
-        }
-    elif b == "transformer":
-        bm = {
-            "parent": "minecraft:block/cube_directional",
-            "textures": {
-                "particle": "powergrid:block/transformer_side",
-                "up": "powergrid:block/transformer_top",
-                "down": "powergrid:block/transformer_top",
-                "north": "powergrid:block/transformer_front",
-                "south": "powergrid:block/transformer_side",
-                "east": "powergrid:block/transformer_side",
-                "west": "powergrid:block/transformer_side"
-            }
-        }
-    elif b == "heavy_accumulator":
-        bm = {
-            "parent": "minecraft:block/cube_column",
-            "textures": {
-                "end": "powergrid:block/heavy_accumulator_top",
-                "side": "powergrid:block/heavy_accumulator_side"
-            }
-        }
-    elif b == "exhaust_stack":
-        bm = {
-            "parent": "minecraft:block/cube_column",
-            "textures": {
-                "end": "powergrid:block/exhaust_stack_top",
-                "side": "powergrid:block/exhaust_stack_side"
-            }
-        }
-    elif b == "power_plant_controller":
-        bm = {
-            "parent": "minecraft:block/cube_directional",
-            "textures": {
-                "particle": "powergrid:block/generator_casing",
-                "up": "powergrid:block/generator_casing",
-                "down": "powergrid:block/generator_casing",
-                "north": "powergrid:block/power_plant_controller",
-                "south": "powergrid:block/generator_casing",
-                "east": "powergrid:block/generator_casing",
-                "west": "powergrid:block/generator_casing"
-            }
-        }
-    elif b == "breaker_switch":
-        bm = {
-            "parent": "minecraft:block/cube_all",
-            "textures": {
-                "all": "powergrid:block/breaker_switch"
-            }
-        }
-    write_json(os.path.join(MODELS_BLOCK, f"{b}.json"), bm)
+        target_model = "powergrid:block/pole_crossarm_beam_x"
 
-    # 2. Blockstate
-    if b in ["treated_wood_pole", "steel_truss_pole", "generator_casing", "alternator_coil", "turbine_rotor", "heavy_accumulator", "exhaust_stack"]:
-        bs = {
-            "variants": {
-                "": {"model": f"powergrid:block/{b}"}
-            }
-        }
-    elif b in ["pole_crossarm", "transformer"]:
-        bs = {
-            "variants": {
-                "facing=north": {"model": f"powergrid:block/{b}", "y": 0},
-                "facing=east":  {"model": f"powergrid:block/{b}", "y": 90},
-                "facing=south": {"model": f"powergrid:block/{b}", "y": 180},
-                "facing=west":  {"model": f"powergrid:block/{b}", "y": 270}
-            }
-        }
-    elif "wire_connector" in b or "wire_relay" in b:
-        bs = {
-            "variants": {
-                "facing=down":  {"model": f"powergrid:block/{b}", "x": 180},
-                "facing=up":    {"model": f"powergrid:block/{b}"},
-                "facing=north": {"model": f"powergrid:block/{b}", "x": 90},
-                "facing=south": {"model": f"powergrid:block/{b}", "x": 90, "y": 180},
-                "facing=west":  {"model": f"powergrid:block/{b}", "x": 90, "y": 270},
-                "facing=east":  {"model": f"powergrid:block/{b}", "x": 90, "y": 90}
-            }
-        }
-    elif b == "breaker_switch":
-        bs = {
-            "variants": {
-                "facing=north,open=false,powered=false": {"model": "powergrid:block/breaker_switch"},
-                "facing=north,open=false,powered=true":  {"model": "powergrid:block/breaker_switch"},
-                "facing=north,open=true,powered=false":  {"model": "powergrid:block/breaker_switch"},
-                "facing=north,open=true,powered=true":   {"model": "powergrid:block/breaker_switch"},
-                "facing=south,open=false,powered=false": {"model": "powergrid:block/breaker_switch", "y": 180},
-                "facing=south,open=false,powered=true":  {"model": "powergrid:block/breaker_switch", "y": 180},
-                "facing=south,open=true,powered=false":  {"model": "powergrid:block/breaker_switch", "y": 180},
-                "facing=south,open=true,powered=true":   {"model": "powergrid:block/breaker_switch", "y": 180},
-                "facing=west,open=false,powered=false":  {"model": "powergrid:block/breaker_switch", "y": 270},
-                "facing=west,open=false,powered=true":   {"model": "powergrid:block/breaker_switch", "y": 270},
-                "facing=west,open=true,powered=false":   {"model": "powergrid:block/breaker_switch", "y": 270},
-                "facing=west,open=true,powered=true":    {"model": "powergrid:block/breaker_switch", "y": 270},
-                "facing=east,open=false,powered=false":  {"model": "powergrid:block/breaker_switch", "y": 90},
-                "facing=east,open=false,powered=true":   {"model": "powergrid:block/breaker_switch", "y": 90},
-                "facing=east,open=true,powered=false":   {"model": "powergrid:block/breaker_switch", "y": 90},
-                "facing=east,open=true,powered=true":    {"model": "powergrid:block/breaker_switch", "y": 90}
-            }
-        }
-    elif b == "power_plant_controller":
-        bs = {
-            "variants": {
-                "active=false,assembled=false,facing=north": {"model": "powergrid:block/power_plant_controller"},
-                "active=false,assembled=false,facing=south": {"model": "powergrid:block/power_plant_controller", "y": 180},
-                "active=false,assembled=false,facing=west":  {"model": "powergrid:block/power_plant_controller", "y": 270},
-                "active=false,assembled=false,facing=east":  {"model": "powergrid:block/power_plant_controller", "y": 90},
-                "active=false,assembled=true,facing=north":  {"model": "powergrid:block/power_plant_controller"},
-                "active=false,assembled=true,facing=south":  {"model": "powergrid:block/power_plant_controller", "y": 180},
-                "active=false,assembled=true,facing=west":   {"model": "powergrid:block/power_plant_controller", "y": 270},
-                "active=false,assembled=true,facing=east":   {"model": "powergrid:block/power_plant_controller", "y": 90},
-                "active=true,assembled=false,facing=north":  {"model": "powergrid:block/power_plant_controller"},
-                "active=true,assembled=false,facing=south":  {"model": "powergrid:block/power_plant_controller", "y": 180},
-                "active=true,assembled=false,facing=west":   {"model": "powergrid:block/power_plant_controller", "y": 270},
-                "active=true,assembled=false,facing=east":   {"model": "powergrid:block/power_plant_controller", "y": 90},
-                "active=true,assembled=true,facing=north":   {"model": "powergrid:block/power_plant_controller"},
-                "active=true,assembled=true,facing=south":   {"model": "powergrid:block/power_plant_controller", "y": 180},
-                "active=true,assembled=true,facing=west":    {"model": "powergrid:block/power_plant_controller", "y": 270},
-                "active=true,assembled=true,facing=east":    {"model": "powergrid:block/power_plant_controller", "y": 90}
-            }
-        }
-    write_json(os.path.join(BLOCKSTATES, f"{b}.json"), bs)
-
-    # 3. Item Model (points to block model)
     write_json(os.path.join(MODELS_ITEM, f"{b}.json"), {
-        "parent": f"powergrid:block/{b}"
+        "parent": target_model,
+        "display": display_transform
     })
-
-    # 4. Item Definition in items/<name>.json (Modern 26.3 specification!)
     write_json(os.path.join(ITEM_DEFS, f"{b}.json"), {
         "model": {
             "type": "minecraft:model",
@@ -554,18 +1119,13 @@ for b in BLOCKS:
         }
     })
 
-# --- REGULAR ITEMS GENERATION ---
-
-for it in ITEMS:
-    # 1. Item Model
+for it in ALL_ITEMS:
     write_json(os.path.join(MODELS_ITEM, f"{it}.json"), {
         "parent": "minecraft:item/generated",
         "textures": {
             "layer0": f"powergrid:item/{it}"
         }
     })
-
-    # 2. Item Definition in items/<name>.json
     write_json(os.path.join(ITEM_DEFS, f"{it}.json"), {
         "model": {
             "type": "minecraft:model",
@@ -573,4 +1133,4 @@ for it in ITEMS:
         }
     })
 
-print("All blockstates, models, and item definitions successfully generated!")
+print("Asset generation complete! All 32x32 textures, 1024x1024 resource pack, 3D models, blockstates, and item definitions created.")

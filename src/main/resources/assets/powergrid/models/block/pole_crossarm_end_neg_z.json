@@ -1,0 +1,74 @@
+{
+  "textures": {
+    "particle": "powergrid:block/pole_crossarm",
+    "wood": "powergrid:block/pole_crossarm",
+    "end": "powergrid:block/pole_crossarm_end",
+    "bracket": "powergrid:block/steel_bracket"
+  },
+  "elements": [
+    {
+      "from": [
+        4.8,
+        9.8,
+        0.0
+      ],
+      "to": [
+        11.2,
+        16.2,
+        1.2
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bracket"
+        },
+        "up": {
+          "texture": "#bracket"
+        },
+        "north": {
+          "texture": "#bracket"
+        },
+        "south": {
+          "texture": "#bracket"
+        },
+        "west": {
+          "texture": "#bracket"
+        },
+        "east": {
+          "texture": "#bracket"
+        }
+      }
+    },
+    {
+      "from": [
+        7.2,
+        16.0,
+        2.0
+      ],
+      "to": [
+        8.8,
+        17.5,
+        3.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bracket"
+        },
+        "up": {
+          "texture": "#bracket"
+        },
+        "north": {
+          "texture": "#bracket"
+        },
+        "south": {
+          "texture": "#bracket"
+        },
+        "west": {
+          "texture": "#bracket"
+        },
+        "east": {
+          "texture": "#bracket"
+        }
+      }
+    }
+  ]
+}

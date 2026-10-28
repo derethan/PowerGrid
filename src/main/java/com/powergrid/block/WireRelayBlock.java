@@ -22,12 +22,12 @@ import org.jspecify.annotations.Nullable;
 public class WireRelayBlock extends Block implements EntityBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
 
-    private static final VoxelShape SHAPE_DOWN = Block.box(6.0, 0.0, 6.0, 10.0, 6.0, 10.0);
-    private static final VoxelShape SHAPE_UP = Block.box(6.0, 10.0, 6.0, 10.0, 16.0, 10.0);
-    private static final VoxelShape SHAPE_NORTH = Block.box(6.0, 6.0, 0.0, 10.0, 10.0, 6.0);
-    private static final VoxelShape SHAPE_SOUTH = Block.box(6.0, 6.0, 10.0, 10.0, 10.0, 16.0);
-    private static final VoxelShape SHAPE_WEST = Block.box(0.0, 6.0, 6.0, 6.0, 10.0, 10.0);
-    private static final VoxelShape SHAPE_EAST = Block.box(10.0, 6.0, 6.0, 16.0, 10.0, 10.0);
+    private static final VoxelShape SHAPE_UP    = Block.box(4.0, 0.0, 4.0, 12.0, 10.0, 12.0);
+    private static final VoxelShape SHAPE_DOWN  = Block.box(4.0, 6.0, 4.0, 12.0, 16.0, 12.0);
+    private static final VoxelShape SHAPE_NORTH = Block.box(4.0, 4.0, 6.0, 12.0, 12.0, 16.0);
+    private static final VoxelShape SHAPE_SOUTH = Block.box(4.0, 4.0, 0.0, 12.0, 12.0, 10.0);
+    private static final VoxelShape SHAPE_WEST  = Block.box(6.0, 4.0, 4.0, 16.0, 12.0, 12.0);
+    private static final VoxelShape SHAPE_EAST  = Block.box(0.0, 4.0, 4.0, 10.0, 12.0, 12.0);
 
     private final WireType wireType;
 

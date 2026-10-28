@@ -1,6 +1,15 @@
 {
   "variants": {
-    "": {
+    "down=false,up=false": {
+      "model": "powergrid:block/treated_wood_pole_single"
+    },
+    "down=false,up=true": {
+      "model": "powergrid:block/treated_wood_pole_bottom"
+    },
+    "down=true,up=false": {
+      "model": "powergrid:block/treated_wood_pole_top"
+    },
+    "down=true,up=true": {
       "model": "powergrid:block/treated_wood_pole"
     }
   }

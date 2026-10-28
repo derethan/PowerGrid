@@ -1,6 +1,267 @@
 {
-  "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "powergrid:block/hv_wire_relay"
-  }
+    "particle": "powergrid:block/relay_insulator_hv",
+    "bracket": "powergrid:block/relay_bracket",
+    "insulator": "powergrid:block/relay_insulator_hv",
+    "clamp": "powergrid:block/wire_clamp_hv"
+  },
+  "elements": [
+    {
+      "from": [
+        4.0,
+        0.0,
+        4.0
+      ],
+      "to": [
+        12.0,
+        1.2,
+        12.0
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bracket",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#bracket"
+        },
+        "north": {
+          "texture": "#bracket"
+        },
+        "south": {
+          "texture": "#bracket"
+        },
+        "west": {
+          "texture": "#bracket"
+        },
+        "east": {
+          "texture": "#bracket"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        1.2,
+        3.5
+      ],
+      "to": [
+        12.5,
+        3.5,
+        12.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#insulator"
+        },
+        "up": {
+          "texture": "#insulator"
+        },
+        "north": {
+          "texture": "#insulator"
+        },
+        "south": {
+          "texture": "#insulator"
+        },
+        "west": {
+          "texture": "#insulator"
+        },
+        "east": {
+          "texture": "#insulator"
+        }
+      }
+    },
+    {
+      "from": [
+        6.0,
+        3.5,
+        6.0
+      ],
+      "to": [
+        10.0,
+        4.2,
+        10.0
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bracket"
+        },
+        "up": {
+          "texture": "#bracket"
+        },
+        "north": {
+          "texture": "#bracket"
+        },
+        "south": {
+          "texture": "#bracket"
+        },
+        "west": {
+          "texture": "#bracket"
+        },
+        "east": {
+          "texture": "#bracket"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        4.2,
+        4.5
+      ],
+      "to": [
+        11.5,
+        6.5,
+        11.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#insulator"
+        },
+        "up": {
+          "texture": "#insulator"
+        },
+        "north": {
+          "texture": "#insulator"
+        },
+        "south": {
+          "texture": "#insulator"
+        },
+        "west": {
+          "texture": "#insulator"
+        },
+        "east": {
+          "texture": "#insulator"
+        }
+      }
+    },
+    {
+      "from": [
+        6.0,
+        6.5,
+        6.0
+      ],
+      "to": [
+        10.0,
+        7.2,
+        10.0
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bracket"
+        },
+        "up": {
+          "texture": "#bracket"
+        },
+        "north": {
+          "texture": "#bracket"
+        },
+        "south": {
+          "texture": "#bracket"
+        },
+        "west": {
+          "texture": "#bracket"
+        },
+        "east": {
+          "texture": "#bracket"
+        }
+      }
+    },
+    {
+      "from": [
+        5.0,
+        7.2,
+        5.0
+      ],
+      "to": [
+        11.0,
+        9.5,
+        11.0
+      ],
+      "faces": {
+        "down": {
+          "texture": "#insulator"
+        },
+        "up": {
+          "texture": "#insulator"
+        },
+        "north": {
+          "texture": "#insulator"
+        },
+        "south": {
+          "texture": "#insulator"
+        },
+        "west": {
+          "texture": "#insulator"
+        },
+        "east": {
+          "texture": "#insulator"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        9.5,
+        5.5
+      ],
+      "to": [
+        11.5,
+        11.5,
+        10.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#clamp"
+        },
+        "up": {
+          "texture": "#clamp"
+        },
+        "north": {
+          "texture": "#clamp"
+        },
+        "south": {
+          "texture": "#clamp"
+        },
+        "west": {
+          "texture": "#clamp"
+        },
+        "east": {
+          "texture": "#clamp"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        11.5,
+        6.5
+      ],
+      "to": [
+        10.5,
+        12.5,
+        9.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#clamp"
+        },
+        "up": {
+          "texture": "#clamp"
+        },
+        "north": {
+          "texture": "#clamp"
+        },
+        "south": {
+          "texture": "#clamp"
+        },
+        "west": {
+          "texture": "#clamp"
+        },
+        "east": {
+          "texture": "#clamp"
+        }
+      }
+    }
+  ]
 }

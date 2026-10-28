@@ -1,64 +1,7 @@
 {
   "variants": {
-    "facing=north,open=false,powered=false": {
+    "": {
       "model": "powergrid:block/breaker_switch"
-    },
-    "facing=north,open=false,powered=true": {
-      "model": "powergrid:block/breaker_switch"
-    },
-    "facing=north,open=true,powered=false": {
-      "model": "powergrid:block/breaker_switch"
-    },
-    "facing=north,open=true,powered=true": {
-      "model": "powergrid:block/breaker_switch"
-    },
-    "facing=south,open=false,powered=false": {
-      "model": "powergrid:block/breaker_switch",
-      "y": 180
-    },
-    "facing=south,open=false,powered=true": {
-      "model": "powergrid:block/breaker_switch",
-      "y": 180
-    },
-    "facing=south,open=true,powered=false": {
-      "model": "powergrid:block/breaker_switch",
-      "y": 180
-    },
-    "facing=south,open=true,powered=true": {
-      "model": "powergrid:block/breaker_switch",
-      "y": 180
-    },
-    "facing=west,open=false,powered=false": {
-      "model": "powergrid:block/breaker_switch",
-      "y": 270
-    },
-    "facing=west,open=false,powered=true": {
-      "model": "powergrid:block/breaker_switch",
-      "y": 270
-    },
-    "facing=west,open=true,powered=false": {
-      "model": "powergrid:block/breaker_switch",
-      "y": 270
-    },
-    "facing=west,open=true,powered=true": {
-      "model": "powergrid:block/breaker_switch",
-      "y": 270
-    },
-    "facing=east,open=false,powered=false": {
-      "model": "powergrid:block/breaker_switch",
-      "y": 90
-    },
-    "facing=east,open=false,powered=true": {
-      "model": "powergrid:block/breaker_switch",
-      "y": 90
-    },
-    "facing=east,open=true,powered=false": {
-      "model": "powergrid:block/breaker_switch",
-      "y": 90
-    },
-    "facing=east,open=true,powered=true": {
-      "model": "powergrid:block/breaker_switch",
-      "y": 90
     }
   }
 }

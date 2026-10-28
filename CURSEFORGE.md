@@ -56,11 +56,13 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 - High voltage lines feature only 0.5% loss per block, incentivizing engineers to construct realistic regional substations with step-up transformers!
 
 ### 3. Utility Poles & Transmission Towers
-- **Treated Wood Utility Poles**: Authentic stackable wooden utility poles that blend seamlessly into countryside and town builds.
-- **Steel Truss Lattice Towers**: Massive, blast-resistant high-voltage transmission towers for overland cable runs.
-- **Pole Crossarms**: Horizontal timber crossarms mounted directly on poles to hold multiple wire connectors and relays.
+- **Treated Wood Utility Poles**: Authentic 8-sided cylindrical wooden telephone poles with steel bands and climbing rungs. Right-clicking with a pole item automatically stacks the pole upwards!
+- **Steel Truss Lattice Towers**: Massive, blast-resistant high-voltage transmission towers for overland cable runs. Supports right-click auto-stacking.
+- **Pole Crossarms**: Modular rounded horizontal timber crossarms that automatically clamp to adjacent poles with forged iron collars and connect seamlessly across neighboring crossarms. Right-clicking automatically extends the beam horizontally!
 
 ### 4. Connectors, Relays, & Substation Gear
+- **32x32 Textures & 1024x1024 Ultra-HD Pack**: Default 32x32 textures with creosote grain and glazed porcelain sheens, plus an included 1024x1024 Ultra-HD resource pack.
+- **3D Element Models**: True 3D geometry for wire relays and connectors with multi-tiered porcelain insulator bells and conductor saddle clamps.
 - **Wire Connectors**: Placed directly on machines, batteries, or generators. Automatically interfaces with NeoForge's standard `Capabilities.Energy.BLOCK` to push or pull line energy.
 - **Wire Relays**: High-density pass-through insulators designed to turn corners and route branches without tapping into a block's internal buffer.
 - **Substation Transformers**: High-efficiency (98%) step-up and step-down transformers connecting LV ⇄ MV and MV ⇄ HV networks.
@@ -84,6 +86,16 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 - **Universal Forge Energy (FE)**: Built natively on NeoForge's Transfer API. Fully compatible with any mod supporting standard FE capabilities (`Capabilities.Energy.BLOCK`).
 - **Industrial Refinery Synergy**: Connect an HV Wire Connector directly to refinery diesel generators or steam boilers to power your entire base from a central power station.
 - **Logistics Mod Synergy**: Feed automation sorters, item pipes, and craft tables directly from overhead wire drop lines.
+
+---
+
+## 📦 Recent Release Notes (v1.0.3)
+- **32x32 Default Textures**: Upgraded all block and item textures to rich 32x32 pixel art with creosote grain, metallic specular highlights, and ceramic porcelain sheens.
+- **1024x1024 Ultra-HD Resource Pack**: Added `(v1.0) 1024x Power Grid.zip` in `resourcepacks/` (and synced to CurseForge profile) for players who want photorealistic ultra-HD graphics.
+- **Round Wooden Telephone Poles**: Replaced solid cubes with authentic 8-sided cylindrical telephone poles with steel bands and climbing steps. Supports right-click auto-stacking!
+- **Expanding Power Pole Crossarms**: Modular rounded timber crossarms that automatically clamp to adjacent poles with forged iron collars and seamlessly extend horizontally across neighboring crossarms. Supports right-click auto-extension!
+- **3D Wire Relays & Connectors**: Replaced broken flat transparent cube models with true 3D element models featuring cast iron baseplates, multi-tier porcelain insulator bells, and conductor wire saddles.
+- **VoxelShape Alignment**: Corrected directional collision and interaction hitboxes across all 6 faces for relays and connectors.
 
 ---
 

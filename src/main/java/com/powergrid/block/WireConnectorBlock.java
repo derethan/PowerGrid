@@ -25,12 +25,12 @@ import org.jspecify.annotations.Nullable;
 public class WireConnectorBlock extends Block implements EntityBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
 
-    private static final VoxelShape SHAPE_DOWN = Block.box(5.0, 0.0, 5.0, 11.0, 8.0, 11.0);
-    private static final VoxelShape SHAPE_UP = Block.box(5.0, 8.0, 5.0, 11.0, 16.0, 11.0);
-    private static final VoxelShape SHAPE_NORTH = Block.box(5.0, 5.0, 0.0, 11.0, 11.0, 8.0);
-    private static final VoxelShape SHAPE_SOUTH = Block.box(5.0, 5.0, 8.0, 11.0, 11.0, 16.0);
-    private static final VoxelShape SHAPE_WEST = Block.box(0.0, 5.0, 5.0, 8.0, 11.0, 11.0);
-    private static final VoxelShape SHAPE_EAST = Block.box(8.0, 5.0, 5.0, 16.0, 11.0, 11.0);
+    private static final VoxelShape SHAPE_UP    = Block.box(3.5, 0.0, 3.5, 12.5, 11.0, 12.5);
+    private static final VoxelShape SHAPE_DOWN  = Block.box(3.5, 5.0, 3.5, 12.5, 16.0, 12.5);
+    private static final VoxelShape SHAPE_NORTH = Block.box(3.5, 3.5, 5.0, 12.5, 12.5, 16.0);
+    private static final VoxelShape SHAPE_SOUTH = Block.box(3.5, 3.5, 0.0, 12.5, 12.5, 11.0);
+    private static final VoxelShape SHAPE_WEST  = Block.box(5.0, 3.5, 3.5, 16.0, 12.5, 12.5);
+    private static final VoxelShape SHAPE_EAST  = Block.box(0.0, 3.5, 3.5, 11.0, 12.5, 12.5);
 
     private final WireType wireType;
 

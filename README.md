@@ -106,21 +106,31 @@ $$\text{Net Received} = \text{Transmitted FE} \times \left(1 - (\text{Distance} 
 ## 4. Overhead Poles & Infrastructure
 
 ### Treated Wood Utility Poles
-- Stackable vertical wooden poles crafted from creosote-treated lumber.
-- Slim 4x4-pixel collision boundary allowing clean vertical utility runs through terrain.
-- Can be placed up to any desired height (recommended 4 to 8 blocks above grade for ground clearance).
+- Authentic **8-sided cylindrical wooden telephone poles** treated with deep creosote oil.
+- Features dual galvanized steel reinforcement collars, alternating iron climbing rungs (spikes), and an end-grain top weather-protection cap.
+- **Auto-Stacking**: Right-clicking any section of an existing pole with a pole item in hand automatically climbs to the top of the column and places the new pole, making tall utility pole construction fast and safe.
 
 ### Steel Truss Lattice Towers
 - Heavy industrial galvanized steel truss columns designed for high-voltage transmission lines.
+- Features 4 corner angle-iron posts, diagonal cross-lacing struts, and heavy gusset plates.
+- **Tower Auto-Stacking**: Right-clicking any tower block with another truss pole in hand automatically stacks the tower upwards.
 - Extremely blast-resistant and weather-hardened.
 
 ### Pole Crossarms & Insulator Mounts
-- Horizontal support crossarms mounted directly to the sides or tops of utility poles.
-- Feature mounting positions for up to 3 individual Wire Connectors or Wire Relays.
+- **Modular Rounded Timber Crossarm**: A rounded 6x6 horizontal creosote timber beam designed to attach directly to telephone poles.
+- **Intelligent Pole Attachment**: When placed against a `TreatedWoodPoleBlock`, it clamps firmly around the pole with a heavy forged-iron bracket and dual mounting bolts.
+- **Horizontal Expansion**: Seamlessly connects to adjacent crossarms on either side, allowing builders to construct wide 3-block, 5-block, or multi-circuit high-voltage crossarm structures.
+- **Auto-Extension**: Right-clicking an existing crossarm with a crossarm item automatically places the next segment extending horizontally outward.
+- **Flush Insulator Mounting**: Top beam surface is positioned at Y=16.0 so Wire Relays and Connectors sit flush on top with zero gap.
 
 ---
 
 ## 5. Connectors, Relays, & Substations
+
+### Visual Quality & 3D Element Models
+- **32x32 High-Fidelity Default**: All blocks and items feature handcrafted 32x32 pixel art textures with creosote grain, metallic specular highlights, and glazed ceramic sheens.
+- **1024x1024 Ultra-HD Resource Pack**: Includes a dedicated `(v1.0) 1024x Power Grid.zip` resource pack featuring photorealistic ultra-high-definition textures for all grid equipment.
+- **Full 3D Element Geometry**: Wire relays and connectors feature true non-cube 3D element JSON geometry—cast iron mounting plates, ribbed ceramic porcelain insulator bells, and conductor wire saddles—completely eliminating transparent box or face-culling glitches.
 
 ### Wire Connectors (Block Interface)
 - Mounted on the face of any machine, power plant, or battery.
@@ -129,7 +139,10 @@ $$\text{Net Received} = \text{Transmitted FE} \times \left(1 - (\text{Distance} 
 - Supports up to **4 simultaneous wire attachments**.
 
 ### Wire Relays (Pass-Through Routing)
-- Ceramic standoff insulators that **do not** interact with the block behind them.
+- Multi-tier ceramic standoff insulators that **do not** interact with the block behind them:
+  - **LV Relay**: Single porcelain ribbed bell with copper conductor clamp.
+  - **MV Relay**: Dual-tiered terracotta porcelain bells with electrum saddle clamp.
+  - **HV Relay**: Heavy three-tiered slate-blue porcelain suspension bells with heavy steel suspension clamp.
 - Designed strictly to bridge spans, make sharp 90-degree turns around buildings, or distribute branches across open yards.
 - High-capacity terminals supporting up to **8 simultaneous wire attachments**.
 
