@@ -22,11 +22,13 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
 public class PoleCrossarmBlock extends Block {
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
+    public static final BooleanProperty ON_POLE = BooleanProperty.create("on_pole");
     public static final BooleanProperty NEG_POLE = BooleanProperty.create("neg_pole");
     public static final BooleanProperty POS_POLE = BooleanProperty.create("pos_pole");
     public static final BooleanProperty NEG_END = BooleanProperty.create("neg_end");
@@ -35,11 +37,20 @@ public class PoleCrossarmBlock extends Block {
     // Horizontal rounded beam shape along X and Z at upper portion of block (Y: 10.0 - 16.0)
     private static final VoxelShape SHAPE_X = Block.box(0.0, 10.0, 5.0, 16.0, 16.0, 11.0);
     private static final VoxelShape SHAPE_Z = Block.box(5.0, 10.0, 0.0, 11.0, 16.0, 16.0);
+    private static final VoxelShape SHAPE_X_ON_POLE = Shapes.or(
+            Block.box(0.0, 10.0, 5.0, 16.0, 16.0, 11.0),
+            Block.box(4.5, 0.0, 4.5, 11.5, 10.0, 11.5)
+    );
+    private static final VoxelShape SHAPE_Z_ON_POLE = Shapes.or(
+            Block.box(5.0, 10.0, 0.0, 11.0, 16.0, 16.0),
+            Block.box(4.5, 0.0, 4.5, 11.5, 10.0, 11.5)
+    );
 
     public PoleCrossarmBlock(Properties properties) {
         super(properties.strength(2.0f, 3.0f).sound(SoundType.WOOD).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(AXIS, Direction.Axis.X)
+                .setValue(ON_POLE, false)
                 .setValue(NEG_POLE, false)
                 .setValue(POS_POLE, false)
                 .setValue(NEG_END, true)
@@ -48,7 +59,7 @@ public class PoleCrossarmBlock extends Block {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(AXIS, NEG_POLE, POS_POLE, NEG_END, POS_END);
+        builder.add(AXIS, ON_POLE, NEG_POLE, POS_POLE, NEG_END, POS_END);
     }
 
     public static Direction getNegativeDirection(Direction.Axis axis) {
@@ -60,7 +71,7 @@ public class PoleCrossarmBlock extends Block {
     }
 
     private boolean isPole(BlockState state) {
-        return state.getBlock() instanceof TreatedWoodPoleBlock;
+        return state.getBlock() instanceof TreatedWoodPoleBlock || state.getBlock() instanceof SteelTrussPoleBlock;
     }
 
     private boolean isCrossarm(BlockState state) {
@@ -68,6 +79,8 @@ public class PoleCrossarmBlock extends Block {
     }
 
     public BlockState calculateState(LevelReader level, BlockPos pos, Direction.Axis preferredAxis) {
+        boolean onPole = isPole(level.getBlockState(pos.below()));
+
         boolean westPole = isPole(level.getBlockState(pos.west()));
         boolean eastPole = isPole(level.getBlockState(pos.east()));
         boolean northPole = isPole(level.getBlockState(pos.north()));
@@ -104,6 +117,7 @@ public class PoleCrossarmBlock extends Block {
 
         return this.defaultBlockState()
                 .setValue(AXIS, chosenAxis)
+                .setValue(ON_POLE, onPole)
                 .setValue(NEG_POLE, negIsPole)
                 .setValue(POS_POLE, posIsPole)
                 .setValue(NEG_END, negEnd)
@@ -131,15 +145,17 @@ public class PoleCrossarmBlock extends Block {
     @Override
     protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, net.minecraft.util.RandomSource random) {
         Direction.Axis currentAxis = state.getValue(AXIS);
-        if (direction.getAxis().isHorizontal()) {
-            return calculateState(level, pos, currentAxis);
-        }
-        return super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
+        return calculateState(level, pos, currentAxis);
     }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return state.getValue(AXIS) == Direction.Axis.X ? SHAPE_X : SHAPE_Z;
+        boolean onPole = state.getValue(ON_POLE);
+        if (state.getValue(AXIS) == Direction.Axis.X) {
+            return onPole ? SHAPE_X_ON_POLE : SHAPE_X;
+        } else {
+            return onPole ? SHAPE_Z_ON_POLE : SHAPE_Z;
+        }
     }
 
     @Override

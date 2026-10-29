@@ -747,40 +747,102 @@ write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_beam_z.json"), {
     ]
 })
 
+write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_top_cap.json"), {
+    "textures": crossarm_textures,
+    "elements": [
+        # Flat steel top plate sitting directly on top of the pole at Y=0.0
+        make_element(4.0, 0.0, 4.0, 12.0, 1.2, 12.0, "bracket"),
+        # Steel downward collar wrapping around the 7x7 pole below from Y=0.0 down to Y=-3.0
+        make_element(4.2, -3.0, 4.2, 11.8, 0.0, 4.8, "bracket"),
+        make_element(4.2, -3.0, 11.2, 11.8, 0.0, 11.8, "bracket"),
+        make_element(4.2, -3.0, 4.8, 4.8, 0.0, 11.2, "bracket"),
+        make_element(11.2, -3.0, 4.8, 11.8, 0.0, 11.2, "bracket"),
+        # Steel central vertical riser column connecting the plate up to the crossarm timber beam (Y=1.2 to Y=10.0)
+        make_element(5.0, 1.2, 5.0, 11.0, 10.0, 11.0, "bracket"),
+        # Heavy steel gusset brackets reinforcing the joint
+        make_element(3.8, 4.0, 5.2, 5.0, 10.0, 10.8, "bracket"),
+        make_element(11.0, 4.0, 5.2, 12.2, 10.0, 10.8, "bracket"),
+        make_element(5.2, 4.0, 3.8, 10.8, 10.0, 5.0, "bracket"),
+        make_element(5.2, 4.0, 11.0, 10.8, 10.0, 12.2, "bracket"),
+        # Central saddle clamp wrapping the bottom of the crossarm beam
+        make_element(4.5, 9.5, 4.5, 11.5, 11.5, 11.5, "bracket")
+    ]
+})
+
 write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_bracket_neg_x.json"), {
     "textures": crossarm_textures,
     "elements": [
-        make_element(0.0, 9.0, 4.5, 2.0, 16.5, 11.5, "bracket"),
-        make_element(-2.0, 10.0, 4.2, 0.0, 16.0, 11.8, "bracket"),
-        make_element(2.0, 12.0, 5.0, 2.6, 13.5, 6.0, "bracket"),
-        make_element(2.0, 12.0, 10.0, 2.6, 13.5, 11.0, "bracket")
+        # Timber beam extension meeting pole surface at X=-4.5
+        make_element(-4.5, 10.0, 5.5, 0.0, 16.0, 10.5, "wood"),
+        make_element(-4.5, 10.5, 5.0, 0.0, 15.5, 11.0, "wood"),
+        # Steel clamping plate against pole surface at X=-4.5
+        make_element(-4.8, 9.0, 4.2, -4.2, 16.5, 11.8, "bracket"),
+        # North and south wrap-around straps hugging pole sides back to center X=-8.0
+        make_element(-8.0, 14.2, 4.2, -4.2, 16.2, 4.8, "bracket"),
+        make_element(-8.0, 14.2, 11.2, -4.2, 16.2, 11.8, "bracket"),
+        make_element(-8.0, 9.2, 4.2, -4.2, 11.2, 4.8, "bracket"),
+        make_element(-8.0, 9.2, 11.2, -4.2, 11.2, 11.8, "bracket"),
+        # Diagonal steel strut brace
+        make_element(-4.5, 6.0, 5.5, 1.5, 10.0, 10.5, "bracket"),
+        # Joint collar in current block
+        make_element(0.0, 9.5, 4.8, 1.8, 16.2, 11.2, "bracket")
     ]
 })
 write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_bracket_pos_x.json"), {
     "textures": crossarm_textures,
     "elements": [
-        make_element(14.0, 9.0, 4.5, 16.0, 16.5, 11.5, "bracket"),
-        make_element(16.0, 10.0, 4.2, 18.0, 16.0, 11.8, "bracket"),
-        make_element(13.4, 12.0, 5.0, 14.0, 13.5, 6.0, "bracket"),
-        make_element(13.4, 12.0, 10.0, 14.0, 13.5, 11.0, "bracket")
+        # Timber beam extension meeting pole surface at X=20.5
+        make_element(16.0, 10.0, 5.5, 20.5, 16.0, 10.5, "wood"),
+        make_element(16.0, 10.5, 5.0, 20.5, 15.5, 11.0, "wood"),
+        # Steel clamping plate against pole surface at X=20.5
+        make_element(20.2, 9.0, 4.2, 20.8, 16.5, 11.8, "bracket"),
+        # North and south wrap-around straps hugging pole sides to center X=24.0
+        make_element(20.2, 14.2, 4.2, 24.0, 16.2, 4.8, "bracket"),
+        make_element(20.2, 14.2, 11.2, 24.0, 16.2, 11.8, "bracket"),
+        make_element(20.2, 9.2, 4.2, 24.0, 11.2, 4.8, "bracket"),
+        make_element(20.2, 9.2, 11.2, 24.0, 11.2, 11.8, "bracket"),
+        # Diagonal steel strut brace
+        make_element(14.5, 6.0, 5.5, 20.5, 10.0, 10.5, "bracket"),
+        # Joint collar in current block
+        make_element(14.2, 9.5, 4.8, 16.0, 16.2, 11.2, "bracket")
     ]
 })
 write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_bracket_neg_z.json"), {
     "textures": crossarm_textures,
     "elements": [
-        make_element(4.5, 9.0, 0.0, 11.5, 16.5, 2.0, "bracket"),
-        make_element(4.2, 10.0, -2.0, 11.8, 16.0, 0.0, "bracket"),
-        make_element(5.0, 12.0, 2.0, 6.0, 13.5, 2.6, "bracket"),
-        make_element(10.0, 12.0, 2.0, 11.0, 13.5, 2.6, "bracket")
+        # Timber beam extension meeting pole surface at Z=-4.5
+        make_element(5.5, 10.0, -4.5, 10.5, 16.0, 0.0, "wood"),
+        make_element(5.0, 10.5, -4.5, 11.0, 15.5, 0.0, "wood"),
+        # Steel clamping plate against pole surface at Z=-4.5
+        make_element(4.2, 9.0, -4.8, 11.8, 16.5, -4.2, "bracket"),
+        # West and east wrap-around straps hugging pole sides to center Z=-8.0
+        make_element(4.2, 14.2, -8.0, 4.8, 16.2, -4.2, "bracket"),
+        make_element(11.2, 14.2, -8.0, 11.8, 16.2, -4.2, "bracket"),
+        make_element(4.2, 9.2, -8.0, 4.8, 11.2, -4.2, "bracket"),
+        make_element(11.2, 9.2, -8.0, 11.8, 11.2, -4.2, "bracket"),
+        # Diagonal steel strut brace
+        make_element(5.5, 6.0, -4.5, 10.5, 10.0, 1.5, "bracket"),
+        # Joint collar in current block
+        make_element(4.8, 9.5, 0.0, 11.2, 16.2, 1.8, "bracket")
     ]
 })
 write_json(os.path.join(MODELS_BLOCK, "pole_crossarm_bracket_pos_z.json"), {
     "textures": crossarm_textures,
     "elements": [
-        make_element(4.5, 9.0, 14.0, 11.5, 16.5, 16.0, "bracket"),
-        make_element(4.2, 10.0, 16.0, 11.8, 16.0, 18.0, "bracket"),
-        make_element(5.0, 12.0, 13.4, 6.0, 13.5, 14.0, "bracket"),
-        make_element(10.0, 12.0, 13.4, 11.0, 13.5, 14.0, "bracket")
+        # Timber beam extension meeting pole surface at Z=20.5
+        make_element(5.5, 10.0, 16.0, 10.5, 16.0, 20.5, "wood"),
+        make_element(5.0, 10.5, 16.0, 11.0, 15.5, 20.5, "wood"),
+        # Steel clamping plate against pole surface at Z=20.5
+        make_element(4.2, 9.0, 20.2, 11.8, 16.5, 20.8, "bracket"),
+        # West and east wrap-around straps hugging pole sides to center Z=24.0
+        make_element(4.2, 14.2, 20.2, 4.8, 16.2, 24.0, "bracket"),
+        make_element(11.2, 14.2, 20.2, 11.8, 16.2, 24.0, "bracket"),
+        make_element(4.2, 9.2, 20.2, 4.8, 11.2, 24.0, "bracket"),
+        make_element(11.2, 9.2, 20.2, 11.8, 11.2, 24.0, "bracket"),
+        # Diagonal steel strut brace
+        make_element(5.5, 6.0, 14.5, 10.5, 10.0, 20.5, "bracket"),
+        # Joint collar in current block
+        make_element(4.8, 9.5, 14.2, 11.2, 16.2, 16.0, "bracket")
     ]
 })
 
@@ -830,38 +892,52 @@ write_json(os.path.join(MODELS_BLOCK, "steel_truss_pole.json"), {
 })
 
 # 4. Wire Relay 3D Models
-def build_relay_model(tier, insul_tex, clamp_tex):
+def build_relay_model(tier, insul_tex, clamp_tex, variant="standard"):
+    # variant can be: "standard", "crossarm_end", "pole_mount"
+    dz = -5.0 if variant == "crossarm_end" else 0.0
+
     if tier == "lv":
         elements = [
-            make_element(5.0, 0.0, 5.0, 11.0, 1.0, 11.0, "bracket", cullface=["down"]),
-            make_element(7.0, 1.0, 7.0, 9.0, 2.5, 9.0, "bracket"),
-            make_element(5.0, 2.5, 5.0, 11.0, 4.5, 11.0, "insulator"),
-            make_element(6.0, 4.5, 6.0, 10.0, 6.0, 10.0, "insulator"),
-            make_element(5.5, 6.0, 6.5, 10.5, 7.5, 9.5, "clamp"),
-            make_element(7.5, 7.5, 7.5, 8.5, 8.2, 8.5, "clamp")
+            make_element(5.0, 0.0, 5.0 + dz, 11.0, 1.0, 11.0 + dz, "bracket", cullface=["down"] if variant == "standard" else None),
+            make_element(7.0, 1.0, 7.0 + dz, 9.0, 2.5, 9.0 + dz, "bracket"),
+            make_element(5.0, 2.5, 5.0 + dz, 11.0, 4.5, 11.0 + dz, "insulator"),
+            make_element(6.0, 4.5, 6.0 + dz, 10.0, 6.0, 10.0 + dz, "insulator"),
+            make_element(5.5, 6.0, 6.5 + dz, 10.5, 7.5, 9.5 + dz, "clamp"),
+            make_element(7.5, 7.5, 7.5 + dz, 8.5, 8.2, 8.5 + dz, "clamp")
         ]
     elif tier == "mv":
         elements = [
-            make_element(4.5, 0.0, 4.5, 11.5, 1.0, 11.5, "bracket", cullface=["down"]),
-            make_element(7.0, 1.0, 7.0, 9.0, 2.0, 9.0, "bracket"),
-            make_element(4.0, 2.0, 4.0, 12.0, 4.0, 12.0, "insulator"),
-            make_element(6.0, 4.0, 6.0, 10.0, 4.8, 10.0, "bracket"),
-            make_element(5.0, 4.8, 5.0, 11.0, 6.8, 11.0, "insulator"),
-            make_element(6.0, 6.8, 6.0, 10.0, 8.0, 10.0, "insulator"),
-            make_element(5.0, 8.0, 6.0, 11.0, 9.5, 10.0, "clamp"),
-            make_element(6.5, 9.5, 7.5, 9.5, 10.2, 8.5, "clamp")
+            make_element(4.5, 0.0, 4.5 + dz, 11.5, 1.0, 11.5 + dz, "bracket", cullface=["down"] if variant == "standard" else None),
+            make_element(7.0, 1.0, 7.0 + dz, 9.0, 2.0, 9.0 + dz, "bracket"),
+            make_element(4.0, 2.0, 4.0 + dz, 12.0, 4.0, 12.0 + dz, "insulator"),
+            make_element(6.0, 4.0, 6.0 + dz, 10.0, 4.8, 10.0 + dz, "bracket"),
+            make_element(5.0, 4.8, 5.0 + dz, 11.0, 6.8, 11.0 + dz, "insulator"),
+            make_element(6.0, 6.8, 6.0 + dz, 10.0, 8.0, 10.0 + dz, "insulator"),
+            make_element(5.0, 8.0, 6.0 + dz, 11.0, 9.5, 10.0 + dz, "clamp"),
+            make_element(6.5, 9.5, 7.5 + dz, 9.5, 10.2, 8.5 + dz, "clamp")
         ]
     else: # hv
         elements = [
-            make_element(4.0, 0.0, 4.0, 12.0, 1.2, 12.0, "bracket", cullface=["down"]),
-            make_element(3.5, 1.2, 3.5, 12.5, 3.5, 12.5, "insulator"),
-            make_element(6.0, 3.5, 6.0, 10.0, 4.2, 10.0, "bracket"),
-            make_element(4.5, 4.2, 4.5, 11.5, 6.5, 11.5, "insulator"),
-            make_element(6.0, 6.5, 6.0, 10.0, 7.2, 10.0, "bracket"),
-            make_element(5.0, 7.2, 5.0, 11.0, 9.5, 11.0, "insulator"),
-            make_element(4.5, 9.5, 5.5, 11.5, 11.5, 10.5, "clamp"),
-            make_element(5.5, 11.5, 6.5, 10.5, 12.5, 9.5, "clamp")
+            make_element(4.0, 0.0, 4.0 + dz, 12.0, 1.2, 12.0 + dz, "bracket", cullface=["down"] if variant == "standard" else None),
+            make_element(3.5, 1.2, 3.5 + dz, 12.5, 3.5, 12.5 + dz, "insulator"),
+            make_element(6.0, 3.5, 6.0 + dz, 10.0, 4.2, 10.0 + dz, "bracket"),
+            make_element(4.5, 4.2, 4.5 + dz, 11.5, 6.5, 11.5 + dz, "insulator"),
+            make_element(6.0, 6.5, 6.0 + dz, 10.0, 7.2, 10.0 + dz, "bracket"),
+            make_element(5.0, 7.2, 5.0 + dz, 11.0, 9.5, 11.0 + dz, "insulator"),
+            make_element(4.5, 9.5, 5.5 + dz, 11.5, 11.5, 10.5 + dz, "clamp"),
+            make_element(5.5, 11.5, 6.5 + dz, 10.5, 12.5, 9.5 + dz, "clamp")
         ]
+
+    if variant == "pole_mount":
+        # Standoff bracket extending back 5px to clasp the pole or crossarm side face
+        elements.extend([
+            make_element(3.5, -5.2, 3.5, 12.5, -4.2, 12.5, "bracket"),
+            make_element(4.2, -4.2, 4.2, 6.0, 0.0, 11.8, "bracket"),
+            make_element(10.0, -4.2, 4.2, 11.8, 0.0, 11.8, "bracket"),
+            make_element(6.0, -4.2, 6.5, 10.0, 0.0, 9.5, "bracket"),
+            make_element(6.5, -5.8, 6.5, 9.5, -5.2, 9.5, "clamp")
+        ])
+
     return {
         "textures": {
             "particle": f"powergrid:block/{insul_tex}",
@@ -872,38 +948,53 @@ def build_relay_model(tier, insul_tex, clamp_tex):
         "elements": elements
     }
 
-write_json(os.path.join(MODELS_BLOCK, "lv_wire_relay.json"), build_relay_model("lv", "relay_insulator_lv", "wire_clamp_lv"))
-write_json(os.path.join(MODELS_BLOCK, "mv_wire_relay.json"), build_relay_model("mv", "relay_insulator_mv", "wire_clamp_mv"))
-write_json(os.path.join(MODELS_BLOCK, "hv_wire_relay.json"), build_relay_model("hv", "relay_insulator_hv", "wire_clamp_hv"))
+for tier, insul, clamp in [("lv", "relay_insulator_lv", "wire_clamp_lv"), ("mv", "relay_insulator_mv", "wire_clamp_mv"), ("hv", "relay_insulator_hv", "wire_clamp_hv")]:
+    write_json(os.path.join(MODELS_BLOCK, f"{tier}_wire_relay.json"), build_relay_model(tier, insul, clamp, "standard"))
+    write_json(os.path.join(MODELS_BLOCK, f"{tier}_wire_relay_crossarm_end.json"), build_relay_model(tier, insul, clamp, "crossarm_end"))
+    write_json(os.path.join(MODELS_BLOCK, f"{tier}_wire_relay_pole_mount.json"), build_relay_model(tier, insul, clamp, "pole_mount"))
 
 # 5. Wire Connector 3D Models
-def build_connector_model(tier, insul_tex):
+def build_connector_model(tier, insul_tex, variant="standard"):
+    # variant can be: "standard", "crossarm_end", "pole_mount"
+    dz = -5.0 if variant == "crossarm_end" else 0.0
+
     if tier == "lv":
         elements = [
-            make_element(4.0, 0.0, 4.0, 12.0, 1.5, 12.0, "base", cullface=["down"]),
-            make_element(5.5, 1.5, 5.5, 10.5, 3.0, 10.5, "base"),
-            make_element(5.0, 3.0, 5.0, 11.0, 6.0, 11.0, "bushing"),
-            make_element(6.0, 6.0, 6.0, 10.0, 8.0, 10.0, "terminal"),
-            make_element(7.0, 8.0, 7.0, 9.0, 9.0, 9.0, "terminal")
+            make_element(4.0, 0.0, 4.0 + dz, 12.0, 1.5, 12.0 + dz, "base", cullface=["down"] if variant == "standard" else None),
+            make_element(5.5, 1.5, 5.5 + dz, 10.5, 3.0, 10.5 + dz, "base"),
+            make_element(5.0, 3.0, 5.0 + dz, 11.0, 6.0, 11.0 + dz, "bushing"),
+            make_element(6.0, 6.0, 6.0 + dz, 10.0, 8.0, 10.0 + dz, "terminal"),
+            make_element(7.0, 8.0, 7.0 + dz, 9.0, 9.0, 9.0 + dz, "terminal")
         ]
     elif tier == "mv":
         elements = [
-            make_element(3.5, 0.0, 3.5, 12.5, 1.5, 12.5, "base", cullface=["down"]),
-            make_element(5.0, 1.5, 5.0, 11.0, 3.2, 11.0, "base"),
-            make_element(4.5, 3.2, 4.5, 11.5, 5.5, 11.5, "bushing"),
-            make_element(5.0, 5.5, 5.0, 11.0, 7.5, 11.0, "bushing"),
-            make_element(5.5, 7.5, 5.5, 10.5, 9.5, 10.5, "terminal"),
-            make_element(6.5, 9.5, 6.5, 9.5, 10.5, 9.5, "terminal")
+            make_element(3.5, 0.0, 3.5 + dz, 12.5, 1.5, 12.5 + dz, "base", cullface=["down"] if variant == "standard" else None),
+            make_element(5.0, 1.5, 5.0 + dz, 11.0, 3.2, 11.0 + dz, "base"),
+            make_element(4.5, 3.2, 4.5 + dz, 11.5, 5.5, 11.5 + dz, "bushing"),
+            make_element(5.0, 5.5, 5.0 + dz, 11.0, 7.5, 11.0 + dz, "bushing"),
+            make_element(5.5, 7.5, 5.5 + dz, 10.5, 9.5, 10.5 + dz, "terminal"),
+            make_element(6.5, 9.5, 6.5 + dz, 9.5, 10.5, 9.5 + dz, "terminal")
         ]
     else: # hv
         elements = [
-            make_element(3.0, 0.0, 3.0, 13.0, 1.8, 13.0, "base", cullface=["down"]),
-            make_element(4.5, 1.8, 4.5, 11.5, 3.8, 11.5, "base"),
-            make_element(4.0, 3.8, 4.0, 12.0, 8.5, 12.0, "bushing"),
-            make_element(5.0, 8.5, 5.0, 11.0, 10.0, 11.0, "base"),
-            make_element(5.0, 10.0, 5.0, 11.0, 12.0, 11.0, "terminal"),
-            make_element(4.5, 12.0, 4.5, 11.5, 13.0, 11.5, "terminal")
+            make_element(3.0, 0.0, 3.0 + dz, 13.0, 1.8, 13.0 + dz, "base", cullface=["down"] if variant == "standard" else None),
+            make_element(4.5, 1.8, 4.5 + dz, 11.5, 3.8, 11.5 + dz, "base"),
+            make_element(4.0, 3.8, 4.0 + dz, 12.0, 8.5, 12.0 + dz, "bushing"),
+            make_element(5.0, 8.5, 5.0 + dz, 11.0, 10.0, 11.0 + dz, "base"),
+            make_element(5.0, 10.0, 5.0 + dz, 11.0, 12.0, 11.0 + dz, "terminal"),
+            make_element(4.5, 12.0, 4.5 + dz, 11.5, 13.0, 11.5 + dz, "terminal")
         ]
+
+    if variant == "pole_mount":
+        # Standoff bracket extending back 5px to clasp the pole or crossarm side face
+        elements.extend([
+            make_element(3.5, -5.2, 3.5, 12.5, -4.2, 12.5, "base"),
+            make_element(4.2, -4.2, 4.2, 6.0, 0.0, 11.8, "base"),
+            make_element(10.0, -4.2, 4.2, 11.8, 0.0, 11.8, "base"),
+            make_element(6.0, -4.2, 6.5, 10.0, 0.0, 9.5, "base"),
+            make_element(6.5, -5.8, 6.5, 9.5, -5.2, 9.5, "terminal")
+        ])
+
     return {
         "textures": {
             "particle": "powergrid:block/connector_base",
@@ -914,9 +1005,10 @@ def build_connector_model(tier, insul_tex):
         "elements": elements
     }
 
-write_json(os.path.join(MODELS_BLOCK, "lv_wire_connector.json"), build_connector_model("lv", "connector_bushing_lv"))
-write_json(os.path.join(MODELS_BLOCK, "mv_wire_connector.json"), build_connector_model("mv", "connector_bushing_mv"))
-write_json(os.path.join(MODELS_BLOCK, "hv_wire_connector.json"), build_connector_model("hv", "connector_bushing_hv"))
+for tier, insul in [("lv", "connector_bushing_lv"), ("mv", "connector_bushing_mv"), ("hv", "connector_bushing_hv")]:
+    write_json(os.path.join(MODELS_BLOCK, f"{tier}_wire_connector.json"), build_connector_model(tier, insul, "standard"))
+    write_json(os.path.join(MODELS_BLOCK, f"{tier}_wire_connector_crossarm_end.json"), build_connector_model(tier, insul, "crossarm_end"))
+    write_json(os.path.join(MODELS_BLOCK, f"{tier}_wire_connector_pole_mount.json"), build_connector_model(tier, insul, "pole_mount"))
 
 # 6. Industrial Blocks Models
 standard_cubes = [
@@ -1037,6 +1129,7 @@ write_json(os.path.join(BLOCKSTATES, "pole_crossarm.json"), {
     "multipart": [
         {"when": {"axis": "x"}, "apply": {"model": "powergrid:block/pole_crossarm_beam_x"}},
         {"when": {"axis": "z"}, "apply": {"model": "powergrid:block/pole_crossarm_beam_z"}},
+        {"when": {"on_pole": "true"}, "apply": {"model": "powergrid:block/pole_crossarm_top_cap"}},
         {"when": {"axis": "x", "neg_pole": "true"}, "apply": {"model": "powergrid:block/pole_crossarm_bracket_neg_x"}},
         {"when": {"axis": "x", "pos_pole": "true"}, "apply": {"model": "powergrid:block/pole_crossarm_bracket_pos_x"}},
         {"when": {"axis": "z", "neg_pole": "true"}, "apply": {"model": "powergrid:block/pole_crossarm_bracket_neg_z"}},
@@ -1082,16 +1175,37 @@ directional_devices = [
     "lv_wire_connector", "mv_wire_connector", "hv_wire_connector"
 ]
 for dev in directional_devices:
-    write_json(os.path.join(BLOCKSTATES, f"{dev}.json"), {
-        "variants": {
-            "facing=down":  {"model": f"powergrid:block/{dev}", "x": 180},
-            "facing=up":    {"model": f"powergrid:block/{dev}"},
-            "facing=north": {"model": f"powergrid:block/{dev}", "x": 90},
-            "facing=south": {"model": f"powergrid:block/{dev}", "x": 90, "y": 180},
-            "facing=west":  {"model": f"powergrid:block/{dev}", "x": 90, "y": 270},
-            "facing=east":  {"model": f"powergrid:block/{dev}", "x": 90, "y": 90}
-        }
-    })
+    device_variants = {}
+    for crossarm_end in ["false", "true"]:
+        for facing in ["down", "up", "north", "south", "west", "east"]:
+            for pole_mount in ["false", "true"]:
+                key = f"crossarm_end={crossarm_end},facing={facing},pole_mount={pole_mount}"
+
+                if crossarm_end == "true" and facing in ["north", "south", "west", "east"]:
+                    target_model = f"powergrid:block/{dev}_crossarm_end"
+                elif pole_mount == "true" and facing in ["north", "south", "west", "east"]:
+                    target_model = f"powergrid:block/{dev}_pole_mount"
+                else:
+                    target_model = f"powergrid:block/{dev}"
+
+                rot = {"model": target_model}
+                if facing == "down":
+                    rot["x"] = 180
+                elif facing == "north":
+                    rot["x"] = 90
+                elif facing == "south":
+                    rot["x"] = 90
+                    rot["y"] = 180
+                elif facing == "west":
+                    rot["x"] = 90
+                    rot["y"] = 270
+                elif facing == "east":
+                    rot["x"] = 90
+                    rot["y"] = 90
+
+                device_variants[key] = rot
+
+    write_json(os.path.join(BLOCKSTATES, f"{dev}.json"), {"variants": device_variants})
 
 write_json(os.path.join(BLOCKSTATES, "transformer.json"), {
     "variants": {

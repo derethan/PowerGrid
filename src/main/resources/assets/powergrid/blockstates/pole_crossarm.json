@@ -18,6 +18,14 @@
     },
     {
       "when": {
+        "on_pole": "true"
+      },
+      "apply": {
+        "model": "powergrid:block/pole_crossarm_top_cap"
+      }
+    },
+    {
+      "when": {
         "axis": "x",
         "neg_pole": "true"
       },

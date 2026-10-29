@@ -118,7 +118,9 @@ $$\text{Net Received} = \text{Transmitted FE} \times \left(1 - (\text{Distance} 
 
 ### Pole Crossarms & Insulator Mounts
 - **Modular Rounded Timber Crossarm**: A rounded 6x6 horizontal creosote timber beam designed to attach directly to telephone poles.
-- **Intelligent Pole Attachment**: When placed against a `TreatedWoodPoleBlock`, it clamps firmly around the pole with a heavy forged-iron bracket and dual mounting bolts.
+- **Intelligent Side & Top Pole Attachment**:
+  - **Side-Mount**: When placed against the side of a `TreatedWoodPoleBlock`, timber beams reach directly to the pole surface with heavy wrap-around forged steel collar straps and diagonal support gussets with zero air gap.
+  - **Top-Mount (Flat Cap)**: When placed directly on top of a pole, it sits flat on the pole top with a heavy galvanized steel saddle plate, downward pole collar clasps, vertical riser column, and diagonal timber beam braces.
 - **Horizontal Expansion**: Seamlessly connects to adjacent crossarms on either side, allowing builders to construct wide 3-block, 5-block, or multi-circuit high-voltage crossarm structures.
 - **Auto-Extension**: Right-clicking an existing crossarm with a crossarm item automatically places the next segment extending horizontally outward.
 - **Flush Insulator Mounting**: Top beam surface is positioned at Y=16.0 so Wire Relays and Connectors sit flush on top with zero gap.
@@ -130,7 +132,10 @@ $$\text{Net Received} = \text{Transmitted FE} \times \left(1 - (\text{Distance} 
 ### Visual Quality & 3D Element Models
 - **32x32 High-Fidelity Default**: All blocks and items feature handcrafted 32x32 pixel art textures with creosote grain, metallic specular highlights, and glazed ceramic sheens.
 - **1024x1024 Ultra-HD Resource Pack**: Includes a dedicated `(v1.0) 1024x Power Grid.zip` resource pack featuring photorealistic ultra-high-definition textures for all grid equipment.
-- **Full 3D Element Geometry**: Wire relays and connectors feature true non-cube 3D element JSON geometry—cast iron mounting plates, ribbed ceramic porcelain insulator bells, and conductor wire saddles—completely eliminating transparent box or face-culling glitches.
+- **Full 3D Element Geometry & Precision Alignment**:
+  - **Crossarm-End Alignment**: When mounted on the end face of a horizontal crossarm, connectors and relays automatically center along the crossarm's beam axis ($Y=13.0$), eliminating any vertical sagging or drooping below the wood beam.
+  - **Pole & Crossarm Standoff Brackets**: When placed on the side of a round wooden pole or side of a crossarm, heavy structural steel standoff channel brackets extend 5px backwards across the block boundary to clasp the timber flush, eliminating floating gaps.
+  - **Flush Surface Mounting**: Mounted flush on full blocks, ceilings, and directly on top of poles and crossarm beams.
 
 ### Wire Connectors (Block Interface)
 - Mounted on the face of any machine, power plant, or battery.

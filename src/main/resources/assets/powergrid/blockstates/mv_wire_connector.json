@@ -1,28 +1,106 @@
 {
   "variants": {
-    "facing=down": {
+    "crossarm_end=false,facing=down,pole_mount=false": {
       "model": "powergrid:block/mv_wire_connector",
       "x": 180
     },
-    "facing=up": {
+    "crossarm_end=false,facing=down,pole_mount=true": {
+      "model": "powergrid:block/mv_wire_connector",
+      "x": 180
+    },
+    "crossarm_end=false,facing=up,pole_mount=false": {
       "model": "powergrid:block/mv_wire_connector"
     },
-    "facing=north": {
+    "crossarm_end=false,facing=up,pole_mount=true": {
+      "model": "powergrid:block/mv_wire_connector"
+    },
+    "crossarm_end=false,facing=north,pole_mount=false": {
       "model": "powergrid:block/mv_wire_connector",
       "x": 90
     },
-    "facing=south": {
+    "crossarm_end=false,facing=north,pole_mount=true": {
+      "model": "powergrid:block/mv_wire_connector_pole_mount",
+      "x": 90
+    },
+    "crossarm_end=false,facing=south,pole_mount=false": {
       "model": "powergrid:block/mv_wire_connector",
       "x": 90,
       "y": 180
     },
-    "facing=west": {
+    "crossarm_end=false,facing=south,pole_mount=true": {
+      "model": "powergrid:block/mv_wire_connector_pole_mount",
+      "x": 90,
+      "y": 180
+    },
+    "crossarm_end=false,facing=west,pole_mount=false": {
       "model": "powergrid:block/mv_wire_connector",
       "x": 90,
       "y": 270
     },
-    "facing=east": {
+    "crossarm_end=false,facing=west,pole_mount=true": {
+      "model": "powergrid:block/mv_wire_connector_pole_mount",
+      "x": 90,
+      "y": 270
+    },
+    "crossarm_end=false,facing=east,pole_mount=false": {
       "model": "powergrid:block/mv_wire_connector",
+      "x": 90,
+      "y": 90
+    },
+    "crossarm_end=false,facing=east,pole_mount=true": {
+      "model": "powergrid:block/mv_wire_connector_pole_mount",
+      "x": 90,
+      "y": 90
+    },
+    "crossarm_end=true,facing=down,pole_mount=false": {
+      "model": "powergrid:block/mv_wire_connector",
+      "x": 180
+    },
+    "crossarm_end=true,facing=down,pole_mount=true": {
+      "model": "powergrid:block/mv_wire_connector",
+      "x": 180
+    },
+    "crossarm_end=true,facing=up,pole_mount=false": {
+      "model": "powergrid:block/mv_wire_connector"
+    },
+    "crossarm_end=true,facing=up,pole_mount=true": {
+      "model": "powergrid:block/mv_wire_connector"
+    },
+    "crossarm_end=true,facing=north,pole_mount=false": {
+      "model": "powergrid:block/mv_wire_connector_crossarm_end",
+      "x": 90
+    },
+    "crossarm_end=true,facing=north,pole_mount=true": {
+      "model": "powergrid:block/mv_wire_connector_crossarm_end",
+      "x": 90
+    },
+    "crossarm_end=true,facing=south,pole_mount=false": {
+      "model": "powergrid:block/mv_wire_connector_crossarm_end",
+      "x": 90,
+      "y": 180
+    },
+    "crossarm_end=true,facing=south,pole_mount=true": {
+      "model": "powergrid:block/mv_wire_connector_crossarm_end",
+      "x": 90,
+      "y": 180
+    },
+    "crossarm_end=true,facing=west,pole_mount=false": {
+      "model": "powergrid:block/mv_wire_connector_crossarm_end",
+      "x": 90,
+      "y": 270
+    },
+    "crossarm_end=true,facing=west,pole_mount=true": {
+      "model": "powergrid:block/mv_wire_connector_crossarm_end",
+      "x": 90,
+      "y": 270
+    },
+    "crossarm_end=true,facing=east,pole_mount=false": {
+      "model": "powergrid:block/mv_wire_connector_crossarm_end",
+      "x": 90,
+      "y": 90
+    },
+    "crossarm_end=true,facing=east,pole_mount=true": {
+      "model": "powergrid:block/mv_wire_connector_crossarm_end",
       "x": 90,
       "y": 90
     }

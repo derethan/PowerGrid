@@ -1,0 +1,202 @@
+{
+  "textures": {
+    "particle": "powergrid:block/connector_base",
+    "base": "powergrid:block/connector_base",
+    "bushing": "powergrid:block/connector_bushing_mv",
+    "terminal": "powergrid:block/connector_terminal"
+  },
+  "elements": [
+    {
+      "from": [
+        3.5,
+        0.0,
+        -1.5
+      ],
+      "to": [
+        12.5,
+        1.5,
+        7.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#base"
+        },
+        "up": {
+          "texture": "#base"
+        },
+        "north": {
+          "texture": "#base"
+        },
+        "south": {
+          "texture": "#base"
+        },
+        "west": {
+          "texture": "#base"
+        },
+        "east": {
+          "texture": "#base"
+        }
+      }
+    },
+    {
+      "from": [
+        5.0,
+        1.5,
+        0.0
+      ],
+      "to": [
+        11.0,
+        3.2,
+        6.0
+      ],
+      "faces": {
+        "down": {
+          "texture": "#base"
+        },
+        "up": {
+          "texture": "#base"
+        },
+        "north": {
+          "texture": "#base"
+        },
+        "south": {
+          "texture": "#base"
+        },
+        "west": {
+          "texture": "#base"
+        },
+        "east": {
+          "texture": "#base"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        3.2,
+        -0.5
+      ],
+      "to": [
+        11.5,
+        5.5,
+        6.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bushing"
+        },
+        "up": {
+          "texture": "#bushing"
+        },
+        "north": {
+          "texture": "#bushing"
+        },
+        "south": {
+          "texture": "#bushing"
+        },
+        "west": {
+          "texture": "#bushing"
+        },
+        "east": {
+          "texture": "#bushing"
+        }
+      }
+    },
+    {
+      "from": [
+        5.0,
+        5.5,
+        0.0
+      ],
+      "to": [
+        11.0,
+        7.5,
+        6.0
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bushing"
+        },
+        "up": {
+          "texture": "#bushing"
+        },
+        "north": {
+          "texture": "#bushing"
+        },
+        "south": {
+          "texture": "#bushing"
+        },
+        "west": {
+          "texture": "#bushing"
+        },
+        "east": {
+          "texture": "#bushing"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        7.5,
+        0.5
+      ],
+      "to": [
+        10.5,
+        9.5,
+        5.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#terminal"
+        },
+        "up": {
+          "texture": "#terminal"
+        },
+        "north": {
+          "texture": "#terminal"
+        },
+        "south": {
+          "texture": "#terminal"
+        },
+        "west": {
+          "texture": "#terminal"
+        },
+        "east": {
+          "texture": "#terminal"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        9.5,
+        1.5
+      ],
+      "to": [
+        9.5,
+        10.5,
+        4.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#terminal"
+        },
+        "up": {
+          "texture": "#terminal"
+        },
+        "north": {
+          "texture": "#terminal"
+        },
+        "south": {
+          "texture": "#terminal"
+        },
+        "west": {
+          "texture": "#terminal"
+        },
+        "east": {
+          "texture": "#terminal"
+        }
+      }
+    }
+  ]
+}
