@@ -56,8 +56,12 @@ public class WireCoilItem extends Item {
         UUID playerId = player.getUUID();
         if (!PENDING_CONNECTIONS.containsKey(playerId)) {
             // First click: select starting node
-            if (!targetNode.canConnectWire(this.wireType, pos)) {
+            if (!targetNode.isWireTypeSupported(this.wireType)) {
                 player.sendSystemMessage(Component.translatable("message.powergrid.cannot_connect_tier", this.wireType.getDisplayName()));
+                return InteractionResult.FAIL;
+            }
+            if (!targetNode.canTakeMoreConnections()) {
+                player.sendSystemMessage(Component.translatable("message.powergrid.cannot_connect"));
                 return InteractionResult.FAIL;
             }
             PENDING_CONNECTIONS.put(playerId, pos);
@@ -75,6 +79,11 @@ public class WireCoilItem extends Item {
             BlockEntity startBE = level.getBlockEntity(startPos);
             if (!(startBE instanceof IWireNode startNode)) {
                 player.sendSystemMessage(Component.translatable("message.powergrid.wire_invalid_start"));
+                return InteractionResult.FAIL;
+            }
+
+            if (!startNode.isWireTypeSupported(this.wireType) || !targetNode.isWireTypeSupported(this.wireType)) {
+                player.sendSystemMessage(Component.translatable("message.powergrid.cannot_connect_tier", this.wireType.getDisplayName()));
                 return InteractionResult.FAIL;
             }
 

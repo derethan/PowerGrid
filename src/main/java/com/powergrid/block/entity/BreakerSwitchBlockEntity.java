@@ -27,18 +27,30 @@ public class BreakerSwitchBlockEntity extends BlockEntity implements IWireNode {
 
     @Override
     public WireType getSupportedWireType() {
-        return WireType.MV; // Standard industrial breaker supports LV and MV lines
+        return WireType.MV;
+    }
+
+    @Override
+    public boolean isWireTypeSupported(WireType type) {
+        return true; // Heavy duty industrial breaker switch supports LV, MV, and HV circuits
+    }
+
+    @Override
+    public int getMaxConnections() {
+        return 2; // Breaker acts as an in-line switch between 2 nodes
     }
 
     @Override
     public boolean canConnectWire(WireType type, BlockPos otherPos) {
-        if (otherPos.equals(this.worldPosition)) return false;
-        double distSq = this.worldPosition.distSqr(otherPos);
-        if (distSq > (double) (type.getMaxDistance() * type.getMaxDistance())) return false;
-        for (WireConnection conn : connections) {
-            if (conn.getTargetPos().equals(otherPos)) return false;
+        if (!isWireTypeSupported(type)) return false;
+        if (otherPos != null && !otherPos.equals(this.worldPosition)) {
+            double distSq = this.worldPosition.distSqr(otherPos);
+            if (distSq > (double) (type.getMaxDistance() * type.getMaxDistance())) return false;
+            for (WireConnection conn : connections) {
+                if (conn.getTargetPos().equals(otherPos)) return false;
+            }
         }
-        return connections.size() < 2; // Breaker acts as an in-line switch between 2 nodes
+        return connections.size() < getMaxConnections();
     }
 
     @Override

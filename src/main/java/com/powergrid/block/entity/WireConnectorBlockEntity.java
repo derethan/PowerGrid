@@ -42,15 +42,21 @@ public class WireConnectorBlockEntity extends BlockEntity implements IWireNode {
     }
 
     @Override
+    public int getMaxConnections() {
+        return 4;
+    }
+
+    @Override
     public boolean canConnectWire(WireType type, BlockPos otherPos) {
         if (type != this.wireType) return false;
-        if (otherPos.equals(this.worldPosition)) return false;
-        double distSq = this.worldPosition.distSqr(otherPos);
-        if (distSq > (double) (type.getMaxDistance() * type.getMaxDistance())) return false;
-        for (WireConnection conn : connections) {
-            if (conn.getTargetPos().equals(otherPos)) return false;
+        if (otherPos != null && !otherPos.equals(this.worldPosition)) {
+            double distSq = this.worldPosition.distSqr(otherPos);
+            if (distSq > (double) (type.getMaxDistance() * type.getMaxDistance())) return false;
+            for (WireConnection conn : connections) {
+                if (conn.getTargetPos().equals(otherPos)) return false;
+            }
         }
-        return connections.size() < 4;
+        return connections.size() < getMaxConnections();
     }
 
     @Override

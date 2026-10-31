@@ -36,10 +36,10 @@ public class WireRelayBlock extends Block implements EntityBlock {
     private static final VoxelShape SHAPE_EAST  = Block.box(0.0, 4.0, 4.0, 10.0, 12.0, 12.0);
 
     // Crossarm End Shapes (centered vertically at Y=13.0)
-    private static final VoxelShape SHAPE_NORTH_END = Block.box(4.0, 9.0, 6.0, 12.0, 16.0, 16.0);
-    private static final VoxelShape SHAPE_SOUTH_END = Block.box(4.0, 9.0, 0.0, 12.0, 16.0, 10.0);
-    private static final VoxelShape SHAPE_WEST_END  = Block.box(6.0, 9.0, 4.0, 16.0, 16.0, 12.0);
-    private static final VoxelShape SHAPE_EAST_END  = Block.box(0.0, 9.0, 4.0, 10.0, 16.0, 12.0);
+    private static final VoxelShape SHAPE_NORTH_END = Block.box(4.0, 9.5, 6.0, 12.0, 16.5, 16.0);
+    private static final VoxelShape SHAPE_SOUTH_END = Block.box(4.0, 9.5, 0.0, 12.0, 16.5, 10.0);
+    private static final VoxelShape SHAPE_WEST_END  = Block.box(6.0, 9.5, 4.0, 16.0, 16.5, 12.0);
+    private static final VoxelShape SHAPE_EAST_END  = Block.box(0.0, 9.5, 4.0, 10.0, 16.5, 12.0);
 
     // Pole Standoff Shapes (extended base)
     private static final VoxelShape SHAPE_NORTH_POLE = Block.box(4.0, 4.0, 0.0, 12.0, 12.0, 16.0);

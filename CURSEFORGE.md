@@ -89,7 +89,25 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.0.7)
+## 📦 Recent Release Notes (v1.0.12)
+- **Wire Coil Attachment False "Incompatible Wire Tier" Bug Fix**:
+  - Resolved an issue in `WireCoilItem` where clicking a connector or relay for the first time passed the node's own position as `otherPos` into `canConnectWire(WireType, BlockPos)`. Because `canConnectWire` verified `!otherPos.equals(this.worldPosition)`, it rejected the node on the first click with "Node does not support X wire!".
+  - Added `isWireTypeSupported(WireType)` and `canTakeMoreConnections()` to `IWireNode` to separate single-node tier and capacity checks from two-node distance and loop-connection checks.
+  - Implemented `getMaxConnections()` on `WireConnectorBlockEntity` (4 lines), `WireRelayBlockEntity` (8 lines), and `BreakerSwitchBlockEntity` (2 lines).
+  - Breaker Switches now universally support in-line disconnect switching across all three wire tiers (LV, MV, HV).
+
+---
+
+## 📦 Previous Release Notes (v1.0.9)
+- **Crossarm-End Wire Connector & Relay Vertical Alignment**:
+  - Corrected horizontal rotation coordinate transformation for crossarm end attachments across LV, MV, and HV Wire Connectors and Wire Relays.
+  - Sized the crossarm-end base plate to precisely $6.4 \times 6.4$ pixels ($X/Z \in [4.8, 11.2]$, $Y \in [9.8, 16.2]$) to fit flush onto the $6 \times 6$ timber crossarm beam and its steel end bracket.
+  - Centered all insulators, bushings, wire clamps, and terminals at exact beam centerline height $Y=13.0$ with zero vertical droop or overhang.
+  - Refined VoxelShape collision and selection bounding boxes across all horizontal facings (`NORTH`, `SOUTH`, `WEST`, `EAST`) to tightly bound the elevated $Y=13.0$ connector geometry ($Y \in [9.5, 16.5]$).
+
+---
+
+## 📦 Previous Release Notes (v1.0.7)
 - **Top-of-Pole Crossarm Mounting (`on_pole`)**:
   - Implemented `ON_POLE` state in `PoleCrossarmBlock` when placed directly on top of a pole (`TreatedWoodPoleBlock` or `SteelTrussPoleBlock`).
   - Added dedicated 3D steel top-cap mounting collar (`pole_crossarm_top_cap.json`) featuring a heavy flat steel cap plate resting directly on the top surface of the pole at $Y=0.0$, downward steel clasp flanges wrapping the pole top ($Y=-3.0..0.0$), a central vertical structural riser ($Y=1.2..10.0$), and diagonal angle gussets bracing the horizontal crossarm timber beam.

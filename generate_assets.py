@@ -894,49 +894,82 @@ write_json(os.path.join(MODELS_BLOCK, "steel_truss_pole.json"), {
 # 4. Wire Relay 3D Models
 def build_relay_model(tier, insul_tex, clamp_tex, variant="standard"):
     # variant can be: "standard", "crossarm_end", "pole_mount"
-    dz = -5.0 if variant == "crossarm_end" else 0.0
+    if variant == "crossarm_end":
+        # Centered vertically at Y=13.0 to match the crossarm beam axis (dz = +5.0 in Z)
+        # Base plate sized to 6.4x6.4 to match the crossarm end bracket exactly
+        if tier == "lv":
+            elements = [
+                make_element(4.8, 0.0, 9.8, 11.2, 1.0, 16.2, "bracket"),
+                make_element(7.0, 1.0, 12.0, 9.0, 2.5, 14.0, "bracket"),
+                make_element(5.0, 2.5, 10.0, 11.0, 4.5, 16.0, "insulator"),
+                make_element(6.0, 4.5, 11.0, 10.0, 6.0, 15.0, "insulator"),
+                make_element(5.5, 6.0, 11.5, 10.5, 7.5, 14.5, "clamp"),
+                make_element(7.5, 7.5, 12.5, 8.5, 8.2, 13.5, "clamp")
+            ]
+        elif tier == "mv":
+            elements = [
+                make_element(4.8, 0.0, 9.8, 11.2, 1.0, 16.2, "bracket"),
+                make_element(7.0, 1.0, 12.0, 9.0, 2.0, 14.0, "bracket"),
+                make_element(4.0, 2.0, 9.0, 12.0, 4.0, 17.0, "insulator"),
+                make_element(6.0, 4.0, 11.0, 10.0, 4.8, 15.0, "bracket"),
+                make_element(5.0, 4.8, 10.0, 11.0, 6.8, 16.0, "insulator"),
+                make_element(6.0, 6.8, 11.0, 10.0, 8.0, 15.0, "insulator"),
+                make_element(5.0, 8.0, 11.0, 11.0, 9.5, 15.0, "clamp"),
+                make_element(6.5, 9.5, 12.5, 9.5, 10.2, 13.5, "clamp")
+            ]
+        else: # hv
+            elements = [
+                make_element(4.8, 0.0, 9.8, 11.2, 1.2, 16.2, "bracket"),
+                make_element(3.5, 1.2, 8.5, 12.5, 3.5, 17.5, "insulator"),
+                make_element(6.0, 3.5, 11.0, 10.0, 4.2, 15.0, "bracket"),
+                make_element(4.5, 4.2, 9.5, 11.5, 6.5, 16.5, "insulator"),
+                make_element(6.0, 6.5, 11.0, 10.0, 7.2, 15.0, "bracket"),
+                make_element(5.0, 7.2, 10.0, 11.0, 9.5, 16.0, "insulator"),
+                make_element(4.5, 9.5, 10.5, 11.5, 11.5, 15.5, "clamp"),
+                make_element(5.5, 11.5, 11.5, 10.5, 12.5, 14.5, "clamp")
+            ]
+    else:
+        if tier == "lv":
+            elements = [
+                make_element(5.0, 0.0, 5.0, 11.0, 1.0, 11.0, "bracket", cullface=["down"] if variant == "standard" else None),
+                make_element(7.0, 1.0, 7.0, 9.0, 2.5, 9.0, "bracket"),
+                make_element(5.0, 2.5, 5.0, 11.0, 4.5, 11.0, "insulator"),
+                make_element(6.0, 4.5, 6.0, 10.0, 6.0, 10.0, "insulator"),
+                make_element(5.5, 6.0, 6.5, 10.5, 7.5, 9.5, "clamp"),
+                make_element(7.5, 7.5, 7.5, 8.5, 8.2, 8.5, "clamp")
+            ]
+        elif tier == "mv":
+            elements = [
+                make_element(4.5, 0.0, 4.5, 11.5, 1.0, 11.5, "bracket", cullface=["down"] if variant == "standard" else None),
+                make_element(7.0, 1.0, 7.0, 9.0, 2.0, 9.0, "bracket"),
+                make_element(4.0, 2.0, 4.0, 12.0, 4.0, 12.0, "insulator"),
+                make_element(6.0, 4.0, 6.0, 10.0, 4.8, 10.0, "bracket"),
+                make_element(5.0, 4.8, 5.0, 11.0, 6.8, 11.0, "insulator"),
+                make_element(6.0, 6.8, 6.0, 10.0, 8.0, 10.0, "insulator"),
+                make_element(5.0, 8.0, 6.0, 11.0, 9.5, 10.0, "clamp"),
+                make_element(6.5, 9.5, 7.5, 9.5, 10.2, 8.5, "clamp")
+            ]
+        else: # hv
+            elements = [
+                make_element(4.0, 0.0, 4.0, 12.0, 1.2, 12.0, "bracket", cullface=["down"] if variant == "standard" else None),
+                make_element(3.5, 1.2, 3.5, 12.5, 3.5, 12.5, "insulator"),
+                make_element(6.0, 3.5, 6.0, 10.0, 4.2, 10.0, "bracket"),
+                make_element(4.5, 4.2, 4.5, 11.5, 6.5, 11.5, "insulator"),
+                make_element(6.0, 6.5, 6.0, 10.0, 7.2, 10.0, "bracket"),
+                make_element(5.0, 7.2, 5.0, 11.0, 9.5, 11.0, "insulator"),
+                make_element(4.5, 9.5, 5.5, 11.5, 11.5, 10.5, "clamp"),
+                make_element(5.5, 11.5, 6.5, 10.5, 12.5, 9.5, "clamp")
+            ]
 
-    if tier == "lv":
-        elements = [
-            make_element(5.0, 0.0, 5.0 + dz, 11.0, 1.0, 11.0 + dz, "bracket", cullface=["down"] if variant == "standard" else None),
-            make_element(7.0, 1.0, 7.0 + dz, 9.0, 2.5, 9.0 + dz, "bracket"),
-            make_element(5.0, 2.5, 5.0 + dz, 11.0, 4.5, 11.0 + dz, "insulator"),
-            make_element(6.0, 4.5, 6.0 + dz, 10.0, 6.0, 10.0 + dz, "insulator"),
-            make_element(5.5, 6.0, 6.5 + dz, 10.5, 7.5, 9.5 + dz, "clamp"),
-            make_element(7.5, 7.5, 7.5 + dz, 8.5, 8.2, 8.5 + dz, "clamp")
-        ]
-    elif tier == "mv":
-        elements = [
-            make_element(4.5, 0.0, 4.5 + dz, 11.5, 1.0, 11.5 + dz, "bracket", cullface=["down"] if variant == "standard" else None),
-            make_element(7.0, 1.0, 7.0 + dz, 9.0, 2.0, 9.0 + dz, "bracket"),
-            make_element(4.0, 2.0, 4.0 + dz, 12.0, 4.0, 12.0 + dz, "insulator"),
-            make_element(6.0, 4.0, 6.0 + dz, 10.0, 4.8, 10.0 + dz, "bracket"),
-            make_element(5.0, 4.8, 5.0 + dz, 11.0, 6.8, 11.0 + dz, "insulator"),
-            make_element(6.0, 6.8, 6.0 + dz, 10.0, 8.0, 10.0 + dz, "insulator"),
-            make_element(5.0, 8.0, 6.0 + dz, 11.0, 9.5, 10.0 + dz, "clamp"),
-            make_element(6.5, 9.5, 7.5 + dz, 9.5, 10.2, 8.5 + dz, "clamp")
-        ]
-    else: # hv
-        elements = [
-            make_element(4.0, 0.0, 4.0 + dz, 12.0, 1.2, 12.0 + dz, "bracket", cullface=["down"] if variant == "standard" else None),
-            make_element(3.5, 1.2, 3.5 + dz, 12.5, 3.5, 12.5 + dz, "insulator"),
-            make_element(6.0, 3.5, 6.0 + dz, 10.0, 4.2, 10.0 + dz, "bracket"),
-            make_element(4.5, 4.2, 4.5 + dz, 11.5, 6.5, 11.5 + dz, "insulator"),
-            make_element(6.0, 6.5, 6.0 + dz, 10.0, 7.2, 10.0 + dz, "bracket"),
-            make_element(5.0, 7.2, 5.0 + dz, 11.0, 9.5, 11.0 + dz, "insulator"),
-            make_element(4.5, 9.5, 5.5 + dz, 11.5, 11.5, 10.5 + dz, "clamp"),
-            make_element(5.5, 11.5, 6.5 + dz, 10.5, 12.5, 9.5 + dz, "clamp")
-        ]
-
-    if variant == "pole_mount":
-        # Standoff bracket extending back 5px to clasp the pole or crossarm side face
-        elements.extend([
-            make_element(3.5, -5.2, 3.5, 12.5, -4.2, 12.5, "bracket"),
-            make_element(4.2, -4.2, 4.2, 6.0, 0.0, 11.8, "bracket"),
-            make_element(10.0, -4.2, 4.2, 11.8, 0.0, 11.8, "bracket"),
-            make_element(6.0, -4.2, 6.5, 10.0, 0.0, 9.5, "bracket"),
-            make_element(6.5, -5.8, 6.5, 9.5, -5.2, 9.5, "clamp")
-        ])
+        if variant == "pole_mount":
+            # Standoff bracket extending back 5px to clasp the pole or crossarm side face
+            elements.extend([
+                make_element(3.5, -5.2, 3.5, 12.5, -4.2, 12.5, "bracket"),
+                make_element(4.2, -4.2, 4.2, 6.0, 0.0, 11.8, "bracket"),
+                make_element(10.0, -4.2, 4.2, 11.8, 0.0, 11.8, "bracket"),
+                make_element(6.0, -4.2, 6.5, 10.0, 0.0, 9.5, "bracket"),
+                make_element(6.5, -5.8, 6.5, 9.5, -5.2, 9.5, "clamp")
+            ])
 
     return {
         "textures": {
@@ -956,44 +989,72 @@ for tier, insul, clamp in [("lv", "relay_insulator_lv", "wire_clamp_lv"), ("mv",
 # 5. Wire Connector 3D Models
 def build_connector_model(tier, insul_tex, variant="standard"):
     # variant can be: "standard", "crossarm_end", "pole_mount"
-    dz = -5.0 if variant == "crossarm_end" else 0.0
+    if variant == "crossarm_end":
+        # Centered vertically at Y=13.0 to match the crossarm beam axis (dz = +5.0 in Z)
+        # Base plate sized to 6.4x6.4 to match the crossarm end bracket exactly
+        if tier == "lv":
+            elements = [
+                make_element(4.8, 0.0, 9.8, 11.2, 1.5, 16.2, "base"),
+                make_element(5.5, 1.5, 10.5, 10.5, 3.0, 15.5, "base"),
+                make_element(5.0, 3.0, 10.0, 11.0, 6.0, 16.0, "bushing"),
+                make_element(6.0, 6.0, 11.0, 10.0, 8.0, 15.0, "terminal"),
+                make_element(7.0, 8.0, 12.0, 9.0, 9.0, 14.0, "terminal")
+            ]
+        elif tier == "mv":
+            elements = [
+                make_element(4.8, 0.0, 9.8, 11.2, 1.5, 16.2, "base"),
+                make_element(5.0, 1.5, 10.0, 11.0, 3.2, 16.0, "base"),
+                make_element(4.5, 3.2, 9.5, 11.5, 5.5, 16.5, "bushing"),
+                make_element(5.0, 5.5, 10.0, 11.0, 7.5, 16.0, "bushing"),
+                make_element(5.5, 7.5, 10.5, 10.5, 9.5, 15.5, "terminal"),
+                make_element(6.5, 9.5, 11.5, 9.5, 10.5, 14.5, "terminal")
+            ]
+        else: # hv
+            elements = [
+                make_element(4.8, 0.0, 9.8, 11.2, 1.8, 16.2, "base"),
+                make_element(4.5, 1.8, 9.5, 11.5, 3.8, 16.5, "base"),
+                make_element(4.0, 3.8, 9.0, 12.0, 8.5, 17.0, "bushing"),
+                make_element(5.0, 8.5, 10.0, 11.0, 10.0, 16.0, "base"),
+                make_element(5.0, 10.0, 10.0, 11.0, 12.0, 16.0, "terminal"),
+                make_element(4.5, 12.0, 9.5, 11.5, 13.0, 16.5, "terminal")
+            ]
+    else:
+        if tier == "lv":
+            elements = [
+                make_element(4.0, 0.0, 4.0, 12.0, 1.5, 12.0, "base", cullface=["down"] if variant == "standard" else None),
+                make_element(5.5, 1.5, 5.5, 10.5, 3.0, 10.5, "base"),
+                make_element(5.0, 3.0, 5.0, 11.0, 6.0, 11.0, "bushing"),
+                make_element(6.0, 6.0, 6.0, 10.0, 8.0, 10.0, "terminal"),
+                make_element(7.0, 8.0, 7.0, 9.0, 9.0, 9.0, "terminal")
+            ]
+        elif tier == "mv":
+            elements = [
+                make_element(3.5, 0.0, 3.5, 12.5, 1.5, 12.5, "base", cullface=["down"] if variant == "standard" else None),
+                make_element(5.0, 1.5, 5.0, 11.0, 3.2, 11.0, "base"),
+                make_element(4.5, 3.2, 4.5, 11.5, 5.5, 11.5, "bushing"),
+                make_element(5.0, 5.5, 5.0, 11.0, 7.5, 11.0, "bushing"),
+                make_element(5.5, 7.5, 5.5, 10.5, 9.5, 10.5, "terminal"),
+                make_element(6.5, 9.5, 6.5, 9.5, 10.5, 9.5, "terminal")
+            ]
+        else: # hv
+            elements = [
+                make_element(3.0, 0.0, 3.0, 13.0, 1.8, 13.0, "base", cullface=["down"] if variant == "standard" else None),
+                make_element(4.5, 1.8, 4.5, 11.5, 3.8, 11.5, "base"),
+                make_element(4.0, 3.8, 4.0, 12.0, 8.5, 12.0, "bushing"),
+                make_element(5.0, 8.5, 5.0, 11.0, 10.0, 11.0, "base"),
+                make_element(5.0, 10.0, 5.0, 11.0, 12.0, 11.0, "terminal"),
+                make_element(4.5, 12.0, 4.5, 11.5, 13.0, 11.5, "terminal")
+            ]
 
-    if tier == "lv":
-        elements = [
-            make_element(4.0, 0.0, 4.0 + dz, 12.0, 1.5, 12.0 + dz, "base", cullface=["down"] if variant == "standard" else None),
-            make_element(5.5, 1.5, 5.5 + dz, 10.5, 3.0, 10.5 + dz, "base"),
-            make_element(5.0, 3.0, 5.0 + dz, 11.0, 6.0, 11.0 + dz, "bushing"),
-            make_element(6.0, 6.0, 6.0 + dz, 10.0, 8.0, 10.0 + dz, "terminal"),
-            make_element(7.0, 8.0, 7.0 + dz, 9.0, 9.0, 9.0 + dz, "terminal")
-        ]
-    elif tier == "mv":
-        elements = [
-            make_element(3.5, 0.0, 3.5 + dz, 12.5, 1.5, 12.5 + dz, "base", cullface=["down"] if variant == "standard" else None),
-            make_element(5.0, 1.5, 5.0 + dz, 11.0, 3.2, 11.0 + dz, "base"),
-            make_element(4.5, 3.2, 4.5 + dz, 11.5, 5.5, 11.5 + dz, "bushing"),
-            make_element(5.0, 5.5, 5.0 + dz, 11.0, 7.5, 11.0 + dz, "bushing"),
-            make_element(5.5, 7.5, 5.5 + dz, 10.5, 9.5, 10.5 + dz, "terminal"),
-            make_element(6.5, 9.5, 6.5 + dz, 9.5, 10.5, 9.5 + dz, "terminal")
-        ]
-    else: # hv
-        elements = [
-            make_element(3.0, 0.0, 3.0 + dz, 13.0, 1.8, 13.0 + dz, "base", cullface=["down"] if variant == "standard" else None),
-            make_element(4.5, 1.8, 4.5 + dz, 11.5, 3.8, 11.5 + dz, "base"),
-            make_element(4.0, 3.8, 4.0 + dz, 12.0, 8.5, 12.0 + dz, "bushing"),
-            make_element(5.0, 8.5, 5.0 + dz, 11.0, 10.0, 11.0 + dz, "base"),
-            make_element(5.0, 10.0, 5.0 + dz, 11.0, 12.0, 11.0 + dz, "terminal"),
-            make_element(4.5, 12.0, 4.5 + dz, 11.5, 13.0, 11.5 + dz, "terminal")
-        ]
-
-    if variant == "pole_mount":
-        # Standoff bracket extending back 5px to clasp the pole or crossarm side face
-        elements.extend([
-            make_element(3.5, -5.2, 3.5, 12.5, -4.2, 12.5, "base"),
-            make_element(4.2, -4.2, 4.2, 6.0, 0.0, 11.8, "base"),
-            make_element(10.0, -4.2, 4.2, 11.8, 0.0, 11.8, "base"),
-            make_element(6.0, -4.2, 6.5, 10.0, 0.0, 9.5, "base"),
-            make_element(6.5, -5.8, 6.5, 9.5, -5.2, 9.5, "terminal")
-        ])
+        if variant == "pole_mount":
+            # Standoff bracket extending back 5px to clasp the pole or crossarm side face
+            elements.extend([
+                make_element(3.5, -5.2, 3.5, 12.5, -4.2, 12.5, "base"),
+                make_element(4.2, -4.2, 4.2, 6.0, 0.0, 11.8, "base"),
+                make_element(10.0, -4.2, 4.2, 11.8, 0.0, 11.8, "base"),
+                make_element(6.0, -4.2, 6.5, 10.0, 0.0, 9.5, "base"),
+                make_element(6.5, -5.8, 6.5, 9.5, -5.2, 9.5, "terminal")
+            ])
 
     return {
         "textures": {

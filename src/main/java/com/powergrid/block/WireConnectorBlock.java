@@ -39,10 +39,10 @@ public class WireConnectorBlock extends Block implements EntityBlock {
     private static final VoxelShape SHAPE_EAST  = Block.box(0.0, 3.5, 3.5, 11.0, 12.5, 12.5);
 
     // Crossarm End Shapes (centered vertically at Y=13.0)
-    private static final VoxelShape SHAPE_NORTH_END = Block.box(3.5, 8.5, 5.0, 12.5, 16.0, 16.0);
-    private static final VoxelShape SHAPE_SOUTH_END = Block.box(3.5, 8.5, 0.0, 12.5, 16.0, 11.0);
-    private static final VoxelShape SHAPE_WEST_END  = Block.box(5.0, 8.5, 3.5, 16.0, 16.0, 12.5);
-    private static final VoxelShape SHAPE_EAST_END  = Block.box(0.0, 8.5, 3.5, 11.0, 16.0, 12.5);
+    private static final VoxelShape SHAPE_NORTH_END = Block.box(4.0, 9.5, 5.0, 12.0, 16.5, 16.0);
+    private static final VoxelShape SHAPE_SOUTH_END = Block.box(4.0, 9.5, 0.0, 12.0, 16.5, 11.0);
+    private static final VoxelShape SHAPE_WEST_END  = Block.box(5.0, 9.5, 4.0, 16.0, 16.5, 12.0);
+    private static final VoxelShape SHAPE_EAST_END  = Block.box(0.0, 9.5, 4.0, 11.0, 16.5, 12.0);
 
     // Pole Standoff Shapes (extended base)
     private static final VoxelShape SHAPE_NORTH_POLE = Block.box(3.5, 3.5, 0.0, 12.5, 12.5, 16.0);
