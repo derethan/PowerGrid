@@ -1,6 +1,8 @@
 package com.powergrid.grid;
 
+import com.powergrid.PowerGridMod;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.Item;
 
 public enum WireType implements StringRepresentable {
     LV("lv", 400, 16, 0.02f, "Low Voltage (LV)"),
@@ -40,5 +42,37 @@ public enum WireType implements StringRepresentable {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public Item getCoilItem() {
+        return switch (this) {
+            case LV -> PowerGridMod.LV_WIRE_COIL.get();
+            case MV -> PowerGridMod.MV_WIRE_COIL.get();
+            case HV -> PowerGridMod.HV_WIRE_COIL.get();
+        };
+    }
+
+    public int getColor() {
+        return switch (this) {
+            case LV -> 0xFFB85D19; // Copper reddish brown
+            case MV -> 0xFF4A4E5A; // Dark insulated slate
+            case HV -> 0xFFC5CBD3; // Galvanized aluminum-steel strand
+        };
+    }
+
+    public float getCableRadius() {
+        return switch (this) {
+            case LV -> 0.025f;
+            case MV -> 0.035f;
+            case HV -> 0.045f;
+        };
+    }
+
+    public float getSagFactor() {
+        return switch (this) {
+            case LV -> 0.035f;
+            case MV -> 0.030f;
+            case HV -> 0.022f;
+        };
     }
 }

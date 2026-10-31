@@ -1,6 +1,7 @@
 package com.powergrid.item;
 
 import com.powergrid.block.entity.PowerPlantControllerBlockEntity;
+import com.powergrid.block.entity.WireConnectorBlockEntity;
 import com.powergrid.grid.IWireNode;
 import com.powergrid.grid.WireConnection;
 import net.minecraft.core.BlockPos;
@@ -47,6 +48,9 @@ public class VoltmeterItem extends Item {
             foundInfo = true;
             player.sendSystemMessage(Component.translatable("message.powergrid.voltmeter_header"));
             player.sendSystemMessage(Component.translatable("message.powergrid.voltmeter_node_tier", node.getSupportedWireType().getDisplayName()));
+            if (be instanceof WireConnectorBlockEntity connector) {
+                player.sendSystemMessage(Component.literal("§7Mode: §r").append(connector.getMode().getFormattedName()));
+            }
             player.sendSystemMessage(Component.translatable("message.powergrid.voltmeter_conn_count", node.getConnections().size()));
             for (WireConnection conn : node.getConnections()) {
                 player.sendSystemMessage(Component.translatable("message.powergrid.voltmeter_conn_line",

@@ -6,6 +6,12 @@ import com.powergrid.grid.IWireNode;
 import com.powergrid.grid.WireConnection;
 import com.powergrid.grid.WireType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -23,6 +29,22 @@ public class BreakerSwitchBlockEntity extends BlockEntity implements IWireNode {
 
     public boolean isCircuitClosed() {
         return !getBlockState().getValue(BreakerSwitchBlock.OPEN);
+    }
+
+    private void syncToClient() {
+        if (this.level != null && !this.level.isClientSide()) {
+            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveWithoutMetadata(registries);
     }
 
     @Override
@@ -57,18 +79,21 @@ public class BreakerSwitchBlockEntity extends BlockEntity implements IWireNode {
     public void addConnection(BlockPos targetPos, WireType type, double distance) {
         this.connections.add(new WireConnection(targetPos, type, distance));
         setChanged();
+        syncToClient();
     }
 
     @Override
     public void removeConnection(BlockPos targetPos) {
         this.connections.removeIf(conn -> conn.getTargetPos().equals(targetPos));
         setChanged();
+        syncToClient();
     }
 
     @Override
     public void clearAllConnections() {
         this.connections.clear();
         setChanged();
+        syncToClient();
     }
 
     @Override
@@ -79,6 +104,32 @@ public class BreakerSwitchBlockEntity extends BlockEntity implements IWireNode {
     @Override
     public BlockPos getNodePos() {
         return this.worldPosition;
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (this.level == null) return;
+
+        List<WireConnection> toSever = new ArrayList<>(this.connections);
+        this.connections.clear();
+        setChanged();
+
+        for (WireConnection conn : toSever) {
+            BlockPos otherPos = conn.getTargetPos();
+            if (this.level.isLoaded(otherPos)) {
+                BlockEntity otherBE = this.level.getBlockEntity(otherPos);
+                if (otherBE instanceof IWireNode otherNode) {
+                    otherNode.removeConnection(pos);
+                    this.level.sendBlockUpdated(otherPos, this.level.getBlockState(otherPos), this.level.getBlockState(otherPos), 3);
+                }
+            }
+
+            // Drop wire coils in survival
+            if (this.level instanceof ServerLevel serverLevel) {
+                Block.popResource(serverLevel, pos, new ItemStack(conn.getWireType().getCoilItem()));
+            }
+        }
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.powergrid.block.entity;
 
 import com.powergrid.PowerGridMod;
+import com.powergrid.block.WireConnectorBlock;
+import com.powergrid.grid.ConnectorMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -30,6 +32,18 @@ public class HeavyAccumulatorBlockEntity extends BlockEntity {
         // Auto-output energy into adjacent consumers
         for (Direction dir : Direction.values()) {
             BlockPos targetPos = pos.relative(dir);
+
+            // Avoid pushing back into a Wire Connector unless it is explicitly set to INPUT mode
+            BlockState targetState = level.getBlockState(targetPos);
+            if (targetState.getBlock() instanceof WireConnectorBlock) {
+                BlockEntity be = level.getBlockEntity(targetPos);
+                if (be instanceof WireConnectorBlockEntity connector) {
+                    if (connector.getMode() != ConnectorMode.INPUT) {
+                        continue;
+                    }
+                }
+            }
+
             EnergyHandler targetEnergy = level.getCapability(Capabilities.Energy.BLOCK, targetPos, dir.getOpposite());
             if (targetEnergy != null) {
                 int toPush = Math.min(this.energyStorage.getAmountAsInt(), MAX_RATE);

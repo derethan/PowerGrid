@@ -2,12 +2,24 @@ package com.powergrid.block.entity;
 
 import com.powergrid.PowerGridMod;
 import com.powergrid.block.WireConnectorBlock;
+import com.powergrid.grid.ConnectorMode;
+import com.powergrid.grid.EnergyGridManager;
 import com.powergrid.grid.IWireNode;
 import com.powergrid.grid.WireConnection;
 import com.powergrid.grid.WireType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -24,6 +36,7 @@ public class WireConnectorBlockEntity extends BlockEntity implements IWireNode {
     private final WireType wireType;
     private final List<WireConnection> connections = new ArrayList<>();
     public final SimpleEnergyHandler energyStorage;
+    private ConnectorMode mode = ConnectorMode.AUTO;
 
     public WireConnectorBlockEntity(BlockPos pos, BlockState state, WireType wireType) {
         super(PowerGridMod.WIRE_CONNECTOR_BE.get(), pos, state);
@@ -34,6 +47,42 @@ public class WireConnectorBlockEntity extends BlockEntity implements IWireNode {
 
     public WireConnectorBlockEntity(BlockPos pos, BlockState state) {
         this(pos, state, WireType.LV);
+    }
+
+    public ConnectorMode getMode() {
+        return this.mode;
+    }
+
+    public void setMode(ConnectorMode mode) {
+        this.mode = mode;
+        setChanged();
+        syncToClient();
+    }
+
+    public void cycleMode(Player player) {
+        this.mode = this.mode.next();
+        setChanged();
+        syncToClient();
+        if (this.level != null) {
+            this.level.playSound(null, this.worldPosition, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.4f, 1.8f);
+        }
+        player.sendSystemMessage(Component.translatable("message.powergrid.connector_mode", this.mode.getFormattedName()));
+    }
+
+    private void syncToClient() {
+        if (this.level != null && !this.level.isClientSide()) {
+            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveWithoutMetadata(registries);
     }
 
     @Override
@@ -63,18 +112,21 @@ public class WireConnectorBlockEntity extends BlockEntity implements IWireNode {
     public void addConnection(BlockPos targetPos, WireType type, double distance) {
         this.connections.add(new WireConnection(targetPos, type, distance));
         setChanged();
+        syncToClient();
     }
 
     @Override
     public void removeConnection(BlockPos targetPos) {
         this.connections.removeIf(conn -> conn.getTargetPos().equals(targetPos));
         setChanged();
+        syncToClient();
     }
 
     @Override
     public void clearAllConnections() {
         this.connections.clear();
         setChanged();
+        syncToClient();
     }
 
     @Override
@@ -88,31 +140,18 @@ public class WireConnectorBlockEntity extends BlockEntity implements IWireNode {
     }
 
     public void serverTick(Level level, BlockPos pos, BlockState state) {
-        Direction facing = state.getValue(WireConnectorBlock.FACING);
-        Direction attachedFace = facing.getOpposite();
-        BlockPos attachedPos = pos.relative(attachedFace);
+        // Distribute energy across wire network using the EnergyGridManager BFS router
+        EnergyGridManager.distributePower(this);
 
-        // Exchange energy with attached machine/generator/storage
-        EnergyHandler neighborEnergy = level.getCapability(Capabilities.Energy.BLOCK, attachedPos, facing);
-        if (neighborEnergy != null) {
-            // Pull energy from neighbor if connector has room
-            int room = this.energyStorage.getCapacityAsInt() - this.energyStorage.getAmountAsInt();
-            if (room > 0) {
-                try (var tx = Transaction.openRoot()) {
-                    int extracted = neighborEnergy.extract(Math.min(room, this.wireType.getTransferRate()), tx);
-                    if (extracted > 0) {
-                        int inserted = this.energyStorage.insert(extracted, tx);
-                        if (inserted == extracted) {
-                            tx.commit();
-                            setChanged();
-                        }
-                    }
-                }
-            }
+        // If connector has leftover energy in buffer and mode allows outputting, deliver to attached block
+        if (this.mode != ConnectorMode.INPUT && this.energyStorage.getAmountAsInt() > 0) {
+            Direction facing = state.getValue(WireConnectorBlock.FACING);
+            Direction attachedFace = facing.getOpposite();
+            BlockPos attachedPos = pos.relative(attachedFace);
 
-            // Push energy to neighbor if connector has energy
-            int stored = this.energyStorage.getAmountAsInt();
-            if (stored > 0) {
+            EnergyHandler neighborEnergy = level.getCapability(Capabilities.Energy.BLOCK, attachedPos, facing);
+            if (neighborEnergy != null) {
+                int stored = this.energyStorage.getAmountAsInt();
                 int toPush = Math.min(stored, this.wireType.getTransferRate());
                 try (var tx = Transaction.openRoot()) {
                     int extracted = this.energyStorage.extract(toPush, tx);
@@ -126,36 +165,30 @@ public class WireConnectorBlockEntity extends BlockEntity implements IWireNode {
                 }
             }
         }
+    }
 
-        // Transmit energy through connected wire lines
-        int currentStored = this.energyStorage.getAmountAsInt();
-        if (currentStored > 0 && !connections.isEmpty()) {
-            int toDistribute = Math.min(currentStored, this.wireType.getTransferRate());
-            int perConn = toDistribute / connections.size();
-            if (perConn > 0) {
-                for (WireConnection conn : connections) {
-                    if (level.getBlockEntity(conn.getTargetPos()) instanceof WireConnectorBlockEntity targetBE) {
-                        int available = targetBE.energyStorage.getCapacityAsInt() - targetBE.energyStorage.getAmountAsInt();
-                        if (available > 0) {
-                            int send = Math.min(perConn, available);
-                            float lossPercent = (float) conn.getDistance() * this.wireType.getLossPerBlock();
-                            int loss = Math.round(send * lossPercent);
-                            int netReceive = Math.max(0, send - loss);
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (this.level == null) return;
 
-                            try (var tx = Transaction.openRoot()) {
-                                int extracted = this.energyStorage.extract(send, tx);
-                                if (extracted > 0) {
-                                    int inserted = targetBE.energyStorage.insert(netReceive, tx);
-                                    if (inserted == netReceive) {
-                                        tx.commit();
-                                        targetBE.setChanged();
-                                        setChanged();
-                                    }
-                                }
-                            }
-                        }
-                    }
+        List<WireConnection> toSever = new ArrayList<>(this.connections);
+        this.connections.clear();
+        setChanged();
+
+        for (WireConnection conn : toSever) {
+            BlockPos otherPos = conn.getTargetPos();
+            if (this.level.isLoaded(otherPos)) {
+                BlockEntity otherBE = this.level.getBlockEntity(otherPos);
+                if (otherBE instanceof IWireNode otherNode) {
+                    otherNode.removeConnection(pos);
+                    this.level.sendBlockUpdated(otherPos, this.level.getBlockState(otherPos), this.level.getBlockState(otherPos), 3);
                 }
+            }
+
+            // Drop wire coils in survival
+            if (this.level instanceof ServerLevel serverLevel) {
+                Block.popResource(serverLevel, pos, new ItemStack(conn.getWireType().getCoilItem()));
             }
         }
     }
@@ -164,6 +197,7 @@ public class WireConnectorBlockEntity extends BlockEntity implements IWireNode {
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.putInt("storedEnergy", this.energyStorage.getAmountAsInt());
+        output.putString("connectorMode", this.mode.getSerializedName());
         output.putInt("connCount", this.connections.size());
         for (int i = 0; i < this.connections.size(); i++) {
             WireConnection c = this.connections.get(i);
@@ -179,6 +213,10 @@ public class WireConnectorBlockEntity extends BlockEntity implements IWireNode {
         super.loadAdditional(input);
         int stored = input.getIntOr("storedEnergy", 0);
         this.energyStorage.set(stored);
+
+        String modeStr = input.getStringOr("connectorMode", "auto");
+        this.mode = modeStr.equals("input") ? ConnectorMode.INPUT : modeStr.equals("output") ? ConnectorMode.OUTPUT : ConnectorMode.AUTO;
+
         this.connections.clear();
         int count = input.getIntOr("connCount", 0);
         for (int i = 0; i < count; i++) {

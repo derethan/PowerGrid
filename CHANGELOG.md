@@ -4,6 +4,37 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.0.13] - 2026-10-31
+
+### Added
+- **3D Physical Catenary Overhead Powerlines**:
+  - Implemented high-performance, segmented 3D powerline rendering (`WireNodeRenderer` & `WireNodeRenderState`) for `WireConnectorBlockEntity`, `WireRelayBlockEntity`, and `BreakerSwitchBlockEntity`.
+  - Realistic gravitational catenary sag formula calculated across all spans with dual-perpendicular cross-quad geometry shaded with in-world lighting.
+  - Distinct wire tier styling and coloring: LV warm copper (`#B85D19`), MV insulated dark slate (`#4A4E5A`), and HV galvanized steel strand (`#C5CBD3`).
+  - Sub-block terminal alignment precisely anchoring wire origins to ceramic insulator tips across all blockstates (`UP`, `DOWN`, `NORTH`, `SOUTH`, `EAST`, `WEST`, `POLE_MOUNT`, and `CROSSARM_END`).
+  - Added dedicated `wire_cable.png` textures in 32x32 default resolution and 1024x1024 Ultra-HD resource pack.
+- **Directional Connector Modes (`AUTO`, `INPUT`, `OUTPUT`)**:
+  - Added configurable connector modes on `WireConnectorBlockEntity` cycled by right-clicking with the `EngineerHammerItem`.
+  - `INPUT` (Orange): Dedicated to generators and supply lines — extracts from the attached machine and pushes directly to the wire grid.
+  - `OUTPUT` (Blue): Dedicated to machines and energy storage — receives from the wire grid and feeds into the attached machine without back-feeding.
+  - `AUTO` (Green / Default): Smart bidirectional sensing delivering energy only to hungry sinks.
+  - Sound effect and actionbar notification on mode cycle.
+
+### Fixed
+- **Wire Relay Passthrough & Grid Energy Routing**:
+  - Implemented `EnergyGridManager` with a unified BFS pathfinding engine. Wire Relays now seamlessly route power as pass-through waypoints between sources and sinks.
+  - Closed Breaker Switches freely pass energy, while open switches cleanly sever the circuit.
+  - Eliminated intermediate buffer sloshing and infinite loop energy depletion by extracting directly from source machines and delivering to destination machines in unified transactions with line loss applied once per transmission path.
+  - Prevented batteries (`HeavyAccumulatorBlockEntity`) from force-feeding into wire connectors in `OUTPUT` mode or `AUTO` mode without downstream demand.
+- **Orphaned Wire Connections & Wire Refunds on Destruction**:
+  - Implemented `preRemoveSideEffects` on `WireConnectorBlockEntity`, `WireRelayBlockEntity`, and `BreakerSwitchBlockEntity`.
+  - Breaking any connected node immediately notifies and severs connections on all remote nodes, triggers block updates, and refunds the respective wire coils (`lv_wire_coil`, `mv_wire_coil`, `hv_wire_coil`) as ground item drops in Survival mode.
+  - `WireCuttersItem` now refunds wire coils when cutting active wire spans.
+- **Client Synchronization**:
+  - Implemented `getUpdatePacket()` and `getUpdateTag()` on all `IWireNode` block entities, ensuring client instances have live, synchronized wire connection and mode data.
+
+---
+
 ## [1.0.12] - 2026-10-30
 
 ### Fixed

@@ -89,7 +89,19 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.0.12)
+## 📦 Recent Release Notes (v1.0.13)
+- **3D Physical Overhead Powerlines with Gravitational Sag**:
+  - Fully implemented multi-segment 3D powerline rendering connecting all poles, crossarms, and switches. Wires sag naturally with gravitational catenary physics and render with tier-accurate styling (Copper LV, Electrum MV, Galvanized Steel HV).
+- **Directional Connector Modes (`AUTO`, `INPUT`, `OUTPUT`)**:
+  - Right-clicking wire connectors with an Engineer's Hammer toggles between `INPUT` (generators), `OUTPUT` (machines/batteries), and `AUTO` (smart sensing).
+- **Wire Relay Passthrough & Energy Routing Fix**:
+  - Complete BFS routing engine (`EnergyGridManager`) allowing Wire Relays and closed Breaker Switches to pass power smoothly without buffer sloshing or resistance depletion loops.
+- **Node Destruction Cleanup & Wire Coil Refunds**:
+  - Breaking any connected block severs all active connections on remote nodes and refunds the wire coils on the ground in Survival mode.
+
+---
+
+## 📦 Previous Release Notes (v1.0.12)
 - **Wire Coil Attachment False "Incompatible Wire Tier" Bug Fix**:
   - Resolved an issue in `WireCoilItem` where clicking a connector or relay for the first time passed the node's own position as `otherPos` into `canConnectWire(WireType, BlockPos)`. Because `canConnectWire` verified `!otherPos.equals(this.worldPosition)`, it rejected the node on the first click with "Node does not support X wire!".
   - Added `isWireTypeSupported(WireType)` and `canTakeMoreConnections()` to `IWireNode` to separate single-node tier and capacity checks from two-node distance and loop-connection checks.

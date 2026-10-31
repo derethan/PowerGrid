@@ -62,6 +62,7 @@
   "message.powergrid.wire_invalid_start": "§c[Power Grid]§r Starting node is no longer valid.",
   "message.powergrid.no_wires_to_cut": "§7[Power Grid]§r No connected wires to cut.",
   "message.powergrid.wires_severed": "§c[Power Grid]§r Severed %s wire connection(s).",
+  "message.powergrid.connector_mode": "§6[Power Grid]§r Connector Mode set to: %s",
 
   "message.powergrid.voltmeter_header": "§6===== [Power Grid Diagnostic] =====§r",
   "message.powergrid.voltmeter_node_tier": "§7Node Tier: §e%s§r",

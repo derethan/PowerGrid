@@ -1,6 +1,7 @@
 package com.powergrid.item;
 
 import com.powergrid.block.entity.PowerPlantControllerBlockEntity;
+import com.powergrid.block.entity.WireConnectorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -33,6 +34,13 @@ public class EngineerHammerItem extends Item {
         if (player == null) return InteractionResult.PASS;
 
         BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof WireConnectorBlockEntity connector) {
+            if (!level.isClientSide()) {
+                connector.cycleMode(player);
+            }
+            return InteractionResult.SUCCESS;
+        }
+
         if (be instanceof PowerPlantControllerBlockEntity controller) {
             if (!level.isClientSide()) {
                 controller.toggleAssembly(player);

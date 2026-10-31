@@ -132,6 +132,14 @@ def render_pole_crossarm_end(size):
         draw_ellipse(d, size, rx - 0.4, ry - 0.4, rx + 0.4, ry + 0.4, fill=(135, 145, 160))
     return im
 
+def render_wire_cable(size):
+    im = Image.new("RGBA", (size, size), (220, 224, 230, 255))
+    d = ImageDraw.Draw(im)
+    step = max(1, size // 8)
+    for i in range(0, size, step):
+        d.line([(0, i), (size, i)], fill=(195, 200, 208, 255), width=max(1, size // 32))
+    return im
+
 def render_steel_bracket(size):
     im = Image.new("RGBA", (size, size), (52, 57, 65, 255))
     d = ImageDraw.Draw(im)
@@ -589,6 +597,7 @@ TEXTURE_DEFS = {
         ("connector_bushing_mv", lambda s: render_insulator(s, (185, 110, 60), (230, 150, 90), (135, 70, 30))),
         ("connector_bushing_hv", lambda s: render_insulator(s, (115, 130, 150), (170, 185, 205), (70, 85, 105))),
         ("connector_terminal", render_connector_terminal),
+        ("wire_cable", render_wire_cable),
         ("transformer_front", render_transformer_front),
         ("transformer_side", render_transformer_side),
         ("transformer_top", render_transformer_top),
