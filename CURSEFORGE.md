@@ -89,7 +89,16 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.0.15)
+## 📦 Recent Release Notes (v1.0.16)
+- **Faster Block Breaking & Halved Hardness**:
+  - Halved the break hardness of Treated Wood Poles and Crossarms (from 2.0 to 1.0) and Steel Truss Poles (from 4.5 to 2.0).
+  - Added `#mineable/axe` tag to wooden poles and crossarms so axes chop them quickly.
+- **Survival Block Item Drops**:
+  - Added block loot tables across all Power Grid blocks so breaking them in Survival mode returns the item to the player.
+
+---
+
+## 📦 Previous Release Notes (v1.0.15)
 - **Custom Creative Inventory Tab Icon**:
   - Replaced the hammer icon with a custom Power Pole and Electrical Lightning Bolt icon, rendered in both default 32x32 pixel art and 1024x1024 Ultra-HD resolution.
 

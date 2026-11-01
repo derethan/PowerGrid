@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "values": [
+    "powergrid:steel_truss_pole",
+    "powergrid:lv_wire_connector",
+    "powergrid:mv_wire_connector",
+    "powergrid:hv_wire_connector",
+    "powergrid:lv_wire_relay",
+    "powergrid:mv_wire_relay",
+    "powergrid:hv_wire_relay",
+    "powergrid:transformer",
+    "powergrid:breaker_switch",
+    "powergrid:heavy_accumulator",
+    "powergrid:power_plant_controller",
+    "powergrid:generator_casing",
+    "powergrid:alternator_coil",
+    "powergrid:turbine_rotor",
+    "powergrid:exhaust_stack"
+  ]
+}

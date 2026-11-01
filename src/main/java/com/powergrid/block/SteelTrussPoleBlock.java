@@ -21,7 +21,7 @@ public class SteelTrussPoleBlock extends Block {
     private static final VoxelShape TRUSS_SHAPE = Block.box(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
 
     public SteelTrussPoleBlock(Properties properties) {
-        super(properties.strength(4.5f, 8.0f).sound(SoundType.NETHERITE_BLOCK).noOcclusion());
+        super(properties.strength(2.0f, 4.0f).sound(SoundType.NETHERITE_BLOCK).noOcclusion());
     }
 
     @Override

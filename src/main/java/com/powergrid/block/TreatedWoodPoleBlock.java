@@ -31,7 +31,7 @@ public class TreatedWoodPoleBlock extends Block {
     private static final VoxelShape POLE_SHAPE = Block.box(4.5, 0.0, 4.5, 11.5, 16.0, 11.5);
 
     public TreatedWoodPoleBlock(Properties properties) {
-        super(properties.strength(2.0f, 3.0f).sound(SoundType.WOOD).noOcclusion());
+        super(properties.strength(1.0f, 1.5f).sound(SoundType.WOOD).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(UP, false)
                 .setValue(DOWN, false));

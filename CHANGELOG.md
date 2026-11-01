@@ -4,6 +4,22 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.0.16] - 2026-11-01
+
+### Changed
+- **Block Hardness Halved for Faster Breaking**:
+  - Reduced hardness of **Treated Wood Pole** from `2.0f` to `1.0f` (resistance `1.5f`), making it twice as fast to break.
+  - Reduced hardness of **Power Pole Crossarm** from `2.0f` to `1.0f` (resistance `1.5f`).
+  - Reduced hardness of **Steel Truss Pole** from `4.5f` to `2.0f` (resistance `4.0f`).
+
+### Fixed
+- **Block Item Drops in Survival (Loot Tables & Mineable Tags)**:
+  - Added complete block loot tables across all Power Grid blocks, ensuring poles, crossarms, connectors, relays, transformers, and accumulators properly drop their corresponding block item when broken in Survival mode.
+  - Added Minecraft `#mineable/axe` tags for wooden poles and crossarms, allowing axes to break them swiftly with proper tool speed multipliers.
+  - Added Minecraft `#mineable/pickaxe` tags for metallic grid blocks and equipment.
+
+---
+
 ## [1.0.15] - 2026-11-01
 
 ### Added

@@ -47,7 +47,7 @@ public class PoleCrossarmBlock extends Block {
     );
 
     public PoleCrossarmBlock(Properties properties) {
-        super(properties.strength(2.0f, 3.0f).sound(SoundType.WOOD).noOcclusion());
+        super(properties.strength(1.0f, 1.5f).sound(SoundType.WOOD).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(AXIS, Direction.Axis.X)
                 .setValue(ON_POLE, false)
