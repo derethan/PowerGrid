@@ -89,27 +89,6 @@ public class PowerGridMod {
             HeavyAccumulatorBlock::new);
     public static final DeferredItem<BlockItem> HEAVY_ACCUMULATOR_ITEM = ITEMS.registerSimpleBlockItem("heavy_accumulator", HEAVY_ACCUMULATOR);
 
-    // Multiblock Power Plant
-    public static final DeferredBlock<PowerPlantControllerBlock> POWER_PLANT_CONTROLLER = BLOCKS.registerBlock("power_plant_controller",
-            PowerPlantControllerBlock::new);
-    public static final DeferredItem<BlockItem> POWER_PLANT_CONTROLLER_ITEM = ITEMS.registerSimpleBlockItem("power_plant_controller", POWER_PLANT_CONTROLLER);
-
-    public static final DeferredBlock<GeneratorCasingBlock> GENERATOR_CASING = BLOCKS.registerBlock("generator_casing",
-            GeneratorCasingBlock::new);
-    public static final DeferredItem<BlockItem> GENERATOR_CASING_ITEM = ITEMS.registerSimpleBlockItem("generator_casing", GENERATOR_CASING);
-
-    public static final DeferredBlock<AlternatorCoilBlock> ALTERNATOR_COIL = BLOCKS.registerBlock("alternator_coil",
-            AlternatorCoilBlock::new);
-    public static final DeferredItem<BlockItem> ALTERNATOR_COIL_ITEM = ITEMS.registerSimpleBlockItem("alternator_coil", ALTERNATOR_COIL);
-
-    public static final DeferredBlock<TurbineRotorBlock> TURBINE_ROTOR = BLOCKS.registerBlock("turbine_rotor",
-            TurbineRotorBlock::new);
-    public static final DeferredItem<BlockItem> TURBINE_ROTOR_ITEM = ITEMS.registerSimpleBlockItem("turbine_rotor", TURBINE_ROTOR);
-
-    public static final DeferredBlock<ExhaustStackBlock> EXHAUST_STACK = BLOCKS.registerBlock("exhaust_stack",
-            ExhaustStackBlock::new);
-    public static final DeferredItem<BlockItem> EXHAUST_STACK_ITEM = ITEMS.registerSimpleBlockItem("exhaust_stack", EXHAUST_STACK);
-
     // === Tools & Usable Items ===
     public static final DeferredItem<Item> GRID_ICON = ITEMS.registerItem("grid_icon",
             Item::new);
@@ -162,10 +141,6 @@ public class PowerGridMod {
             BLOCK_ENTITY_TYPES.register("heavy_accumulator",
                     () -> new BlockEntityType<>(HeavyAccumulatorBlockEntity::new, HEAVY_ACCUMULATOR.get()));
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PowerPlantControllerBlockEntity>> POWER_PLANT_CONTROLLER_BE =
-            BLOCK_ENTITY_TYPES.register("power_plant_controller",
-                    () -> new BlockEntityType<>(PowerPlantControllerBlockEntity::new, POWER_PLANT_CONTROLLER.get()));
-
     // === Creative Mode Tab ===
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> POWER_GRID_TAB = CREATIVE_MODE_TABS.register("powergrid_tab",
             () -> CreativeModeTab.builder()
@@ -208,13 +183,6 @@ public class PowerGridMod {
                         output.accept(TRANSFORMER_ITEM.get());
                         output.accept(BREAKER_SWITCH_ITEM.get());
                         output.accept(HEAVY_ACCUMULATOR_ITEM.get());
-
-                        // Power Plant Multiblock
-                        output.accept(POWER_PLANT_CONTROLLER_ITEM.get());
-                        output.accept(GENERATOR_CASING_ITEM.get());
-                        output.accept(ALTERNATOR_COIL_ITEM.get());
-                        output.accept(TURBINE_ROTOR_ITEM.get());
-                        output.accept(EXHAUST_STACK_ITEM.get());
                     })
                     .build());
 
@@ -240,10 +208,6 @@ public class PowerGridMod {
 
         // Heavy Accumulator (Capacitor Bank)
         event.registerBlockEntity(Capabilities.Energy.BLOCK, HEAVY_ACCUMULATOR_BE.get(),
-                (be, side) -> be.energyStorage);
-
-        // Multiblock Power Plant Controller
-        event.registerBlockEntity(Capabilities.Energy.BLOCK, POWER_PLANT_CONTROLLER_BE.get(),
                 (be, side) -> be.energyStorage);
     }
 }

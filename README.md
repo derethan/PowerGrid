@@ -27,14 +27,9 @@
    - [Substation Transformers (Step-Up / Step-Down)](#substation-transformers-step-up--step-down)
    - [High-Voltage Breaker Switches](#high-voltage-breaker-switches)
    - [Heavy Accumulator Banks](#heavy-accumulator-banks)
-6. [Heavy Multiblock Power Plant (3x3x3)](#6-heavy-multiblock-power-plant-3x3x3)
-   - [Structural Requirements & Bill of Materials](#structural-requirements--bill-of-materials)
-   - [Layer-by-Layer Construction Diagram](#layer-by-layer-construction-diagram)
-   - [Commissioning with the Engineer's Hammer](#commissioning-with-the-engineers-hammer)
-   - [Thermodynamic Generation & Operational Behavior](#thermodynamic-generation--operational-behavior)
-7. [Comprehensive Recipe Codex](#7-comprehensive-recipe-codex)
-8. [Cross-Mod Interoperability & Capabilities](#8-cross-mod-interoperability--capabilities)
-9. [Frequently Asked Questions (FAQ) & Troubleshooting](#9-frequently-asked-questions-faq--troubleshooting)
+6. [Comprehensive Recipe Codex](#6-comprehensive-recipe-codex)
+7. [Cross-Mod Interoperability & Capabilities](#7-cross-mod-interoperability--capabilities)
+8. [Frequently Asked Questions (FAQ) & Troubleshooting](#8-frequently-asked-questions-faq--troubleshooting)
 
 ---
 
@@ -44,7 +39,7 @@ In modern modded Minecraft, electricity has often been reduced to magic single-b
 
 - **Physical Overhead Lines**: Run catenary copper, electrum, and steel-core wires strung between utility poles, rooftops, and substation yards.
 - **Voltage Tier Progression**: Power cannot simply jump arbitrary distances without consequences. Low voltages suffer high transmission loss, demanding step-up transformation to High Voltage (HV) for long-distance cross-country spans.
-- **Industrial Scale**: Build true 3x3x3 multiblock power plants that shake the ground, belch industrial chimney exhaust, and generate enough continuous wattage to energize your entire technological complex.
+- **Industrial Transmission Focus**: Build authentic distribution networks with wooden utility poles, steel towers, crossarms, ceramic insulators, substation transformers, and high-voltage breaker switches.
 - **Native NeoForge Transfer API**: Built from the ground up for **Minecraft 26.3** and **NeoForge 26.3.0.48-beta**, natively exposing standard `Capabilities.Energy.BLOCK` for zero-lag, instant compatibility with mods like *Industrial Refinery*, *Logistics*, and all Forge Energy (FE) machines.
 
 ---
@@ -56,7 +51,7 @@ Before building an electrical network, an engineer must craft their diagnostic a
 ### Grid Engineer's Hammer
 The quintessential tool of the trade.
 - **Block Orientation**: Right-click on directional grid components (transformers, crossarms, breakers) to cycle their horizontal facing clockwise.
-- **Multiblock Assembly**: Strike the front face of a completed 3x3x3 Power Plant structure at the `PowerPlantControllerBlock` to validate and commission the multiblock into an active generator. Striking an assembled plant safely decommissions it.
+- **Connector Mode**: Right-click a Wire Connector to cycle its input/output mode.
 - **Durability**: Indestructible hand tool.
 
 ### Grid Voltmeter
@@ -67,7 +62,6 @@ A precision electronic multimeter for live grid diagnostics.
   - Destination coordinates and span distance of each connected wire
 - Right-click any **Battery / Accumulator / Machine** to inspect:
   - Stored Forge Energy (FE) and maximum buffer capacity
-- Right-click an assembled **Power Plant** to check running status and burn-cycle timers.
 
 ### Insulated Wire Cutters
 High-leverage ceramic-insulated wire snips.
@@ -92,7 +86,7 @@ Power Grid enforces three strict voltage tiers. Terminal blocks (connectors and 
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **LV (Low Voltage)** | Annealed Copper | **400 FE/t** | **16 blocks** | 2.0% per block | Workshops, early machinery, indoor lighting |
 | **MV (Medium Voltage)** | Electrum (Au-Ag) | **2,048 FE/t** | **32 blocks** | 1.0% per block | Factory sub-mains, industrial smelters |
-| **HV (High Voltage)** | Steel-Core Aluminum | **16,384 FE/t** | **64 blocks** | 0.5% per block | Cross-country overland grids, power plant export |
+| **HV (High Voltage)** | Steel-Core Aluminum | **16,384 FE/t** | **64 blocks** | 0.5% per block | Cross-country overland grids, heavy industrial transmission |
 
 ### Line Resistance & Transmission Loss
 Long overhead spans naturally encounter physical electrical resistance. When power travels between two terminals, the net energy delivered to the receiving node equals:
@@ -138,7 +132,7 @@ $$\text{Net Received} = \text{Transmitted FE} \times \left(1 - (\text{Distance} 
   - **Flush Surface Mounting**: Mounted flush on full blocks, ceilings, and directly on top of poles and crossarm beams.
 
 ### Wire Connectors (Block Interface)
-- Mounted on the face of any machine, power plant, or battery.
+- Mounted on the face of any machine, generator, or battery.
 - **Directional Energy Link**: The rear face of the connector automatically searches the block it is attached to for standard NeoForge energy capabilities (`Capabilities.Energy.BLOCK`).
 - Automatically balances power: pulls excess power from generators and injects stored line power into consumers.
 - Supports up to **4 simultaneous wire attachments**.
@@ -173,51 +167,7 @@ $$\text{Net Received} = \text{Transmitted FE} \times \left(1 - (\text{Distance} 
 
 ---
 
-## 6. Heavy Multiblock Power Plant (3x3x3)
-
-The pinnacle of early-to-late industrial power generation in Power Grid is the **Heavy Power Plant**.
-
-### Structural Requirements & Bill of Materials
-A complete 3x3x3 Power Plant requires exactly 27 blocks:
-- **1x Power Plant Controller** (`powergrid:power_plant_controller`) — Front center block.
-- **1x Heavy Alternator Coil** (`powergrid:alternator_coil`) OR **Turbine Rotor** (`powergrid:turbine_rotor`) — Very center block (X=0, Y=0, Z=0 relative to core).
-- **1x Industrial Exhaust Stack** (`powergrid:exhaust_stack`) — Top center block.
-- **24x Generator Casing** (`powergrid:generator_casing`) — Comprising the entire bottom foundation layer and exterior structural walls.
-
-### Layer-by-Layer Construction Diagram
-
-```
-=== LAYER 1 (Foundation Base - Y = 0) ===
-[ Casing ] [ Casing ] [ Casing ]
-[ Casing ] [ Casing ] [ Casing ]
-[ Casing ] [ Casing ] [ Casing ]
-
-=== LAYER 2 (Core & Mechanical - Y = 1) ===
-[ Casing ] [ Controller ] [ Casing ]   <- Front Face
-[ Casing ] [ Rotor/Coil ] [ Casing ]
-[ Casing ] [   Casing   ] [ Casing ]
-
-=== LAYER 3 (Roof & Ventilation - Y = 2) ===
-[ Casing ] [   Casing   ] [ Casing ]
-[ Casing ] [  Exhaust   ] [ Casing ]   <- Chimney Stack
-[ Casing ] [   Casing   ] [ Casing ]
-```
-
-### Commissioning with the Engineer's Hammer
-1. Verify all 27 blocks are placed accurately according to the diagram above.
-2. Hold the **Grid Engineer's Hammer** in your main hand.
-3. Right-click the front **Power Plant Controller**.
-4. If valid, the structure will flash with a satisfying anvil chime, turning into an active multiblock!
-
-### Thermodynamic Generation & Operational Behavior
-- Once assembled, the internal combustion core continuously generates **4,096 FE/t**.
-- Generates high-density thermal exhaust plumes visible from dozens of blocks away.
-- Possesses an internal reserve buffer of **2,000,000 FE**.
-- Features auto-export into adjacent HV Wire Connectors, Transformers, or Accumulator Banks.
-
----
-
-## 7. Comprehensive Recipe Codex
+## 6. Comprehensive Recipe Codex
 
 | Item / Block | Pattern Layout | Ingredients | Output |
 | :--- | :--- | :--- | :--- |
@@ -231,7 +181,7 @@ A complete 3x3x3 Power Plant requires exactly 27 blocks:
 
 ---
 
-## 8. Cross-Mod Interoperability & Capabilities
+## 7. Cross-Mod Interoperability & Capabilities
 
 Power Grid is built directly on NeoForge's official **Transfer API**:
 - **Forge Energy Standard**: Any block registered with `Capabilities.Energy.BLOCK` can directly receive or supply power via `WireConnectorBlock`.
@@ -240,7 +190,7 @@ Power Grid is built directly on NeoForge's official **Transfer API**:
 
 ---
 
-## 9. Frequently Asked Questions (FAQ) & Troubleshooting
+## 8. Frequently Asked Questions (FAQ) & Troubleshooting
 
 **Q: My wire won't attach between two connectors!**
 > **A**: Verify that both terminals are of the exact same tier (e.g. LV Connector to LV Relay). Also check that the distance does not exceed the wire's maximum span (16 blocks for LV, 32 for MV, 64 for HV). Use your **Grid Voltmeter** to check line status.
@@ -250,9 +200,6 @@ Power Grid is built directly on NeoForge's official **Transfer API**:
 
 **Q: How do I remove a wire line?**
 > **A**: Right-click the terminal with **Insulated Wire Cutters**. All connected coils will cleanly pop off and drop into your inventory.
-
-**Q: Why won't my Power Plant assemble?**
-> **A**: Double-check that your center mechanical core is either an `AlternatorCoilBlock` or `TurbineRotorBlock`, the top middle block is an `ExhaustStackBlock`, and the remaining 24 blocks are `GeneratorCasingBlock`. Right-click the controller with the **Grid Engineer's Hammer**.
 
 ---
 

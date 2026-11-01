@@ -385,83 +385,7 @@ def render_heavy_accumulator_top(size):
     draw_ellipse(d, size, 6.5, 6.5, 9.5, 9.5, fill=(60, 66, 76), outline=(90, 100, 115))
     return im
 
-def render_power_plant_controller(size):
-    im = Image.new("RGBA", (size, size), (38, 42, 50, 255))
-    d = ImageDraw.Draw(im)
-    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(72, 80, 95), width=1.0)
-    draw_rect(d, size, 1.5, 1.5, 14.5, 14.5, fill=(28, 32, 38))
-    draw_ellipse(d, size, 2.5, 2.5, 7.5, 7.5, fill=(230, 225, 210), outline=(80, 90, 105))
-    draw_line(d, size, 5.0, 5.0, 6.5, 3.8, fill=(190, 25, 25), width=0.5)
-    draw_ellipse(d, size, 8.5, 2.5, 13.5, 7.5, fill=(230, 225, 210), outline=(80, 90, 105))
-    draw_line(d, size, 11.0, 5.0, 12.2, 4.0, fill=(190, 25, 25), width=0.5)
-    draw_ellipse(d, size, 3.0, 9.5, 5.0, 11.5, fill=(40, 215, 60), outline=(15, 90, 25))
-    draw_ellipse(d, size, 7.0, 9.5, 9.0, 11.5, fill=(245, 185, 30), outline=(110, 80, 12))
-    draw_ellipse(d, size, 11.0, 9.5, 13.0, 11.5, fill=(225, 35, 35), outline=(100, 15, 15))
-    draw_ellipse(d, size, 6.0, 12.5, 10.0, 15.5, fill=(50, 55, 65), outline=(95, 105, 120))
-    draw_rect(d, size, 7.5, 12.0, 8.5, 16.0, fill=(185, 145, 60))
-    return im
 
-def render_generator_casing(size):
-    im = Image.new("RGBA", (size, size), (45, 48, 55, 255))
-    d = ImageDraw.Draw(im)
-    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(75, 82, 95), width=1.0)
-    draw_rect(d, size, 2.5, 2.5, 13.5, 13.5, fill=(35, 38, 44), outline=(60, 66, 78))
-    for ly in [4.5, 6.5, 8.5, 10.5]:
-        draw_rect(d, size, 4.0, ly, 12.0, ly + 1.0, fill=(20, 22, 26))
-        draw_line(d, size, 4.0, ly, 12.0, ly, fill=(65, 72, 85), width=0.4)
-    for bx, by in [(1.5, 1.5), (14.5, 1.5), (1.5, 14.5), (14.5, 14.5), (8.0, 1.5), (8.0, 14.5)]:
-        draw_ellipse(d, size, bx - 0.4, by - 0.4, bx + 0.4, by + 0.4, fill=(130, 140, 155))
-    return im
-
-def render_alternator_coil(size):
-    im = Image.new("RGBA", (size, size), (32, 34, 40, 255))
-    d = ImageDraw.Draw(im)
-    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(65, 72, 84), width=1.0)
-    coil_count = 10
-    step = 14.0 / coil_count
-    for i in range(coil_count):
-        y = 1.0 + i * step
-        draw_rect(d, size, 2.0, y, 14.0, y + step * 0.85, fill=(205, 115, 45), outline=(130, 65, 20))
-        draw_line(d, size, 2.0, y + step * 0.2, 14.0, y + step * 0.2, fill=(255, 170, 85), width=0.4)
-    return im
-
-def render_turbine_rotor(size):
-    im = Image.new("RGBA", (size, size), (36, 40, 48, 255))
-    d = ImageDraw.Draw(im)
-    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(70, 78, 92), width=1.0)
-    for i in range(8):
-        import math
-        ang = i * (math.pi / 4)
-        x1 = 8.0 + 2.0 * math.cos(ang)
-        y1 = 8.0 + 2.0 * math.sin(ang)
-        x2 = 8.0 + 6.5 * math.cos(ang + 0.4)
-        y2 = 8.0 + 6.5 * math.sin(ang + 0.4)
-        draw_line(d, size, x1, y1, x2, y2, fill=(150, 165, 185), width=1.2)
-        draw_line(d, size, x1, y1, x2, y2, fill=(80, 90, 105), width=0.5)
-    draw_ellipse(d, size, 5.5, 5.5, 10.5, 10.5, fill=(55, 62, 72), outline=(95, 105, 122))
-    draw_ellipse(d, size, 7.0, 7.0, 9.0, 9.0, fill=(130, 140, 155))
-    return im
-
-def render_exhaust_stack_side(size):
-    im = Image.new("RGBA", (size, size), (28, 30, 35, 255))
-    d = ImageDraw.Draw(im)
-    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(60, 66, 76), width=1.0)
-    for y_seam in [5.0, 11.0]:
-        draw_line(d, size, 0, y_seam, 16, y_seam, fill=(75, 82, 95), width=0.8)
-        draw_line(d, size, 0, y_seam + 0.8, 16, y_seam + 0.8, fill=(15, 16, 20), width=0.5)
-        for rx in [1.5, 4.5, 8.0, 11.5, 14.5]:
-            draw_ellipse(d, size, rx - 0.4, y_seam - 0.4, rx + 0.4, y_seam + 0.4, fill=(120, 130, 145))
-    return im
-
-def render_exhaust_stack_top(size):
-    im = Image.new("RGBA", (size, size), (32, 35, 42, 255))
-    d = ImageDraw.Draw(im)
-    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(65, 72, 84), width=1.0)
-    draw_ellipse(d, size, 2.0, 2.0, 14.0, 14.0, fill=(12, 14, 18), outline=(80, 90, 105))
-    draw_ellipse(d, size, 4.0, 4.0, 12.0, 12.0, fill=(5, 6, 8))
-    draw_line(d, size, 2.0, 8.0, 14.0, 8.0, fill=(60, 68, 78), width=0.6)
-    draw_line(d, size, 8.0, 2.0, 8.0, 14.0, fill=(60, 68, 78), width=0.6)
-    return im
 
 def render_grid_icon(size):
     im = Image.new("RGBA", (size, size), (0, 0, 0, 0))
@@ -683,12 +607,6 @@ TEXTURE_DEFS = {
         ("breaker_handle", render_breaker_handle),
         ("heavy_accumulator_side", render_heavy_accumulator_side),
         ("heavy_accumulator_top", render_heavy_accumulator_top),
-        ("power_plant_controller", render_power_plant_controller),
-        ("generator_casing", render_generator_casing),
-        ("alternator_coil", render_alternator_coil),
-        ("turbine_rotor", render_turbine_rotor),
-        ("exhaust_stack_side", render_exhaust_stack_side),
-        ("exhaust_stack_top", render_exhaust_stack_top),
     ],
     "item": [
         ("engineer_hammer", render_engineer_hammer),
@@ -1156,17 +1074,7 @@ for tier, insul in [("lv", "connector_bushing_lv"), ("mv", "connector_bushing_mv
     write_json(os.path.join(MODELS_BLOCK, f"{tier}_wire_connector_crossarm_end.json"), build_connector_model(tier, insul, "crossarm_end"))
     write_json(os.path.join(MODELS_BLOCK, f"{tier}_wire_connector_pole_mount.json"), build_connector_model(tier, insul, "pole_mount"))
 
-# 6. Industrial Blocks Models
-standard_cubes = [
-    ("generator_casing", "generator_casing"),
-    ("alternator_coil", "alternator_coil"),
-    ("turbine_rotor", "turbine_rotor")
-]
-for name, tex in standard_cubes:
-    write_json(os.path.join(MODELS_BLOCK, f"{name}.json"), {
-        "parent": "minecraft:block/cube_all",
-        "textures": {"all": f"powergrid:block/{tex}"}
-    })
+
 
 # 7. Breaker Switch (Heavy Duty Safety Switch / Disconnect Enclosure) 3D Models
 def build_breaker_switch_model(is_on):
@@ -1237,26 +1145,7 @@ write_json(os.path.join(MODELS_BLOCK, "heavy_accumulator.json"), {
     }
 })
 
-write_json(os.path.join(MODELS_BLOCK, "exhaust_stack.json"), {
-    "parent": "minecraft:block/cube_column",
-    "textures": {
-        "end": "powergrid:block/exhaust_stack_top",
-        "side": "powergrid:block/exhaust_stack_side"
-    }
-})
 
-write_json(os.path.join(MODELS_BLOCK, "power_plant_controller.json"), {
-    "parent": "minecraft:block/cube_directional",
-    "textures": {
-        "particle": "powergrid:block/generator_casing",
-        "up": "powergrid:block/generator_casing",
-        "down": "powergrid:block/generator_casing",
-        "north": "powergrid:block/power_plant_controller",
-        "south": "powergrid:block/generator_casing",
-        "east": "powergrid:block/generator_casing",
-        "west": "powergrid:block/generator_casing"
-    }
-})
 
 # ==============================================================================
 # BLOCKSTATES
@@ -1362,18 +1251,8 @@ write_json(os.path.join(BLOCKSTATES, "transformer.json"), {
     }
 })
 
-for b in ["heavy_accumulator", "generator_casing", "alternator_coil", "turbine_rotor", "exhaust_stack"]:
-    write_json(os.path.join(BLOCKSTATES, f"{b}.json"), {
-        "variants": {"": {"model": f"powergrid:block/{b}"}}
-    })
-
-write_json(os.path.join(BLOCKSTATES, "power_plant_controller.json"), {
-    "variants": {
-        "facing=north": {"model": "powergrid:block/power_plant_controller"},
-        "facing=east":  {"model": "powergrid:block/power_plant_controller", "y": 90},
-        "facing=south": {"model": "powergrid:block/power_plant_controller", "y": 180},
-        "facing=west":  {"model": "powergrid:block/power_plant_controller", "y": 270}
-    }
+write_json(os.path.join(BLOCKSTATES, "heavy_accumulator.json"), {
+    "variants": {"": {"model": "powergrid:block/heavy_accumulator"}}
 })
 
 # ==============================================================================
@@ -1384,9 +1263,7 @@ ALL_BLOCKS = [
     "treated_wood_pole", "steel_truss_pole", "pole_crossarm",
     "lv_wire_connector", "mv_wire_connector", "hv_wire_connector",
     "lv_wire_relay", "mv_wire_relay", "hv_wire_relay",
-    "transformer", "breaker_switch", "heavy_accumulator",
-    "power_plant_controller", "generator_casing", "alternator_coil",
-    "turbine_rotor", "exhaust_stack"
+    "transformer", "breaker_switch", "heavy_accumulator"
 ]
 
 ALL_ITEMS = [

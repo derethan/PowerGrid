@@ -1,6 +1,5 @@
 package com.powergrid.item;
 
-import com.powergrid.block.entity.PowerPlantControllerBlockEntity;
 import com.powergrid.block.entity.WireConnectorBlockEntity;
 import com.powergrid.grid.IWireNode;
 import com.powergrid.grid.WireConnection;
@@ -56,13 +55,6 @@ public class VoltmeterItem extends Item {
                 player.sendSystemMessage(Component.translatable("message.powergrid.voltmeter_conn_line",
                         conn.getTargetPos().toShortString(), (int) conn.getDistance(), conn.getWireType().getDisplayName()));
             }
-        }
-
-        // Check if multiblock power plant
-        if (be instanceof PowerPlantControllerBlockEntity plant) {
-            foundInfo = true;
-            player.sendSystemMessage(Component.translatable("message.powergrid.voltmeter_plant_status",
-                    plant.isAssembled() ? "§aASSEMBLED & OPERATIONAL§r" : "§cINCOMPLETE§r"));
         }
 
         // Check energy capability

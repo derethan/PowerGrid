@@ -1,6 +1,5 @@
 package com.powergrid.item;
 
-import com.powergrid.block.entity.PowerPlantControllerBlockEntity;
 import com.powergrid.block.entity.WireConnectorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -37,13 +36,6 @@ public class EngineerHammerItem extends Item {
         if (be instanceof WireConnectorBlockEntity connector) {
             if (!level.isClientSide()) {
                 connector.cycleMode(player);
-            }
-            return InteractionResult.SUCCESS;
-        }
-
-        if (be instanceof PowerPlantControllerBlockEntity controller) {
-            if (!level.isClientSide()) {
-                controller.toggleAssembly(player);
             }
             return InteractionResult.SUCCESS;
         }

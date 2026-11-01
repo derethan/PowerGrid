@@ -17,12 +17,6 @@
   "block.powergrid.breaker_switch": "High Voltage Breaker Switch",
   "block.powergrid.heavy_accumulator": "Heavy Accumulator Bank",
 
-  "block.powergrid.power_plant_controller": "Power Plant Controller",
-  "block.powergrid.generator_casing": "Power Plant Generator Casing",
-  "block.powergrid.alternator_coil": "Heavy Alternator Copper Coil",
-  "block.powergrid.turbine_rotor": "Heavy Turbine Rotor",
-  "block.powergrid.exhaust_stack": "Power Plant Industrial Exhaust Stack",
-
   "item.powergrid.grid_icon": "Power Grid",
   "item.powergrid.engineer_hammer": "Grid Engineer's Hammer",
   "item.powergrid.voltmeter": "Grid Voltmeter",
@@ -43,7 +37,7 @@
   "tooltip.powergrid.wire_max_dist": "§7Maximum Span: §b%s blocks§r",
 
   "tooltip.powergrid.hammer.desc_1": "§7Right-click: Rotate directional grid blocks.§r",
-  "tooltip.powergrid.hammer.desc_2": "§7Right-click Power Plant Controller: Assemble/Disassemble 3x3x3 multiblock.§r",
+  "tooltip.powergrid.hammer.desc_2": "§7Right-click Wire Connector: Toggle Input/Output mode.§r",
 
   "tooltip.powergrid.voltmeter.desc": "§7Right-click on connectors, poles, or batteries to inspect voltage, throughput, and grid topology.§r",
   "tooltip.powergrid.cutters.desc": "§7Right-click a connector or relay to cleanly sever all attached wire connections.§r",
@@ -70,10 +64,5 @@
   "message.powergrid.voltmeter_conn_count": "§7Active Connections: §f%s§r",
   "message.powergrid.voltmeter_conn_line": " §8-§r Target: §b%s§r (§f%s blocks§r, %s)",
   "message.powergrid.voltmeter_energy": "§7Stored Energy: §6%s / %s FE§r",
-  "message.powergrid.voltmeter_plant_status": "§7Power Plant Status: %s",
-  "message.powergrid.voltmeter_no_data": "§7[Power Grid] No grid or energy data found at target.",
-
-  "message.powergrid.plant_assembled": "§a[Power Plant] Multiblock successfully assembled and ready for generation!§r",
-  "message.powergrid.plant_disassembled": "§c[Power Plant] Multiblock disassembled.§r",
-  "message.powergrid.plant_incomplete": "§e[Power Plant] Structure incomplete! Requires 3x3x3 footprint with generator casing base, center coil/rotor, and exhaust."
+  "message.powergrid.voltmeter_no_data": "§7[Power Grid] No grid or energy data found at target."
 }

@@ -4,6 +4,21 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.0.17] - 2026-11-01
+
+### Removed
+- **Power Plant Multiblock Generation Components**:
+  - Removed the early 3x3x3 multiblock power plant components (`Power Plant Controller`, `Generator Casing`, `Alternator Copper Coil`, `Turbine Rotor`, and `Industrial Exhaust Stack`) from this mod to focus purely on high-fidelity power transmission, overhead utility lines, and distribution grids.
+  - Power generation will be introduced in an upcoming dedicated update/expansion mod.
+  - Removed corresponding block entities, capability handlers, loot tables, recipes, models, and textures.
+
+### Changed
+- **Tool Updates**:
+  - Updated the **Grid Engineer's Hammer** tooltip to reflect rotation and connector mode toggling (Input/Output).
+  - Streamlined the **Grid Voltmeter** diagnostic readouts to grid transmission metrics.
+
+---
+
 ## [1.0.16] - 2026-11-01
 
 ### Changed

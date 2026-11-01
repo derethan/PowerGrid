@@ -10,7 +10,7 @@ This document contains everything needed to publish and update **Power Grid** on
 `Power Grid`
 
 ### Short Summary / Tagline (Max 255 characters)
-> Heavy industrial electricity distribution, overhead power poles, high-voltage transmission lines, substations, and multiblock power plants for modern Minecraft!
+> Heavy industrial electricity distribution, overhead power poles, high-voltage transmission lines, and substations for modern Minecraft!
 
 ### Primary Category
 - **Technology**
@@ -28,7 +28,7 @@ This document contains everything needed to publish and update **Power Grid** on
 ---
 
 # ⚡ Power Grid
-**Heavy Overhead Electricity Distribution • High-Voltage Catenary Wires • Substations • 3x3x3 Multiblock Power Plants**
+**Heavy Overhead Electricity Distribution • High-Voltage Catenary Wires • Substations • Industrial Energy Transport**
 
 *Built natively for Minecraft 26.3 on NeoForge.*
 
@@ -39,7 +39,7 @@ This document contains everything needed to publish and update **Power Grid** on
 ## 🔌 Overview
 **Power Grid** brings authentic electrical engineering back to Minecraft, deeply inspired by the beloved mechanics of *Immersive Engineering*. Say goodbye to invisible magical power cables buried underground — **Power Grid** requires you to plan, run, and maintain real overhead transmission lines across poles, towers, substations, and factories!
 
-From running early copper Low-Voltage lines to your first workshop machines, to stepping up power with Substation Transformers and stringing heavy steel-core High-Voltage cables across entire mountain ranges to a massive 3x3x3 Multiblock Power Plant, Power Grid makes power transmission visually spectacular and engineeringly rewarding.
+From running early copper Low-Voltage lines to your first workshop machines, to stepping up power with Substation Transformers and stringing heavy steel-core High-Voltage cables across entire mountain ranges to heavy industrial factories and substations, Power Grid makes power transmission visually spectacular and engineeringly rewarding.
 
 ---
 
@@ -69,15 +69,10 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 - **Heavy Duty Safety Disconnect Switches**: Wall-mounted industrial disconnect safety switches modeled after commercial Siemens/Square-D enclosures. Features a throw switch with an animated red safety handle that physically flips between ON (UP) and OFF (DOWN) when toggled or driven by Redstone.
 - **Heavy Accumulator Banks**: Industrial multi-cell capacitor storage units buffering up to **4,000,000 FE** each with rapid charge/discharge capabilities.
 
-### 5. Multiblock Heavy Power Plant (3x3x3)
-- Construct a true heavy industrial power plant using **Generator Casings**, **Alternator Coils**, **Turbine Rotors**, and **Industrial Exhaust Stacks**.
-- Strike the front controller with the **Grid Engineer's Hammer** to assemble the multiblock.
-- Produces **4,096 FE/t** of continuous industrial electricity, complete with animated smoke plumes and realistic mechanical hums!
-
-### 6. Specialized Engineering Tools
+### 5. Specialized Engineering Tools
 - **Wire Coils (LV, MV, HV)**: Right-click the starting terminal, then right-click the destination terminal to string physical catenary wires.
 - **Grid Voltmeter**: Live diagnostic multimeter reporting stored FE, throughput, voltage tier, and all connected terminal coordinates.
-- **Grid Engineer's Hammer**: Validates and commissions multiblock power plants and rotates directional grid gear.
+- **Grid Engineer's Hammer**: Rotates directional grid gear and configures connector input/output modes.
 - **Insulated Wire Cutters**: Safely and cleanly disconnects all attached wire lines from any connector or relay.
 
 ---

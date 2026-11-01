@@ -10,11 +10,6 @@
     "powergrid:hv_wire_relay",
     "powergrid:transformer",
     "powergrid:breaker_switch",
-    "powergrid:heavy_accumulator",
-    "powergrid:power_plant_controller",
-    "powergrid:generator_casing",
-    "powergrid:alternator_coil",
-    "powergrid:turbine_rotor",
-    "powergrid:exhaust_stack"
+    "powergrid:heavy_accumulator"
   ]
 }
