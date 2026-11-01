@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -23,7 +24,9 @@ import java.util.function.Consumer;
 
 public class WireCoilItem extends Item {
     private final WireType wireType;
-    private static final Map<UUID, BlockPos> PENDING_CONNECTIONS = new HashMap<>();
+    private static final Map<UUID, PendingWire> PENDING_CONNECTIONS = new HashMap<>();
+
+    private record PendingWire(BlockPos pos, WireType wireType, long gameTime) {}
 
     public WireCoilItem(WireType wireType, Properties properties) {
         super(properties.stacksTo(64));
@@ -32,6 +35,17 @@ public class WireCoilItem extends Item {
 
     public WireType getWireType() {
         return wireType;
+    }
+
+    @Override
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        if (!level.isClientSide()) {
+            if (PENDING_CONNECTIONS.remove(player.getUUID()) != null) {
+                player.sendSystemMessage(Component.translatable("message.powergrid.wire_cancelled"));
+                return InteractionResult.SUCCESS;
+            }
+        }
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -54,7 +68,15 @@ public class WireCoilItem extends Item {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
 
         UUID playerId = player.getUUID();
-        if (!PENDING_CONNECTIONS.containsKey(playerId)) {
+        PendingWire pending = PENDING_CONNECTIONS.get(playerId);
+
+        // Cancel if mismatched wire type or stale (older than 30 seconds / 600 ticks)
+        if (pending != null && (pending.wireType() != this.wireType || level.getGameTime() - pending.gameTime() > 600L)) {
+            PENDING_CONNECTIONS.remove(playerId);
+            pending = null;
+        }
+
+        if (pending == null) {
             // First click: select starting node
             if (!targetNode.isWireTypeSupported(this.wireType)) {
                 player.sendSystemMessage(Component.translatable("message.powergrid.cannot_connect_tier", this.wireType.getDisplayName()));
@@ -64,13 +86,14 @@ public class WireCoilItem extends Item {
                 player.sendSystemMessage(Component.translatable("message.powergrid.cannot_connect"));
                 return InteractionResult.FAIL;
             }
-            PENDING_CONNECTIONS.put(playerId, pos);
+            PENDING_CONNECTIONS.put(playerId, new PendingWire(pos, this.wireType, level.getGameTime()));
             level.playSound(null, pos, SoundEvents.TRIPWIRE_ATTACH, SoundSource.BLOCKS, 0.8f, 1.2f);
             player.sendSystemMessage(Component.translatable("message.powergrid.wire_start", pos.getX(), pos.getY(), pos.getZ()));
             return InteractionResult.SUCCESS;
         } else {
             // Second click: complete connection
-            BlockPos startPos = PENDING_CONNECTIONS.remove(playerId);
+            PENDING_CONNECTIONS.remove(playerId);
+            BlockPos startPos = pending.pos();
             if (startPos.equals(pos)) {
                 player.sendSystemMessage(Component.translatable("message.powergrid.wire_cancelled"));
                 return InteractionResult.SUCCESS;

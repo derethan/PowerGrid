@@ -1,0 +1,115 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "powergrid:block/cable_16_gauge_core"
+      }
+    },
+    {
+      "when": {
+        "north": "cable|device"
+      },
+      "apply": {
+        "model": "powergrid:block/cable_16_gauge_arm"
+      }
+    },
+    {
+      "when": {
+        "north": "device"
+      },
+      "apply": {
+        "model": "powergrid:block/cable_16_gauge_plug"
+      }
+    },
+    {
+      "when": {
+        "south": "cable|device"
+      },
+      "apply": {
+        "y": 180,
+        "model": "powergrid:block/cable_16_gauge_arm"
+      }
+    },
+    {
+      "when": {
+        "south": "device"
+      },
+      "apply": {
+        "y": 180,
+        "model": "powergrid:block/cable_16_gauge_plug"
+      }
+    },
+    {
+      "when": {
+        "west": "cable|device"
+      },
+      "apply": {
+        "y": 270,
+        "model": "powergrid:block/cable_16_gauge_arm"
+      }
+    },
+    {
+      "when": {
+        "west": "device"
+      },
+      "apply": {
+        "y": 270,
+        "model": "powergrid:block/cable_16_gauge_plug"
+      }
+    },
+    {
+      "when": {
+        "east": "cable|device"
+      },
+      "apply": {
+        "y": 90,
+        "model": "powergrid:block/cable_16_gauge_arm"
+      }
+    },
+    {
+      "when": {
+        "east": "device"
+      },
+      "apply": {
+        "y": 90,
+        "model": "powergrid:block/cable_16_gauge_plug"
+      }
+    },
+    {
+      "when": {
+        "up": "cable|device"
+      },
+      "apply": {
+        "x": 270,
+        "model": "powergrid:block/cable_16_gauge_arm"
+      }
+    },
+    {
+      "when": {
+        "up": "device"
+      },
+      "apply": {
+        "x": 270,
+        "model": "powergrid:block/cable_16_gauge_plug"
+      }
+    },
+    {
+      "when": {
+        "down": "cable|device"
+      },
+      "apply": {
+        "x": 90,
+        "model": "powergrid:block/cable_16_gauge_arm"
+      }
+    },
+    {
+      "when": {
+        "down": "device"
+      },
+      "apply": {
+        "x": 90,
+        "model": "powergrid:block/cable_16_gauge_plug"
+      }
+    }
+  ]
+}

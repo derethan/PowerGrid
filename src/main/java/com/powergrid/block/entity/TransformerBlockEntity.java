@@ -1,6 +1,8 @@
 package com.powergrid.block.entity;
 
 import com.powergrid.PowerGridMod;
+import com.powergrid.block.WireConnectorBlock;
+import com.powergrid.grid.ConnectorMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -15,7 +17,7 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class TransformerBlockEntity extends BlockEntity {
     public static final int CAPACITY = 64_000;
-    public static final int MAX_RATE = 8_192;
+    public static final int MAX_RATE = 16_384;
 
     public final SimpleEnergyHandler energyStorage = new SimpleEnergyHandler(CAPACITY, MAX_RATE, MAX_RATE);
 
@@ -30,17 +32,35 @@ public class TransformerBlockEntity extends BlockEntity {
         // Push energy to adjacent energy handlers
         for (Direction dir : Direction.values()) {
             BlockPos targetPos = pos.relative(dir);
+
+            // Avoid pushing back into a Wire Connector unless it is explicitly set to INPUT mode
+            BlockState targetState = level.getBlockState(targetPos);
+            if (targetState.getBlock() instanceof WireConnectorBlock) {
+                BlockEntity be = level.getBlockEntity(targetPos);
+                if (be instanceof WireConnectorBlockEntity connector) {
+                    if (connector.getMode() != ConnectorMode.INPUT) {
+                        continue;
+                    }
+                }
+            }
+
             EnergyHandler targetEnergy = level.getCapability(Capabilities.Energy.BLOCK, targetPos, dir.getOpposite());
             if (targetEnergy != null) {
                 int toPush = Math.min(this.energyStorage.getAmountAsInt(), MAX_RATE);
-                try (var tx = Transaction.openRoot()) {
-                    int extracted = this.energyStorage.extract(toPush, tx);
-                    if (extracted > 0) {
-                        int accepted = targetEnergy.insert(extracted, tx);
-                        if (accepted == extracted) {
-                            tx.commit();
-                            setChanged();
-                            if (this.energyStorage.getAmountAsInt() <= 0) break;
+                int acceptedSim;
+                try (var simTx = Transaction.openRoot()) {
+                    acceptedSim = targetEnergy.insert(toPush, simTx);
+                }
+                if (acceptedSim > 0) {
+                    try (var tx = Transaction.openRoot()) {
+                        int extracted = this.energyStorage.extract(acceptedSim, tx);
+                        if (extracted > 0) {
+                            int accepted = targetEnergy.insert(extracted, tx);
+                            if (accepted == extracted) {
+                                tx.commit();
+                                setChanged();
+                                if (this.energyStorage.getAmountAsInt() <= 0) break;
+                            }
                         }
                     }
                 }

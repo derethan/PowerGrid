@@ -1,0 +1,17 @@
+{
+  "result": {
+    "id": "powergrid:cable_12_gauge",
+    "count": 8
+  },
+  "category": "misc",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "KKK",
+    "GGG",
+    "KKK"
+  ],
+  "key": {
+    "K": "minecraft:dried_kelp",
+    "G": "minecraft:gold_ingot"
+  }
+}

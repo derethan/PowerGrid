@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#c:rubber",
+      "required": false
+    },
+    {
+      "id": "logistics:core/rubber",
+      "required": false
+    },
+    {
+      "id": "refinery:rubber",
+      "required": false
+    },
+    {
+      "id": "techreborn:rubber",
+      "required": false
+    }
+  ]
+}

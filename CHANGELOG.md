@@ -4,6 +4,84 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.1.3] - 2026-11-01
+
+### Fixed
+- **Root Transaction Collision Crash in Cable Network Router**:
+  - Fixed a critical server crash (`IllegalStateException: A root transaction of class HeavyAccumulatorBlockEntity is already active on this thread`) that occurred whenever a machine or accumulator ticked next to a power cable.
+  - Re-engineered `CableNetworkRouter.routeEnergy` to propagate caller transactions and open nested transactions with `Transaction.open(parentTx)`.
+  - Added a transactional `SnapshotJournal` to `PowerCableBlockEntity` for `transferredThisTick`, ensuring cable throughput calculations roll back cleanly during simulations.
+  - Removed transaction calls from BFS sink discovery in `findSinks` and added deduplication to avoid redundant insertions.
+  - Prevented cable passive extraction from fighting self-ticking energy pushers like Heavy Accumulators and Transformers.
+
+---
+
+## [1.1.2] - 2026-11-01
+
+### Fixed
+- **Recipe Parsing Error on Server Startup (Rubber Insulation)**:
+  - Registered `c:ingots/rubber` and `c:rubber` common item tags with optional mod item entries (`logistics:core/rubber`, `refinery:rubber`, `techreborn:rubber`).
+  - Added `neoforge:conditions` using `neoforge:tag_empty` checks across all four rubber cable recipes (`cable_18_gauge_from_rubber`, `cable_16_gauge_from_rubber`, `cable_14_gauge_from_rubber`, `cable_12_gauge_from_rubber`). This ensures the recipes safely load when a rubber-providing mod is installed and are cleanly skipped without crashing the server's `RegistryDataLoader` if no rubber mod is present.
+
+---
+
+## [1.1.1] - 2026-11-01
+
+### Added
+- **Indoor AWG Power Cables (4 Voltage / Gauge Tiers)**:
+  - Added modular 6-way indoor power cables for direct machine-to-machine power distribution within buildings, factories, and workshops without requiring overhead pole runs.
+  - **18 AWG Cable**: 128 FE/t transfer limit, 128 FE buffer. Requires Copper Wire Strands. Ideal for light workshop appliances, lighting, and low-power automation.
+  - **16 AWG Cable**: 512 FE/t transfer limit, 512 FE buffer. Requires Iron Wire Strands. Balanced wiring for midgame machinery and general processing setups.
+  - **14 AWG Cable**: 2,048 FE/t transfer limit, 2,048 FE buffer. Requires High-Tensile Steel Wire Strands. Heavy-duty branch cabling for power-hungry machines and smelters.
+  - **12 AWG Cable**: 8,192 FE/t transfer limit, 8,192 FE buffer. Requires Gold Wire Strands. High-throughput indoor feeder lines connecting directly to substation transformers and battery banks.
+- **Low-Latency Direct Transfer & Minimal Energy Buffering**:
+  - Cables maintain a strictly limited 1-tick internal energy buffer (equal to their per-tick transfer rating), ensuring cables transport power instantly without behaving like massive energy storage batteries.
+  - Intelligent graph-based routing algorithm (`CableNetworkRouter`) conducts instant breadth-first routing from energy sources to reachable sinks, respecting per-tick throughput limits and path bottlenecks when mixed cable gauges are interconnected.
+- **Wire Strands & Material Processing**:
+  - Added craftable wire strands: **Copper Wire Strand**, **Iron Wire Strand**, **Steel Wire Strand**, and **Gold Wire Strand**.
+  - Added blast furnace recipe for creating Steel Wire Strands from Iron Wire Strands, and added `#c:ingots/steel` tag compatibility.
+  - Added flexible recipes for all 4 cable gauges using either Rubber or Dried Kelp as insulation.
+- **Precision Tool Interactions**:
+  - **Grid Engineer's Hammer**: Right-clicking any face or arm of a power cable toggles the connection on that specific side, enabling manual isolation and neat cable management.
+  - **Insulated Wire Cutters**: Right-clicking a cable with wire cutters instantly snips and dismantles the cable, returning the item to your inventory immediately.
+  - **Grid Voltmeter**: Right-clicking a power cable displays the gauge, current tick energy throughput, max transfer rate, and internal buffer state.
+- **Models, Blockstates & Textures**:
+  - Full 3D multipart models for all 4 gauge tiers with custom core boxes, arm connectors, device connection plugs, and 3D item models.
+  - Native 16x16 pixel art textures and 1024x1024 Ultra-HD texture pack assets (`(v1.0) 1024x Power Grid.zip`).
+  - Full waterloggable support across all cable types.
+
+---
+
+## [1.0.19] - 2026-11-01
+
+### Fixed
+- **Substation Transformer Energy Voiding & Back-Feeding Loop**:
+  - Fixed a critical energy voiding bug where `TransformerBlockEntity` unconditionally pushed stored energy into attached wire connectors in `AUTO` or `OUTPUT` mode every server tick. This caused the transformer buffer to immediately dump all stored energy into its connector, which routed the power back over the wire to the supplying battery, perpetually draining the battery through line loss while leaving the transformer at 0 FE.
+  - `TransformerBlockEntity` now checks the attached wire connector's mode and avoids pushing energy back into connectors unless they are explicitly set to `INPUT` mode (matching `HeavyAccumulatorBlockEntity` behavior).
+  - Prevented bidirectional back-feeding in `EnergyGridManager` between Substation Transformers and Heavy Accumulators when both connectors are in `AUTO` mode, allowing batteries to charge substation transformers without oscillation.
+  - Synchronized block entity state (`setChanged()`) on both source and sink blocks during grid power distribution so chunk saves retain energy levels.
+- **Partial Capacity Insertion**:
+  - Fixed adjacent energy transfers in `TransformerBlockEntity`, `HeavyAccumulatorBlockEntity`, and `WireConnectorBlockEntity` using root transaction pre-simulation before buffer extraction, allowing power to cleanly top off machines and buffers whose remaining space is smaller than the maximum transfer rate.
+
+### Changed
+- **Substation Transformer Transfer Rate**:
+  - Increased `TransformerBlockEntity.MAX_RATE` from 8,192 FE/t to 16,384 FE/t, fully supporting High-Voltage (HV) wire throughput without bottlenecking cross-tier stepping.
+
+---
+
+## [1.0.18] - 2026-11-01
+
+### Fixed
+- **Wire Connector & Relay Block Entity Deserialization**:
+  - Fixed a critical bug where `WireConnectorBlockEntity` and `WireRelayBlockEntity` constructors called during world loading, chunk loading, or block updates defaulted to `WireType.LV`, causing placed Medium Voltage (MV) and High Voltage (HV) connectors/relays to revert to LV and reject subsequent MV/HV wire connections with `"Node does not support ... wire!"`.
+  - Added dynamic blockstate inspection (`getWireTypeFromState`) and NBT tag serialization (`wireType`) so all tiers maintain their proper voltage rating, transfer rates (up to 16,384 FE/t), and buffer sizes across world reloads.
+- **Wire Stringing Interaction & Session Safety**:
+  - Re-engineered pending wire connection tracking (`PendingWire`) to store the wire tier and game timestamp.
+  - Automatically cancels or resets pending runs if a player switches wire coil tiers in their hand or if a pending run is older than 30 seconds (600 ticks), eliminating false "incompatible tier" errors caused by orphaned or stale connections.
+  - Added right-click in air (`use`) with any wire coil to cleanly cancel an in-progress wire run with audio and chat confirmation.
+
+---
+
 ## [1.0.17] - 2026-11-01
 
 ### Removed

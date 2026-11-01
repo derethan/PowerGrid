@@ -1,6 +1,7 @@
 package com.powergrid.block.entity;
 
 import com.powergrid.PowerGridMod;
+import com.powergrid.block.WireRelayBlock;
 import com.powergrid.grid.IWireNode;
 import com.powergrid.grid.WireConnection;
 import com.powergrid.grid.WireType;
@@ -20,16 +21,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WireRelayBlockEntity extends BlockEntity implements IWireNode {
-    private final WireType wireType;
+    private WireType wireType;
     private final List<WireConnection> connections = new ArrayList<>();
 
     public WireRelayBlockEntity(BlockPos pos, BlockState state, WireType wireType) {
         super(PowerGridMod.WIRE_RELAY_BE.get(), pos, state);
-        this.wireType = wireType;
+        this.wireType = wireType != null ? wireType : getWireTypeFromState(state);
     }
 
     public WireRelayBlockEntity(BlockPos pos, BlockState state) {
-        this(pos, state, WireType.LV);
+        this(pos, state, getWireTypeFromState(state));
+    }
+
+    public static WireType getWireTypeFromState(BlockState state) {
+        if (state != null && state.getBlock() instanceof WireRelayBlock wrb) {
+            return wrb.getWireType();
+        }
+        return WireType.LV;
     }
 
     private void syncToClient() {
@@ -50,6 +58,9 @@ public class WireRelayBlockEntity extends BlockEntity implements IWireNode {
 
     @Override
     public WireType getSupportedWireType() {
+        if (this.wireType == null) {
+            this.wireType = getWireTypeFromState(getBlockState());
+        }
         return this.wireType;
     }
 
@@ -131,6 +142,7 @@ public class WireRelayBlockEntity extends BlockEntity implements IWireNode {
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
+        output.putString("wireType", getSupportedWireType().getSerializedName());
         output.putInt("connCount", this.connections.size());
         for (int i = 0; i < this.connections.size(); i++) {
             WireConnection c = this.connections.get(i);
@@ -144,6 +156,13 @@ public class WireRelayBlockEntity extends BlockEntity implements IWireNode {
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
+        String wt = input.getStringOr("wireType", "");
+        if (!wt.isEmpty()) {
+            this.wireType = WireType.fromString(wt);
+        } else {
+            this.wireType = getWireTypeFromState(getBlockState());
+        }
+
         this.connections.clear();
         int count = input.getIntOr("connCount", 0);
         for (int i = 0; i < count; i++) {

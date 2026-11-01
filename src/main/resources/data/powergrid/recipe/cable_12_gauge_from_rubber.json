@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/rubber"
+      }
+    }
+  ],
+  "result": {
+    "id": "powergrid:cable_12_gauge",
+    "count": 8
+  },
+  "category": "misc",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RRR",
+    "GGG",
+    "RRR"
+  ],
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "R": "#c:ingots/rubber"
+  }
+}

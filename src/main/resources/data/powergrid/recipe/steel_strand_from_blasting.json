@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": "minecraft:iron_ingot",
+  "category": "misc",
+  "experience": 0.5,
+  "result": {
+    "id": "powergrid:steel_strand",
+    "count": 1
+  },
+  "cookingtime": 100
+}

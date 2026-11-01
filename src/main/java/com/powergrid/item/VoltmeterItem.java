@@ -1,6 +1,9 @@
 package com.powergrid.item;
 
+import com.powergrid.block.entity.PowerCableBlockEntity;
 import com.powergrid.block.entity.WireConnectorBlockEntity;
+import com.powergrid.grid.CableGauge;
+import com.powergrid.grid.CableNetworkRouter;
 import com.powergrid.grid.IWireNode;
 import com.powergrid.grid.WireConnection;
 import net.minecraft.core.BlockPos;
@@ -20,6 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class VoltmeterItem extends Item {
@@ -42,6 +46,43 @@ public class VoltmeterItem extends Item {
         BlockEntity be = level.getBlockEntity(pos);
         boolean foundInfo = false;
 
+        // Check if Indoor Power Cable
+        if (be instanceof PowerCableBlockEntity cable) {
+            foundInfo = true;
+            CableGauge gauge = cable.getGauge();
+            player.sendSystemMessage(Component.literal("§6===== [Power Grid Cable Diagnostic] =====§r"));
+            player.sendSystemMessage(Component.literal("§7Cable Gauge: §e" + gauge.getDisplayName()));
+            player.sendSystemMessage(Component.literal("§7Max Throughput: §6" + String.format("%,d", gauge.getTransferRate()) + " FE/t§r"));
+            player.sendSystemMessage(Component.literal("§7Stored Buffer: §b" + cable.getEnergyStorage().getAmountAsInt() + " / " + gauge.getBufferCapacity() + " FE§r"));
+            player.sendSystemMessage(Component.literal("§7Transferred this Tick: §a" + cable.getTransferredThisTick() + " FE§r (Remaining: §a" + cable.getRemainingThroughput() + " FE§r)"));
+
+            StringBuilder conns = new StringBuilder();
+            for (Direction dir : Direction.values()) {
+                if (cable.isSideDisabled(dir)) {
+                    conns.append(" ").append(dir.getName().toUpperCase()).append("(§cDIS§r)");
+                } else {
+                    BlockPos np = pos.relative(dir);
+                    if (level.isLoaded(np)) {
+                        BlockEntity nbe = level.getBlockEntity(np);
+                        if (nbe instanceof PowerCableBlockEntity) {
+                            conns.append(" ").append(dir.getName().toUpperCase()).append("(§aCABLE§r)");
+                        } else if (level.getCapability(Capabilities.Energy.BLOCK, np, dir.getOpposite()) != null) {
+                            conns.append(" ").append(dir.getName().toUpperCase()).append("(§bDEV§r)");
+                        }
+                    }
+                }
+            }
+            if (conns.length() > 0) {
+                player.sendSystemMessage(Component.literal("§7Connections:" + conns));
+            }
+
+            List<CableNetworkRouter.FoundDevice> sinks = CableNetworkRouter.findSinks(level, cable, null);
+            player.sendSystemMessage(Component.literal("§7Reachable Sinks: §f" + sinks.size()));
+            for (CableNetworkRouter.FoundDevice sink : sinks) {
+                player.sendSystemMessage(Component.literal(" §8-§r Target: §b" + sink.target.devicePos().toShortString() + "§r (Path limit: §6" + sink.bottleneck + " FE/t§r)"));
+            }
+        }
+
         // Check if wire node
         if (be instanceof IWireNode node) {
             foundInfo = true;
@@ -58,11 +99,13 @@ public class VoltmeterItem extends Item {
         }
 
         // Check energy capability
-        EnergyHandler energy = level.getCapability(Capabilities.Energy.BLOCK, pos, face);
-        if (energy != null) {
-            foundInfo = true;
-            player.sendSystemMessage(Component.translatable("message.powergrid.voltmeter_energy",
-                    energy.getAmountAsInt(), energy.getCapacityAsInt()));
+        if (!(be instanceof PowerCableBlockEntity)) {
+            EnergyHandler energy = level.getCapability(Capabilities.Energy.BLOCK, pos, face);
+            if (energy != null) {
+                foundInfo = true;
+                player.sendSystemMessage(Component.translatable("message.powergrid.voltmeter_energy",
+                        energy.getAmountAsInt(), energy.getCapacityAsInt()));
+            }
         }
 
         if (!foundInfo) {

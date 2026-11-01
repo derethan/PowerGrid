@@ -1,0 +1,7 @@
+{
+  "textures": {
+    "1": "powergrid:block/cable_18_gauge",
+    "particle": "powergrid:block/cable_18_gauge"
+  },
+  "parent": "powergrid:block/cable_inventory"
+}

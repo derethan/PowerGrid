@@ -1,5 +1,7 @@
 package com.powergrid.grid;
 
+import com.powergrid.block.HeavyAccumulatorBlock;
+import com.powergrid.block.TransformerBlock;
 import com.powergrid.block.WireConnectorBlock;
 import com.powergrid.block.entity.BreakerSwitchBlockEntity;
 import com.powergrid.block.entity.WireConnectorBlockEntity;
@@ -104,6 +106,34 @@ public class EnergyGridManager {
                             EnergyHandler sinkEnergy = level.getCapability(Capabilities.Energy.BLOCK, targetAttached, targetFacing);
 
                             if (sinkEnergy != null) {
+                                // If BOTH source and target connectors are in AUTO mode, check storage interactions
+                                if (source.getMode() == ConnectorMode.AUTO && targetConnector.getMode() == ConnectorMode.AUTO && sourceNeighbor != null) {
+                                    BlockState sinkAttachedState = level.getBlockState(targetAttached);
+                                    BlockState srcAttachedState = level.getBlockState(attachedPos);
+
+                                    // A transformer in AUTO mode should not back-feed into an accumulator in AUTO mode
+                                    if (srcAttachedState.getBlock() instanceof TransformerBlock &&
+                                            sinkAttachedState.getBlock() instanceof HeavyAccumulatorBlock) {
+                                        continue;
+                                    }
+
+                                    // Between two storage nodes of the same type in AUTO mode, only transfer from higher to lower state of charge
+                                    int sinkCapacity = sinkEnergy.getCapacityAsInt();
+                                    int sourceCapacity = sourceNeighbor.getCapacityAsInt();
+                                    if (sinkCapacity > 0 && sourceCapacity > 0) {
+                                        if ((srcAttachedState.getBlock() instanceof HeavyAccumulatorBlock &&
+                                                sinkAttachedState.getBlock() instanceof HeavyAccumulatorBlock) ||
+                                            (srcAttachedState.getBlock() instanceof TransformerBlock &&
+                                                sinkAttachedState.getBlock() instanceof TransformerBlock)) {
+                                            double sinkRatio = (double) sinkEnergy.getAmountAsInt() / sinkCapacity;
+                                            double sourceRatio = (double) sourceNeighbor.getAmountAsInt() / sourceCapacity;
+                                            if (sourceRatio <= sinkRatio + 0.001) {
+                                                continue;
+                                            }
+                                        }
+                                    }
+                                }
+
                                 int acceptedSim;
                                 try (var tx = Transaction.openRoot()) {
                                     acceptedSim = sinkEnergy.insert(rate, tx);
@@ -175,11 +205,23 @@ public class EnergyGridManager {
                         remaining -= alloc;
                         totalTransferred += inserted;
                         sink.connector.setChanged();
+                        BlockState targetSt = sink.connector.getBlockState();
+                        if (targetSt.hasProperty(WireConnectorBlock.FACING)) {
+                            BlockPos sinkBEPos = sink.connector.getBlockPos().relative(targetSt.getValue(WireConnectorBlock.FACING).getOpposite());
+                            BlockEntity sinkBE = level.getBlockEntity(sinkBEPos);
+                            if (sinkBE != null) {
+                                sinkBE.setChanged();
+                            }
+                        }
                     }
                 }
 
                 tx.commit();
                 source.setChanged();
+                BlockEntity srcBE = level.getBlockEntity(attachedPos);
+                if (srcBE != null) {
+                    srcBE.setChanged();
+                }
             }
         }
 

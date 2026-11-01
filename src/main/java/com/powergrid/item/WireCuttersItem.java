@@ -1,5 +1,6 @@
 package com.powergrid.item;
 
+import com.powergrid.block.PowerCableBlock;
 import com.powergrid.grid.IWireNode;
 import com.powergrid.grid.WireConnection;
 import net.minecraft.core.BlockPos;
@@ -17,6 +18,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,22 @@ public class WireCuttersItem extends Item {
         BlockPos pos = context.getClickedPos();
         Player player = context.getPlayer();
         if (player == null) return InteractionResult.PASS;
+
+        BlockState state = level.getBlockState(pos);
+
+        // Instant snip and retrieve power cable
+        if (state.getBlock() instanceof PowerCableBlock) {
+            if (!level.isClientSide()) {
+                ItemStack drop = new ItemStack(state.getBlock().asItem());
+                level.destroyBlock(pos, false);
+                if (!player.getAbilities().instabuild && level instanceof ServerLevel serverLevel) {
+                    Block.popResource(serverLevel, pos, drop);
+                }
+                level.playSound(null, pos, SoundEvents.SHEEP_SHEAR, SoundSource.PLAYERS, 1.0f, 1.2f);
+                player.sendSystemMessage(Component.translatable("message.powergrid.cable_dismantled"));
+            }
+            return InteractionResult.SUCCESS;
+        }
 
         BlockEntity be = level.getBlockEntity(pos);
         if (!(be instanceof IWireNode node)) {

@@ -33,20 +33,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WireConnectorBlockEntity extends BlockEntity implements IWireNode {
-    private final WireType wireType;
+    private WireType wireType;
     private final List<WireConnection> connections = new ArrayList<>();
     public final SimpleEnergyHandler energyStorage;
     private ConnectorMode mode = ConnectorMode.AUTO;
 
     public WireConnectorBlockEntity(BlockPos pos, BlockState state, WireType wireType) {
         super(PowerGridMod.WIRE_CONNECTOR_BE.get(), pos, state);
-        this.wireType = wireType;
-        int rate = wireType.getTransferRate();
+        this.wireType = wireType != null ? wireType : getWireTypeFromState(state);
+        int rate = this.wireType.getTransferRate();
         this.energyStorage = new SimpleEnergyHandler(rate * 4, rate, rate);
     }
 
     public WireConnectorBlockEntity(BlockPos pos, BlockState state) {
-        this(pos, state, WireType.LV);
+        this(pos, state, getWireTypeFromState(state));
+    }
+
+    public static WireType getWireTypeFromState(BlockState state) {
+        if (state != null && state.getBlock() instanceof WireConnectorBlock wcb) {
+            return wcb.getWireType();
+        }
+        return WireType.LV;
     }
 
     public ConnectorMode getMode() {
@@ -87,6 +94,9 @@ public class WireConnectorBlockEntity extends BlockEntity implements IWireNode {
 
     @Override
     public WireType getSupportedWireType() {
+        if (this.wireType == null) {
+            this.wireType = getWireTypeFromState(getBlockState());
+        }
         return this.wireType;
     }
 
@@ -153,13 +163,19 @@ public class WireConnectorBlockEntity extends BlockEntity implements IWireNode {
             if (neighborEnergy != null) {
                 int stored = this.energyStorage.getAmountAsInt();
                 int toPush = Math.min(stored, this.wireType.getTransferRate());
-                try (var tx = Transaction.openRoot()) {
-                    int extracted = this.energyStorage.extract(toPush, tx);
-                    if (extracted > 0) {
-                        int accepted = neighborEnergy.insert(extracted, tx);
-                        if (accepted == extracted) {
-                            tx.commit();
-                            setChanged();
+                int acceptedSim;
+                try (var simTx = Transaction.openRoot()) {
+                    acceptedSim = neighborEnergy.insert(toPush, simTx);
+                }
+                if (acceptedSim > 0) {
+                    try (var tx = Transaction.openRoot()) {
+                        int extracted = this.energyStorage.extract(acceptedSim, tx);
+                        if (extracted > 0) {
+                            int accepted = neighborEnergy.insert(extracted, tx);
+                            if (accepted == extracted) {
+                                tx.commit();
+                                setChanged();
+                            }
                         }
                     }
                 }
@@ -196,6 +212,7 @@ public class WireConnectorBlockEntity extends BlockEntity implements IWireNode {
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
+        output.putString("wireType", getSupportedWireType().getSerializedName());
         output.putInt("storedEnergy", this.energyStorage.getAmountAsInt());
         output.putString("connectorMode", this.mode.getSerializedName());
         output.putInt("connCount", this.connections.size());
@@ -211,6 +228,13 @@ public class WireConnectorBlockEntity extends BlockEntity implements IWireNode {
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
+        String wt = input.getStringOr("wireType", "");
+        if (!wt.isEmpty()) {
+            this.wireType = WireType.fromString(wt);
+        } else {
+            this.wireType = getWireTypeFromState(getBlockState());
+        }
+
         int stored = input.getIntOr("storedEnergy", 0);
         this.energyStorage.set(stored);
 

@@ -75,4 +75,11 @@ public enum WireType implements StringRepresentable {
             case HV -> 0.022f;
         };
     }
+
+    public static WireType fromString(String name) {
+        if (name == null) return LV;
+        if ("hv".equalsIgnoreCase(name)) return HV;
+        if ("mv".equalsIgnoreCase(name)) return MV;
+        return LV;
+    }
 }

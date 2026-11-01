@@ -69,22 +69,77 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 - **Heavy Duty Safety Disconnect Switches**: Wall-mounted industrial disconnect safety switches modeled after commercial Siemens/Square-D enclosures. Features a throw switch with an animated red safety handle that physically flips between ON (UP) and OFF (DOWN) when toggled or driven by Redstone.
 - **Heavy Accumulator Banks**: Industrial multi-cell capacitor storage units buffering up to **4,000,000 FE** each with rapid charge/discharge capabilities.
 
-### 5. Specialized Engineering Tools
+### 5. Indoor AWG Power Cables (Machine-to-Machine Wiring)
+- **Compact Indoor Distribution**: 6-way modular power cables for routing electricity directly between machines, generators, and storage inside workshops and factories without overhead poles.
+- **American Wire Gauge (AWG) Tiers**:
+  - **18 AWG Cable** (Copper): 128 FE/t transfer limit, 128 FE buffer. Compact sub-circuits and lighting.
+  - **16 AWG Cable** (Iron): 512 FE/t transfer limit, 512 FE buffer. General workshop machinery.
+  - **14 AWG Cable** (Steel): 2,048 FE/t transfer limit, 2,048 FE buffer. Heavy manufacturing and smelters.
+  - **12 AWG Cable** (Gold): 8,192 FE/t transfer limit, 8,192 FE buffer. High-capacity indoor feeder trunks.
+- **Ultra-Low Buffer Conductance**: Maintains an ultra-lightweight 1-tick internal energy buffer ($1 \times \text{transfer rate}$), transferring power without acting as bulky energy storage blocks.
+- **Intelligent Flow Routing**: Automatically calculates shortest paths, bottlenecks, and available sinks across connected networks without artificial line-loss loops.
+- **Side Isolation**: Right-click any cable face or arm with the Engineer's Hammer to isolate or disconnect that face.
+- **Waterloggable**: Fully waterloggable for submerged industrial routing.
+
+### 6. Specialized Engineering Tools
 - **Wire Coils (LV, MV, HV)**: Right-click the starting terminal, then right-click the destination terminal to string physical catenary wires.
-- **Grid Voltmeter**: Live diagnostic multimeter reporting stored FE, throughput, voltage tier, and all connected terminal coordinates.
-- **Grid Engineer's Hammer**: Rotates directional grid gear and configures connector input/output modes.
-- **Insulated Wire Cutters**: Safely and cleanly disconnects all attached wire lines from any connector or relay.
+- **Grid Voltmeter**: Live diagnostic multimeter reporting stored FE, throughput, voltage tier, cable throughput/gauge, and all connected terminal coordinates.
+- **Grid Engineer's Hammer**: Rotates directional grid gear, configures connector input/output modes, and toggles individual cable connection sides.
+- **Insulated Wire Cutters**: Safely and cleanly disconnects all attached wire lines from any connector or relay, and instantly snips/recovers indoor power cables.
 
 ---
 
 ## 🛠️ Mod Compatibility & Integration
 - **Universal Forge Energy (FE)**: Built natively on NeoForge's Transfer API. Fully compatible with any mod supporting standard FE capabilities (`Capabilities.Energy.BLOCK`).
 - **Industrial Refinery Synergy**: Connect an HV Wire Connector directly to refinery diesel generators or steam boilers to power your entire base from a central power station.
-- **Logistics Mod Synergy**: Feed automation sorters, item pipes, and craft tables directly from overhead wire drop lines.
+- **Logistics Mod Synergy**: Feed automation sorters, item pipes, and craft tables directly from indoor AWG cables or overhead wire drop lines.
 
 ---
 
-## 📦 Recent Release Notes (v1.0.16)
+## 📦 Recent Release Notes (v1.1.3)
+- **Root Transaction Collision Crash Fix**:
+  - Fixed a server crash (`IllegalStateException: A root transaction of class HeavyAccumulatorBlockEntity is already active on this thread`) occurring when machines or accumulators pushed power into indoor cables.
+  - Re-engineered `CableNetworkRouter` to handle transaction propagation and open nested transactions via `Transaction.open(parentTx)`.
+  - Added a `SnapshotJournal` for cable throughput state, guaranteeing rollback during upstream transaction simulations.
+
+---
+
+## 📦 Previous Release Notes (v1.1.2)
+- **Rubber Cable Recipe Parsing Crash Fix**:
+  - Registered `c:ingots/rubber` and `c:rubber` common item tags in data with optional entries for `logistics:core/rubber`, `refinery:rubber`, and `techreborn:rubber`.
+  - Added `neoforge:conditions` with `neoforge:tag_empty` check to all 4 rubber cable recipes (`cable_18_gauge_from_rubber`, `cable_16_gauge_from_rubber`, `cable_14_gauge_from_rubber`, `cable_12_gauge_from_rubber`). Server startup no longer crashes with `Missing tag: 'c:ingots/rubber'` when running without a rubber-providing mod.
+
+---
+
+## 📦 Previous Release Notes (v1.1.1)
+- **Indoor AWG Power Cables (4 Gauge Tiers)**:
+  - Added modular 6-way indoor power cables (18, 16, 14, and 12 AWG) with material progression from Copper, Iron, High-Tensile Steel, to Gold Wire Strands.
+  - Low-buffer design ($1 \times \text{transfer rate}$) ensuring cables act as pure conductors rather than giant energy batteries.
+  - Intelligent breadth-first network routing with bottleneck throughput enforcement.
+  - Side isolation via the Grid Engineer's Hammer, instant removal via Insulated Wire Cutters, and diagnostic inspection via the Grid Voltmeter.
+  - Full crafting recipes with Rubber or Dried Kelp insulation and furnace blasting for Steel Strands.
+  - Fully waterloggable blocks with 32x32 native pixel art and 1024x1024 Ultra-HD resource pack models and textures.
+
+---
+
+## 📦 Previous Release Notes (v1.0.19)
+- **Substation Transformer Energy Voiding Fix**:
+  - Fixed a critical issue where Substation Transformers unconditionally pushed stored energy to attached wire connectors in `AUTO` or `OUTPUT` mode, causing energy to drain into a continuous back-feeding line-loss loop back to supplying batteries while leaving the transformer empty.
+  - Substation Transformers now only push energy into attached wire connectors when explicitly configured in `INPUT` mode.
+  - Upgraded Substation Transformer throughput limit (`MAX_RATE`) from 8,192 FE/t to 16,384 FE/t to match High-Voltage (HV) transfer speeds.
+  - Prevented bidirectional back-feeding in `EnergyGridManager` between Substation Transformers and Heavy Accumulators in `AUTO` mode.
+  - Fixed adjacent energy transfers in `TransformerBlockEntity`, `HeavyAccumulatorBlockEntity`, and `WireConnectorBlockEntity` using root transaction pre-simulation before buffer extraction, allowing power to cleanly top off machines and buffers whose remaining space is smaller than the maximum transfer rate.
+
+---
+
+## 📦 Previous Release Notes (v1.0.18)
+- **Wire Connector & Relay Deserialization & Session Safety**:
+  - Fixed an issue where `WireConnectorBlockEntity` and `WireRelayBlockEntity` defaulted to LV on reload, ensuring proper MV and HV rating retention.
+  - Added pending wire run timeout (30 seconds) and air right-click cancellation with audio confirmation.
+
+---
+
+## 📦 Previous Release Notes (v1.0.16)
 - **Faster Block Breaking & Halved Hardness**:
   - Halved the break hardness of Treated Wood Poles and Crossarms (from 2.0 to 1.0) and Steel Truss Poles (from 4.5 to 2.0).
   - Added `#mineable/axe` tag to wooden poles and crossarms so axes chop them quickly.

@@ -3,6 +3,7 @@ package com.powergrid;
 import com.mojang.logging.LogUtils;
 import com.powergrid.block.*;
 import com.powergrid.block.entity.*;
+import com.powergrid.grid.CableGauge;
 import com.powergrid.grid.WireType;
 import com.powergrid.item.*;
 import net.minecraft.core.registries.Registries;
@@ -75,6 +76,27 @@ public class PowerGridMod {
             p -> new WireRelayBlock(WireType.HV, p));
     public static final DeferredItem<BlockItem> HV_WIRE_RELAY_ITEM = ITEMS.registerSimpleBlockItem("hv_wire_relay", HV_WIRE_RELAY);
 
+    // Indoor AWG Power Cables
+    public static final DeferredBlock<PowerCableBlock> CABLE_18_GAUGE = BLOCKS.registerBlock("cable_18_gauge",
+            p -> new PowerCableBlock(CableGauge.GAUGE_18, p));
+    public static final DeferredItem<PowerCableBlockItem> CABLE_18_GAUGE_ITEM = ITEMS.registerItem("cable_18_gauge",
+            p -> new PowerCableBlockItem(CABLE_18_GAUGE.get(), p));
+
+    public static final DeferredBlock<PowerCableBlock> CABLE_16_GAUGE = BLOCKS.registerBlock("cable_16_gauge",
+            p -> new PowerCableBlock(CableGauge.GAUGE_16, p));
+    public static final DeferredItem<PowerCableBlockItem> CABLE_16_GAUGE_ITEM = ITEMS.registerItem("cable_16_gauge",
+            p -> new PowerCableBlockItem(CABLE_16_GAUGE.get(), p));
+
+    public static final DeferredBlock<PowerCableBlock> CABLE_14_GAUGE = BLOCKS.registerBlock("cable_14_gauge",
+            p -> new PowerCableBlock(CableGauge.GAUGE_14, p));
+    public static final DeferredItem<PowerCableBlockItem> CABLE_14_GAUGE_ITEM = ITEMS.registerItem("cable_14_gauge",
+            p -> new PowerCableBlockItem(CABLE_14_GAUGE.get(), p));
+
+    public static final DeferredBlock<PowerCableBlock> CABLE_12_GAUGE = BLOCKS.registerBlock("cable_12_gauge",
+            p -> new PowerCableBlock(CableGauge.GAUGE_12, p));
+    public static final DeferredItem<PowerCableBlockItem> CABLE_12_GAUGE_ITEM = ITEMS.registerItem("cable_12_gauge",
+            p -> new PowerCableBlockItem(CABLE_12_GAUGE.get(), p));
+
     // Transformer & Switchgear
     public static final DeferredBlock<TransformerBlock> TRANSFORMER = BLOCKS.registerBlock("transformer",
             TransformerBlock::new);
@@ -129,6 +151,11 @@ public class PowerGridMod {
                     () -> new BlockEntityType<>(WireRelayBlockEntity::new,
                             LV_WIRE_RELAY.get(), MV_WIRE_RELAY.get(), HV_WIRE_RELAY.get()));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PowerCableBlockEntity>> POWER_CABLE_BE =
+            BLOCK_ENTITY_TYPES.register("power_cable",
+                    () -> new BlockEntityType<>(PowerCableBlockEntity::new,
+                            CABLE_18_GAUGE.get(), CABLE_16_GAUGE.get(), CABLE_14_GAUGE.get(), CABLE_12_GAUGE.get()));
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TransformerBlockEntity>> TRANSFORMER_BE =
             BLOCK_ENTITY_TYPES.register("transformer",
                     () -> new BlockEntityType<>(TransformerBlockEntity::new, TRANSFORMER.get()));
@@ -179,6 +206,12 @@ public class PowerGridMod {
                         output.accept(MV_WIRE_RELAY_ITEM.get());
                         output.accept(HV_WIRE_RELAY_ITEM.get());
 
+                        // Indoor Power Cables
+                        output.accept(CABLE_18_GAUGE_ITEM.get());
+                        output.accept(CABLE_16_GAUGE_ITEM.get());
+                        output.accept(CABLE_14_GAUGE_ITEM.get());
+                        output.accept(CABLE_12_GAUGE_ITEM.get());
+
                         // Grid Gear
                         output.accept(TRANSFORMER_ITEM.get());
                         output.accept(BREAKER_SWITCH_ITEM.get());
@@ -201,6 +234,10 @@ public class PowerGridMod {
         // Wire Connectors
         event.registerBlockEntity(Capabilities.Energy.BLOCK, WIRE_CONNECTOR_BE.get(),
                 (be, side) -> be.energyStorage);
+
+        // Power Cables
+        event.registerBlockEntity(Capabilities.Energy.BLOCK, POWER_CABLE_BE.get(),
+                PowerCableBlockEntity::getSideEnergyHandler);
 
         // Transformer
         event.registerBlockEntity(Capabilities.Energy.BLOCK, TRANSFORMER_BE.get(),

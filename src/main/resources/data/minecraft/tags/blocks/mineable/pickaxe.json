@@ -10,6 +10,10 @@
     "powergrid:hv_wire_relay",
     "powergrid:transformer",
     "powergrid:breaker_switch",
-    "powergrid:heavy_accumulator"
+    "powergrid:heavy_accumulator",
+    "powergrid:cable_18_gauge",
+    "powergrid:cable_16_gauge",
+    "powergrid:cable_14_gauge",
+    "powergrid:cable_12_gauge"
   ]
 }

@@ -1,0 +1,6 @@
+{
+  "model": {
+    "model": "powergrid:item/cable_12_gauge",
+    "type": "minecraft:model"
+  }
+}

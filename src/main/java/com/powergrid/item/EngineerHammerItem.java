@@ -1,5 +1,7 @@
 package com.powergrid.item;
 
+import com.powergrid.block.PowerCableBlock;
+import com.powergrid.block.entity.PowerCableBlockEntity;
 import com.powergrid.block.entity.WireConnectorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,6 +42,14 @@ public class EngineerHammerItem extends Item {
             return InteractionResult.SUCCESS;
         }
 
+        if (be instanceof PowerCableBlockEntity cable) {
+            if (!level.isClientSide()) {
+                Direction sideToToggle = PowerCableBlock.getTargetedSide(context.getClickLocation(), context.getClickedFace(), pos);
+                cable.toggleSide(sideToToggle, player);
+            }
+            return InteractionResult.SUCCESS;
+        }
+
         // Rotate directional blocks on click
         BlockState state = level.getBlockState(pos);
         if (state.hasProperty(HorizontalDirectionalBlock.FACING)) {
@@ -58,6 +68,7 @@ public class EngineerHammerItem extends Item {
     public void appendHoverText(ItemStack itemStack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
         builder.accept(Component.translatable("tooltip.powergrid.hammer.desc_1"));
         builder.accept(Component.translatable("tooltip.powergrid.hammer.desc_2"));
+        builder.accept(Component.translatable("tooltip.powergrid.hammer.desc_3"));
         super.appendHoverText(itemStack, context, display, builder, tooltipFlag);
     }
 }
