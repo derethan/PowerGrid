@@ -23,6 +23,7 @@
   "block.powergrid.turbine_rotor": "Heavy Turbine Rotor",
   "block.powergrid.exhaust_stack": "Power Plant Industrial Exhaust Stack",
 
+  "item.powergrid.grid_icon": "Power Grid",
   "item.powergrid.engineer_hammer": "Grid Engineer's Hammer",
   "item.powergrid.voltmeter": "Grid Voltmeter",
   "item.powergrid.wire_cutters": "Insulated Wire Cutters",

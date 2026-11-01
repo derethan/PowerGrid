@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " I ",
+    " G ",
+    " I "
+  ],
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "I": "powergrid:ceramic_insulator"
+  },
+  "result": {
+    "id": "powergrid:mv_wire_relay",
+    "count": 4
+  }
+}

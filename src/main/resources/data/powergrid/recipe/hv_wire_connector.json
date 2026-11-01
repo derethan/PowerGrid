@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " S ",
+    " S ",
+    " I "
+  ],
+  "key": {
+    "S": "minecraft:iron_ingot",
+    "I": "powergrid:ceramic_insulator"
+  },
+  "result": {
+    "id": "powergrid:hv_wire_connector",
+    "count": 4
+  }
+}

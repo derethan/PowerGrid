@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " C ",
+    " T ",
+    " I "
+  ],
+  "key": {
+    "C": "minecraft:clay_ball",
+    "T": "minecraft:terracotta",
+    "I": "minecraft:iron_ingot"
+  },
+  "result": {
+    "id": "powergrid:ceramic_insulator",
+    "count": 4
+  }
+}

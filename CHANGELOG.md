@@ -4,6 +4,38 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.0.15] - 2026-11-01
+
+### Added
+- **Custom Creative Mode Tab Icon**:
+  - Replaced the placeholder Engineer's Hammer tab icon with a custom **Power Pole & Electrical Lightning Symbol** icon (`grid_icon`).
+  - Depicts a detailed treated wooden utility pole equipped with crossarm, ceramic insulators, steel bands, and an energetic electric lightning bolt symbol.
+  - Provided in both **32x32** native pixel art and **1024x1024** Ultra-HD resource pack versions.
+
+---
+
+## [1.0.14] - 2026-10-31
+
+### Added
+- **Complete Crafting Recipes for JEI & Vanilla Recipe Book**:
+  - Added recipe for **Ceramic Insulator** (`ceramic_insulator.json`).
+  - Added recipes for all wire connector tiers:
+    - **LV Wire Connector** (`lv_wire_connector.json`): Copper ingots + Ceramic Insulator
+    - **MV Wire Connector** (`mv_wire_connector.json`): Gold ingots + Ceramic Insulator
+    - **HV Wire Connector** (`hv_wire_connector.json`): Iron ingots + Ceramic Insulator
+  - Added recipes for all wire relay tiers:
+    - **LV Wire Relay** (`lv_wire_relay.json`): Ceramic Insulators
+    - **MV Wire Relay** (`mv_wire_relay.json`): Gold ingots + Ceramic Insulators
+    - **HV Wire Relay** (`hv_wire_relay.json`): Iron ingots + Ceramic Insulators
+  - Added recipes for additional utility and grid equipment:
+    - **Wire Cutters** (`wire_cutters.json`)
+    - **Breaker Switch** (`breaker_switch.json`)
+    - **Steel Truss Pole** (`steel_truss_pole.json`)
+    - **Step-Up/Step-Down Transformer** (`transformer.json`)
+    - **Heavy Accumulator** (`heavy_accumulator.json`)
+
+---
+
 ## [1.0.13] - 2026-10-31
 
 ### Added

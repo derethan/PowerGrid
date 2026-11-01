@@ -89,7 +89,19 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.0.13)
+## 📦 Recent Release Notes (v1.0.15)
+- **Custom Creative Inventory Tab Icon**:
+  - Replaced the hammer icon with a custom Power Pole and Electrical Lightning Bolt icon, rendered in both default 32x32 pixel art and 1024x1024 Ultra-HD resolution.
+
+---
+
+## 📦 Previous Release Notes (v1.0.14)
+- **Complete JEI / Recipe Book Support**:
+  - Added shaped crafting recipes for all LV, MV, and HV Wire Connectors and Wire Relays, Ceramic Insulators, Wire Cutters, Breaker Switches, Steel Truss Poles, Transformers, and Heavy Accumulators.
+
+---
+
+## 📦 Previous Release Notes (v1.0.13)
 - **3D Physical Overhead Powerlines with Gravitational Sag**:
   - Fully implemented multi-segment 3D powerline rendering connecting all poles, crossarms, and switches. Wires sag naturally with gravitational catenary physics and render with tier-accurate styling (Copper LV, Electrum MV, Galvanized Steel HV).
 - **Directional Connector Modes (`AUTO`, `INPUT`, `OUTPUT`)**:

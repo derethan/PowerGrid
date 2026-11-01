@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "III",
+    "ILI",
+    "IRI"
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "L": "minecraft:lever",
+    "R": "minecraft:redstone"
+  },
+  "result": {
+    "id": "powergrid:breaker_switch",
+    "count": 1
+  }
+}

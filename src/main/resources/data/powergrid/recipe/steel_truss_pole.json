@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " I ",
+    "ISI",
+    " I "
+  ],
+  "key": {
+    "I": "minecraft:iron_bars",
+    "S": "minecraft:iron_ingot"
+  },
+  "result": {
+    "id": "powergrid:steel_truss_pole",
+    "count": 6
+  }
+}

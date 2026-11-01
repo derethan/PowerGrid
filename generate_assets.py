@@ -463,6 +463,81 @@ def render_exhaust_stack_top(size):
     draw_line(d, size, 8.0, 2.0, 8.0, 14.0, fill=(60, 68, 78), width=0.6)
     return im
 
+def render_grid_icon(size):
+    im = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+
+    def s(v):
+        return v * size / 32.0
+
+    # 1. Pole Vertical Column (Centered around X=9, spanning Y=4 to Y=30)
+    px0, px1 = s(7), s(11)
+    d.rectangle([px0, s(4), px1, s(30)], fill=(75, 48, 28, 255))
+    d.line([(px0 + s(0.5), s(4)), (px0 + s(0.5), s(30))], fill=(110, 75, 45, 255), width=max(1, int(s(1))))
+    d.line([(px1 - s(0.5), s(4)), (px1 - s(0.5), s(30))], fill=(45, 28, 16, 255), width=max(1, int(s(1))))
+
+    # Steel bands on the pole
+    for y_band in [12, 19, 26]:
+        d.rectangle([px0 - s(0.5), s(y_band), px1 + s(0.5), s(y_band + 1.5)], fill=(60, 65, 75, 255))
+        d.line([(px0 - s(0.5), s(y_band)), (px1 + s(0.5), s(y_band))], fill=(100, 110, 125, 255), width=max(1, int(s(0.5))))
+
+    # Climbing rungs / steps on sides of pole
+    d.rectangle([px0 - s(2), s(16), px0, s(17)], fill=(70, 75, 85, 255))
+    d.rectangle([px1, s(23), px1 + s(2), s(24)], fill=(70, 75, 85, 255))
+
+    # 2. Horizontal Crossarm (At Y=7 to Y=10, X from 2 to 16)
+    cx0, cx1 = s(2), s(16)
+    cy0, cy1 = s(7), s(10)
+    d.rectangle([cx0, cy0, cx1, cy1], fill=(90, 58, 35, 255))
+    d.line([(cx0, cy0), (cx1, cy0)], fill=(130, 88, 55, 255), width=max(1, int(s(0.8))))
+    d.line([(cx0, cy1), (cx1, cy1)], fill=(50, 32, 18, 255), width=max(1, int(s(0.8))))
+
+    # Crossarm end steel caps
+    d.rectangle([cx0, cy0 - s(0.5), cx0 + s(1.5), cy1 + s(0.5)], fill=(65, 72, 82, 255))
+    d.rectangle([cx1 - s(1.5), cy0 - s(0.5), cx1, cy1 + s(0.5)], fill=(65, 72, 82, 255))
+    d.rectangle([px0 - s(0.5), cy0 - s(0.5), px1 + s(0.5), cy1 + s(0.5)], fill=(55, 60, 70, 255))
+
+    # Diagonal braces
+    d.line([(px0, s(12)), (cx0 + s(2), cy1)], fill=(75, 82, 95, 255), width=max(1, int(s(1))))
+    d.line([(px1, s(12)), (cx1 - s(2), cy1)], fill=(75, 82, 95, 255), width=max(1, int(s(1))))
+
+    # 3. Ceramic Insulators on Crossarm
+    for ix in [3.5, 9, 14.5]:
+        d.rectangle([s(ix - 1.2), s(5), s(ix + 1.2), s(7)], fill=(230, 225, 215, 255))
+        d.rectangle([s(ix - 0.8), s(3.5), s(ix + 0.8), s(5)], fill=(245, 240, 230, 255))
+        d.rectangle([s(ix - 0.5), s(2.5), s(ix + 0.5), s(3.5)], fill=(180, 110, 45, 255))
+
+    # Left drooping wire entering from left edge
+    d.line([(s(0), s(3)), (s(3.5), s(3.5))], fill=(160, 85, 35, 255), width=max(1, int(s(0.8))))
+
+    # 4. Electrical Bolt Symbol (Lightning Bolt) on the Right
+    bolt_pts = [
+        (s(25), s(2)),
+        (s(18), s(14)),
+        (s(23), s(14)),
+        (s(17), s(30)),
+        (s(29), s(12)),
+        (s(23.5), s(12))
+    ]
+
+    for ox, oy in [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (1, 1)]:
+        shifted = [(x + s(ox * 0.7), y + s(oy * 0.7)) for x, y in bolt_pts]
+        d.polygon(shifted, fill=(210, 120, 10, 220))
+
+    d.polygon(bolt_pts, fill=(255, 220, 40, 255))
+
+    core_pts = [
+        (s(24.5), s(4.5)),
+        (s(20), s(13.5)),
+        (s(23.5), s(13.5)),
+        (s(19), s(26)),
+        (s(26.5), s(13)),
+        (s(23.5), s(13))
+    ]
+    d.polygon(core_pts, fill=(255, 255, 220, 255))
+
+    return im
+
 # --- ITEM TEXTURES ---
 
 def render_engineer_hammer(size):
@@ -627,6 +702,7 @@ TEXTURE_DEFS = {
         ("electrum_wire", lambda s: render_material_item(s, "electrum_wire")),
         ("steel_strand", lambda s: render_material_item(s, "steel_strand")),
         ("ceramic_insulator", lambda s: render_material_item(s, "ceramic_insulator")),
+        ("grid_icon", render_grid_icon),
     ]
 }
 
@@ -1314,6 +1390,7 @@ ALL_BLOCKS = [
 ]
 
 ALL_ITEMS = [
+    "grid_icon",
     "engineer_hammer", "voltmeter", "wire_cutters",
     "lv_wire_coil", "mv_wire_coil", "hv_wire_coil",
     "treated_wood", "copper_wire", "electrum_wire", "steel_strand", "ceramic_insulator"

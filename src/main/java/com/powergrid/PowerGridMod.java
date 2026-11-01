@@ -111,6 +111,8 @@ public class PowerGridMod {
     public static final DeferredItem<BlockItem> EXHAUST_STACK_ITEM = ITEMS.registerSimpleBlockItem("exhaust_stack", EXHAUST_STACK);
 
     // === Tools & Usable Items ===
+    public static final DeferredItem<Item> GRID_ICON = ITEMS.registerItem("grid_icon",
+            Item::new);
     public static final DeferredItem<EngineerHammerItem> ENGINEER_HAMMER = ITEMS.registerItem("engineer_hammer",
             EngineerHammerItem::new);
     public static final DeferredItem<VoltmeterItem> VOLTMETER = ITEMS.registerItem("voltmeter",
@@ -168,8 +170,10 @@ public class PowerGridMod {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> POWER_GRID_TAB = CREATIVE_MODE_TABS.register("powergrid_tab",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.powergrid"))
-                    .icon(() -> ENGINEER_HAMMER.get().getDefaultInstance())
+                    .icon(() -> GRID_ICON.get().getDefaultInstance())
                     .displayItems((params, output) -> {
+                        // Badge / Icon
+                        output.accept(GRID_ICON.get());
                         // Tools
                         output.accept(ENGINEER_HAMMER.get());
                         output.accept(VOLTMETER.get());

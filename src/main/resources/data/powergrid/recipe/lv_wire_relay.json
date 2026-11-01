@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "   ",
+    " I ",
+    " I "
+  ],
+  "key": {
+    "I": "powergrid:ceramic_insulator"
+  },
+  "result": {
+    "id": "powergrid:lv_wire_relay",
+    "count": 4
+  }
+}
