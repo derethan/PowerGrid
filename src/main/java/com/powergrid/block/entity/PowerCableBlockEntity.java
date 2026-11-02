@@ -170,7 +170,7 @@ public class PowerCableBlockEntity extends BlockEntity {
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.putString("gauge", getGauge().getSerializedName());
-        output.putInt("storedEnergy", this.energyStorage.getAmountAsInt());
+        output.putInt("storedEnergy", 0);
         output.putInt("disabledSides", this.disabledSidesMask);
     }
 
@@ -183,8 +183,7 @@ public class PowerCableBlockEntity extends BlockEntity {
         } else {
             this.gauge = getGaugeFromState(getBlockState());
         }
-        int stored = input.getIntOr("storedEnergy", 0);
-        this.energyStorage.set(stored);
+        this.energyStorage.set(0);
         this.disabledSidesMask = input.getIntOr("disabledSides", 0);
     }
 
@@ -205,35 +204,27 @@ public class PowerCableBlockEntity extends BlockEntity {
 
             int toInsert = Math.min(maxAmount, remaining);
 
-            // First attempt to route directly across connected sinks using caller's transaction context
+            // Directly route across connected sinks using caller's transaction context
             int routed = CableNetworkRouter.routeEnergy(level, PowerCableBlockEntity.this, side, toInsert, tx);
             if (routed > 0) {
                 setChanged();
-                return routed;
             }
-
-            // If no sinks immediately available, buffer in this cable up to capacity
-            int buffered = energyStorage.insert(toInsert, tx);
-            if (buffered > 0) {
-                recordTransferred(buffered, tx);
-                setChanged();
-            }
-            return buffered;
+            return routed;
         }
 
         @Override
         public int extract(int maxAmount, TransactionContext tx) {
-            return energyStorage.extract(maxAmount, tx);
+            return 0;
         }
 
         @Override
         public long getAmountAsLong() {
-            return energyStorage.getAmountAsLong();
+            return 0;
         }
 
         @Override
         public int getAmountAsInt() {
-            return energyStorage.getAmountAsInt();
+            return 0;
         }
 
         @Override

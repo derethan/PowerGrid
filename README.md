@@ -122,8 +122,8 @@ Following standard electrical engineering conventions, lower AWG numbers denote 
 | **12 AWG** | Electrum / Gold Strand | **8,192 FE/t** | **8,192 FE** | Main indoor feeder buses, substation drop interconnects |
 
 ### Minimal Buffering & Network Flow
-- **1-Tick Buffer Capacity**: Each cable piece buffers exactly one tick worth of rated energy ($1 \times \text{transfer rate}$). Cables act as true conductors rather than giant energy storage batteries, maintaining lightweight memory footprints and preventing energy hoarding.
-- **Dynamic Instant Flow Routing**: Energy inserted into any cable is routed along connected cable segments via breadth-first search (`CableNetworkRouter`) and pushed directly into connected machines during the same tick.
+- **Instant Flow Routing**: Cables act as pure electrical conductors rather than giant energy storage batteries. Energy inserted into any cable is routed along connected cable segments via breadth-first search (`CableNetworkRouter`) and pushed directly into connected machines during the same tick. If no machines demand power, insertion returns 0, allowing generators to safely idle in standby.
+- **Battery Bank & Storage Protection**: Accumulator banks connected to a cable bus power machines without discharging into adjacent or networked accumulators, preventing parasitic power draw and endless battery-to-battery sloshing loops.
 - **Bottleneck Preservation**: If you run a high-gauge (thin) cable between lower-gauge (thick) cables, the throughput across that path is naturally throttled to the narrowest cable's rated capacity, preserving realistic electrical physics without artificial loss.
 - **Waterloggable**: Fully waterloggable blocks for safe routing through aquatic facilities or industrial basements.
 

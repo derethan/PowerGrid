@@ -45,9 +45,12 @@ public class CableNetworkRouter {
         BlockPos startPos = originCable.getBlockPos();
         visitedCables.add(startPos);
 
+        BlockEntity sourceBE = null;
         // Never loop back into the source device that injected energy into originCable
         if (originSide != null) {
-            visitedSinks.add(startPos.relative(originSide));
+            BlockPos sourcePos = startPos.relative(originSide);
+            visitedSinks.add(sourcePos);
+            sourceBE = level.getBlockEntity(sourcePos);
         }
 
         int startRemaining = originCable.getRemainingThroughput();
@@ -77,7 +80,7 @@ public class CableNetworkRouter {
                     }
                 } else {
                     // Check if neighborBE is valid sink
-                    if (neighborBE != null && !isExcludedSink(neighborBE, opposite)) {
+                    if (neighborBE != null && !isExcludedSink(neighborBE, opposite, sourceBE)) {
                         if (!visitedSinks.add(neighborPos)) {
                             continue;
                         }
@@ -93,10 +96,17 @@ public class CableNetworkRouter {
         return sinks;
     }
 
-    private static boolean isExcludedSink(BlockEntity be, Direction face) {
+    private static boolean isExcludedSink(BlockEntity be, Direction face, @Nullable BlockEntity sourceBE) {
+        if (be == sourceBE) return true;
         if (be instanceof WireConnectorBlockEntity connector) {
             // Only output to connector if connector is in INPUT mode (drawing from grid/cable to push to wire)
             return connector.getMode() == ConnectorMode.OUTPUT;
+        }
+        // If the source of energy is an Accumulator or Transformer, never route into another Accumulator or Transformer
+        if (sourceBE instanceof HeavyAccumulatorBlockEntity || sourceBE instanceof TransformerBlockEntity) {
+            if (be instanceof HeavyAccumulatorBlockEntity || be instanceof TransformerBlockEntity) {
+                return true;
+            }
         }
         return false;
     }
@@ -199,26 +209,13 @@ public class CableNetworkRouter {
     }
 
     /**
-     * Routine called during cable serverTick to push internal buffered energy or pull from adjacent extractable sources.
+     * Routine called during cable serverTick to check adjacent passive blocks to pull energy when demand exists.
      */
     public static void distributeFromCable(PowerCableBlockEntity cable) {
         Level level = cable.getLevel();
         if (level == null || level.isClientSide()) return;
 
-        // 1. If cable has buffered energy, try pushing it into connected sinks
-        int stored = cable.getEnergyStorage().getAmountAsInt();
-        if (stored > 0) {
-            try (Transaction tx = Transaction.openRoot()) {
-                int routed = routeEnergy(level, cable, null, stored, tx);
-                if (routed > 0) {
-                    cable.getEnergyStorage().extract(routed, tx);
-                    tx.commit();
-                    cable.setChanged();
-                }
-            }
-        }
-
-        // 2. If cable still has remaining throughput capacity, check adjacent passive blocks to pull energy
+        // If cable still has remaining throughput capacity, check adjacent passive blocks to pull energy
         int remaining = cable.getRemainingThroughput();
         if (remaining <= 0) return;
 
@@ -250,19 +247,28 @@ public class CableNetworkRouter {
                 if (sinks.isEmpty()) continue;
 
                 int maxPull = Math.min(remaining, cable.getGauge().getTransferRate());
-                try (Transaction pullTx = Transaction.openRoot()) {
-                    int extracted = neighborHandler.extract(maxPull, pullTx);
-                    if (extracted > 0) {
-                        int routed = routeEnergy(level, cable, dir, extracted, pullTx);
-                        if (routed > 0) {
-                            if (routed < extracted) {
-                                cable.getEnergyStorage().insert(extracted - routed, pullTx);
+
+                // Simulate first to see if any sinks can actually accept energy from this source
+                int simulatedDemand = 0;
+                try (Transaction simTx = Transaction.openRoot()) {
+                    int simExtracted = neighborHandler.extract(maxPull, simTx);
+                    if (simExtracted > 0) {
+                        simulatedDemand = routeEnergy(level, cable, dir, simExtracted, simTx);
+                    }
+                }
+
+                if (simulatedDemand > 0) {
+                    try (Transaction realTx = Transaction.openRoot()) {
+                        int extracted = neighborHandler.extract(simulatedDemand, realTx);
+                        if (extracted > 0) {
+                            int routed = routeEnergy(level, cable, dir, extracted, realTx);
+                            if (routed == extracted) {
+                                realTx.commit();
+                                neighborBE.setChanged();
+                                cable.setChanged();
+                                remaining -= extracted;
+                                if (remaining <= 0) break;
                             }
-                            pullTx.commit();
-                            neighborBE.setChanged();
-                            cable.setChanged();
-                            remaining -= extracted;
-                            if (remaining <= 0) break;
                         }
                     }
                 }

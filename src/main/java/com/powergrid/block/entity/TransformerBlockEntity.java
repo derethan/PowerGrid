@@ -1,6 +1,8 @@
 package com.powergrid.block.entity;
 
 import com.powergrid.PowerGridMod;
+import com.powergrid.block.HeavyAccumulatorBlock;
+import com.powergrid.block.TransformerBlock;
 import com.powergrid.block.WireConnectorBlock;
 import com.powergrid.grid.ConnectorMode;
 import net.minecraft.core.BlockPos;
@@ -42,6 +44,11 @@ public class TransformerBlockEntity extends BlockEntity {
                         continue;
                     }
                 }
+            }
+
+            // Avoid pushing into other Transformers or Heavy Accumulators (prevents intra-bank sloshing)
+            if (targetState.getBlock() instanceof TransformerBlock || targetState.getBlock() instanceof HeavyAccumulatorBlock) {
+                continue;
             }
 
             EnergyHandler targetEnergy = level.getCapability(Capabilities.Energy.BLOCK, targetPos, dir.getOpposite());

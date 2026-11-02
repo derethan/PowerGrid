@@ -96,7 +96,17 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.1.3)
+## 📦 Recent Release Notes (v1.1.5)
+- **Parasitic Power Draw & Battery Sloshing Loop Fix**:
+  - Fixed an issue where power generators would continuously burn fuel and lose energy when connected via AWG power cables to a fully charged Heavy Accumulator bank.
+  - Re-architected `PowerCableBlockEntity` energy handling to act as a pure instantaneous conduit: cables now route power directly to valid consumers/sinks in the caller's transaction and return 0 when no sinks require energy, eliminating phantom buffer accumulation and preventing feedback loops into batteries.
+  - Added intra-bank protection to `HeavyAccumulatorBlockEntity` and `TransformerBlockEntity` so adjacent storage blocks never push into one another.
+  - Updated `CableNetworkRouter.findSinks` to disallow battery-to-battery routing across cables (accumulators discharging into a cable network will only power machines, never other accumulators on the same network).
+  - Upgraded `CableNetworkRouter.distributeFromCable` passive extraction to simulate demand in a dry-run transaction first, pulling only the exact energy required by connected sinks and preventing voided energy.
+
+---
+
+## 📦 Previous Release Notes (v1.1.3)
 - **Root Transaction Collision Crash Fix**:
   - Fixed a server crash (`IllegalStateException: A root transaction of class HeavyAccumulatorBlockEntity is already active on this thread`) occurring when machines or accumulators pushed power into indoor cables.
   - Re-engineered `CableNetworkRouter` to handle transaction propagation and open nested transactions via `Transaction.open(parentTx)`.

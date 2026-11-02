@@ -4,6 +4,25 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.1.5] - 2026-11-01
+
+### Changed
+- Mod update
+
+---
+
+## [1.1.5] - 2026-11-01
+
+### Fixed
+- **Parasitic Power Draw & Battery Sloshing Loop**:
+  - Fixed an issue where power generators would continuously burn fuel and lose energy when connected via AWG power cables to a fully charged Heavy Accumulator bank.
+  - Re-architected `PowerCableBlockEntity` energy handling to act as a pure instantaneous conduit: cables now route power directly to valid consumers/sinks in the caller's transaction and return 0 when no sinks require energy, eliminating phantom buffer accumulation and preventing feedback loops into batteries.
+  - Added intra-bank protection to `HeavyAccumulatorBlockEntity` and `TransformerBlockEntity` so adjacent storage blocks never push into one another.
+  - Updated `CableNetworkRouter.findSinks` to disallow battery-to-battery routing across cables (accumulators discharging into a cable network will only power machines, never other accumulators on the same network).
+  - Upgraded `CableNetworkRouter.distributeFromCable` passive extraction to simulate demand in a dry-run transaction first, pulling only the exact energy required by connected sinks and preventing voided energy.
+
+---
+
 ## [1.1.3] - 2026-11-01
 
 ### Fixed
