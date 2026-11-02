@@ -1,6 +1,7 @@
 package com.powergrid.grid;
 
 import com.powergrid.PowerGridMod;
+import com.powergrid.config.PowerGridConfig;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 
@@ -12,14 +13,14 @@ public enum WireType implements StringRepresentable {
     private final String name;
     private final int transferRate; // FE/t max capacity
     private final int maxDistance;  // Max distance between connectors in blocks
-    private final float lossPerBlock; // Energy loss percentage per block
+    private final float defaultLossPerBlock; // Intended production energy loss percentage per block
     private final String displayName;
 
-    WireType(String name, int transferRate, int maxDistance, float lossPerBlock, String displayName) {
+    WireType(String name, int transferRate, int maxDistance, float defaultLossPerBlock, String displayName) {
         this.name = name;
         this.transferRate = transferRate;
         this.maxDistance = maxDistance;
-        this.lossPerBlock = lossPerBlock;
+        this.defaultLossPerBlock = defaultLossPerBlock;
         this.displayName = displayName;
     }
 
@@ -37,7 +38,37 @@ public enum WireType implements StringRepresentable {
     }
 
     public float getLossPerBlock() {
-        return lossPerBlock;
+        if (PowerGridConfig.SPEC.isLoaded() && PowerGridConfig.CONFIG != null) {
+            return switch (this) {
+                case LV -> PowerGridConfig.CONFIG.lvLossPerBlock.get().floatValue();
+                case MV -> PowerGridConfig.CONFIG.mvLossPerBlock.get().floatValue();
+                case HV -> PowerGridConfig.CONFIG.hvLossPerBlock.get().floatValue();
+            };
+        }
+        return 0.0f;
+    }
+
+    public float getDefaultLossPerBlock() {
+        return defaultLossPerBlock;
+    }
+
+    public int getLossFreeDistance() {
+        if (PowerGridConfig.SPEC.isLoaded() && PowerGridConfig.CONFIG != null) {
+            return switch (this) {
+                case LV -> PowerGridConfig.CONFIG.lvLossFreeDistance.get();
+                case MV -> PowerGridConfig.CONFIG.mvLossFreeDistance.get();
+                case HV -> PowerGridConfig.CONFIG.hvLossFreeDistance.get();
+            };
+        }
+        return getDefaultLossFreeDistance();
+    }
+
+    public int getDefaultLossFreeDistance() {
+        return switch (this) {
+            case LV -> 8;
+            case MV -> 16;
+            case HV -> 24;
+        };
     }
 
     public String getDisplayName() {

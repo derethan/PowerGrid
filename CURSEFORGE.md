@@ -96,7 +96,21 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.1.6)
+## 📦 Recent Release Notes (v1.1.8)
+- **Loss-Free Distance Thresholds for Short Runs (`powergrid.toml`)**:
+  - Added configurable distance thresholds (`lvLossFreeDistance: 8`, `mvLossFreeDistance: 16`, `hvLossFreeDistance: 24`) below which transmission line loss is completely bypassed.
+  - Wire spans shorter than or equal to the threshold operate at 100% transmission efficiency with 0% line loss. For longer spans, resistance applies only to the distance exceeding the threshold.
+
+---
+
+## 📦 Previous Release Notes (v1.1.7)
+- **Configurable Transmission Line Loss (`powergrid.toml`)**:
+  - Added full configuration controls in `config/powergrid.toml` for energy transmission loss across all wire tiers (`lvLossPerBlock`, `mvLossPerBlock`, `hvLossPerBlock`).
+  - Wire transmission losses are now set to `0.0` (zero loss / 100% transmission efficiency) by default for baseline testing and stability, with comments documenting intended production values (LV: 0.02, MV: 0.01, HV: 0.005).
+
+---
+
+## 📦 Previous Release Notes (v1.1.6)
 - **Overhead Wire Battery Drain & Bidirectional Sloshing Loop Fix**:
   - Fixed an issue where connecting two Heavy Accumulator banks via overhead utility wires with connectors in `AUTO` mode caused both banks to drain completely to zero.
   - Eliminated the harmonic oscillation in `EnergyGridManager`: when both connectors were set to `AUTO`, state-of-charge ratio differences caused full line rate packets (up to 8,192 FE/t) to bounce between banks, burning all stored energy in wire transmission loss.

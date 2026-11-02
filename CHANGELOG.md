@@ -4,6 +4,30 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.1.8] - 2026-11-01
+
+### Added
+- **Loss-Free Distance Thresholds for Short Runs (`powergrid.toml`)**:
+  - Added configurable distance thresholds for all wire tiers below which zero power loss occurs:
+    - `lvLossFreeDistance`: Default 8 blocks (LV wire runs $\le$ 8 blocks incur 0% loss).
+    - `mvLossFreeDistance`: Default 16 blocks (MV wire runs $\le$ 16 blocks incur 0% loss).
+    - `hvLossFreeDistance`: Default 24 blocks (HV wire runs $\le$ 24 blocks incur 0% loss).
+  - Short runs between nearby substation equipment, wall-mounted breaker switches, and local machine drops operate at 100% transmission efficiency. For longer runs exceeding the threshold, line resistance applies only to the distance beyond the threshold.
+
+---
+
+## [1.1.7] - 2026-11-01
+
+### Added
+- **Configurable Transmission Line Loss (`powergrid.toml`)**:
+  - Added a dedicated configuration file (`config/powergrid.toml`) specifying energy transmission loss fractions per block for all wire tiers:
+    - `lvLossPerBlock`: Low Voltage (LV) line loss (default: `0.0`, intended production balance: `0.02` / 2.0% per block).
+    - `mvLossPerBlock`: Medium Voltage (MV) line loss (default: `0.0`, intended production balance: `0.01` / 1.0% per block).
+    - `hvLossPerBlock`: High Voltage (HV) line loss (default: `0.0`, intended production balance: `0.005` / 0.5% per block).
+  - All wire losses default to `0.0` (zero line loss / 100% transmission efficiency) for initial testing, debugging, and baseline power grid verification.
+
+---
+
 ## [1.1.6] - 2026-11-01
 
 ### Fixed

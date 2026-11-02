@@ -129,7 +129,9 @@ public class EnergyGridManager {
                                 }
 
                                 if (acceptedSim > 0) {
-                                    float loss = Math.min(0.95f, (float) dist * wireType.getLossPerBlock());
+                                    double lossFreeDist = wireType.getLossFreeDistance();
+                                    double effectiveLossDist = Math.max(0.0, dist - lossFreeDist);
+                                    float loss = Math.min(0.95f, (float) (effectiveLossDist * wireType.getLossPerBlock()));
                                     float eff = Math.max(0.05f, 1.0f - loss);
                                     int req = (int) Math.ceil((double) acceptedSim / eff);
                                     sinks.add(new SinkCandidate(targetConnector, sinkEnergy, dist, eff, acceptedSim, req));

@@ -99,11 +99,15 @@ Power Grid enforces three strict voltage tiers. Terminal blocks (connectors and 
 | **HV (High Voltage)** | Steel-Core Aluminum | **16,384 FE/t** | **64 blocks** | 0.5% per block | Cross-country overland grids, heavy industrial transmission |
 
 ### Line Resistance & Transmission Loss
-Long overhead spans naturally encounter physical electrical resistance. When power travels between two terminals, the net energy delivered to the receiving node equals:
+Long overhead spans naturally encounter physical electrical resistance. Short runs under the loss-free distance threshold operate at 100% transmission efficiency (0% loss). For longer runs exceeding the threshold, net energy delivered to the receiving node equals:
 
-$$\text{Net Received} = \text{Transmitted FE} \times \left(1 - (\text{Distance} \times \text{Loss Rate})\right)$$
+$$\text{Effective Distance} = \max\left(0, \text{Total Distance} - \text{Loss-Free Distance}\right)$$
+$$\text{Net Received} = \text{Transmitted FE} \times \left(1 - (\text{Effective Distance} \times \text{Loss Rate})\right)$$
 
-*Example*: Sending 1,000 FE over 20 blocks of MV wire (1% loss per block = 20% loss) delivers 800 FE. Stepping up to HV wire (0.5% loss per block = 10% loss) preserves 900 FE!
+- **Loss-Free Thresholds**: Short spans within substations, breaker switch drops, and nearby machines incur **0% loss** (defaults: LV $\le$ 8 blocks, MV $\le$ 16 blocks, HV $\le$ 24 blocks).
+- **Fully Configurable (`config/powergrid.toml`)**:
+  - Distance thresholds (`lvLossFreeDistance`, `mvLossFreeDistance`, `hvLossFreeDistance`).
+  - Loss rates (`lvLossPerBlock`, `mvLossPerBlock`, `hvLossPerBlock`) default to `0.0` (0% loss) for initial testing and baseline stability, with documented intended production balance values (LV: 0.02, MV: 0.01, HV: 0.005).
 
 ---
 

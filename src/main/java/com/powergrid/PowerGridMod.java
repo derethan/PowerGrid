@@ -220,6 +220,9 @@ public class PowerGridMod {
                     .build());
 
     public PowerGridMod(IEventBus modEventBus, ModContainer modContainer) {
+        // Register configuration specification
+        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.LOCAL, com.powergrid.config.PowerGridConfig.SPEC, "powergrid.toml");
+
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         BLOCK_ENTITY_TYPES.register(modEventBus);
