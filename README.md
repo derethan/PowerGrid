@@ -171,7 +171,10 @@ Following standard electrical engineering conventions, lower AWG numbers denote 
 ### Wire Connectors (Block Interface)
 - Mounted on the face of any machine, generator, or battery.
 - **Directional Energy Link**: The rear face of the connector automatically searches the block it is attached to for standard NeoForge energy capabilities (`Capabilities.Energy.BLOCK`).
-- Automatically balances power: pulls excess power from generators and injects stored line power into consumers.
+- **Tri-State Operational Modes**:
+  - **AUTO (Auto-Sensing)**: Automatically draws from generators and supplies consumers. When attached to energy storage (Heavy Accumulators), it charges from available grid producers and discharges into active consumers, but will never transfer to other storage nodes in `AUTO` mode, eliminating parasitic drain and oscillation.
+  - **INPUT (From Machine to Grid)**: Forces the connector to strictly extract power from the attached machine/battery and push it into the wire network.
+  - **OUTPUT (From Grid to Machine)**: Forces the connector to strictly receive power from the wire network and deliver it into the attached machine/battery.
 - Supports up to **4 simultaneous wire attachments**.
 
 ### Wire Relays (Pass-Through Routing)

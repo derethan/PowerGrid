@@ -4,6 +4,19 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.1.6] - 2026-11-01
+
+### Fixed
+- **Overhead Wire Battery Drain & Bidirectional Sloshing Loop**:
+  - Fixed an issue where connecting two Heavy Accumulator banks via overhead utility wires with connectors in `AUTO` mode caused both banks to drain completely to zero.
+  - Resolved the underlying resonance catastrophe in `EnergyGridManager`: when both connectors were set to `AUTO`, state-of-charge ratio differences caused full line rate packets (up to 8,192 FE/t) to oscillate between banks, burning all stored energy in wire transmission loss.
+  - Added strict storage-to-storage isolation in `EnergyGridManager` so two bidirectional storage nodes (Accumulators or Transformers) in `AUTO` mode never transfer power to each other. Directed transfers can still be performed by explicitly setting one connector to `INPUT` and the other to `OUTPUT`.
+- **Zero-Loss Energy Accounting & Distribution Voiding Fix**:
+  - Fixed a critical energy void bug in `EnergyGridManager.distributePower` where extracting power upfront from a source would discard and void any unused energy if a connected sink/machine accepted less than the allocated amount.
+  - Re-engineered the distribution loop to extract energy from the source incrementally only for the exact amount accepted by each sink plus physical line loss (`sourceConsumed = ceil(inserted / eff)`), ensuring zero energy is voided or lost when machines or batteries near full capacity.
+
+---
+
 ## [1.1.5] - 2026-11-01
 
 ### Changed

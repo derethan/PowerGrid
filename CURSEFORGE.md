@@ -96,7 +96,18 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.1.5)
+## 📦 Recent Release Notes (v1.1.6)
+- **Overhead Wire Battery Drain & Bidirectional Sloshing Loop Fix**:
+  - Fixed an issue where connecting two Heavy Accumulator banks via overhead utility wires with connectors in `AUTO` mode caused both banks to drain completely to zero.
+  - Eliminated the harmonic oscillation in `EnergyGridManager`: when both connectors were set to `AUTO`, state-of-charge ratio differences caused full line rate packets (up to 8,192 FE/t) to bounce between banks, burning all stored energy in wire transmission loss.
+  - Added strict storage-to-storage isolation in `EnergyGridManager` so two bidirectional storage nodes (Accumulators or Transformers) in `AUTO` mode never transfer power to each other. Directed transfers can still be performed by explicitly setting one connector to `INPUT` and the other to `OUTPUT`.
+- **Zero-Loss Energy Accounting & Distribution Voiding Fix**:
+  - Fixed a critical energy void bug in `EnergyGridManager.distributePower` where extracting power upfront from a source would discard and void any unused energy if a connected sink/machine accepted less than the allocated amount.
+  - Re-engineered the distribution loop to extract energy from the source incrementally only for the exact amount accepted by each sink plus physical line loss (`sourceConsumed = ceil(inserted / eff)`), ensuring zero energy is voided or lost when machines or batteries near full capacity.
+
+---
+
+## 📦 Previous Release Notes (v1.1.5)
 - **Parasitic Power Draw & Battery Sloshing Loop Fix**:
   - Fixed an issue where power generators would continuously burn fuel and lose energy when connected via AWG power cables to a fully charged Heavy Accumulator bank.
   - Re-architected `PowerCableBlockEntity` energy handling to act as a pure instantaneous conduit: cables now route power directly to valid consumers/sinks in the caller's transaction and return 0 when no sinks require energy, eliminating phantom buffer accumulation and preventing feedback loops into batteries.

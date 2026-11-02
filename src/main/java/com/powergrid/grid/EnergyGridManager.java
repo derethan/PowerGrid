@@ -111,26 +111,15 @@ public class EnergyGridManager {
                                     BlockState sinkAttachedState = level.getBlockState(targetAttached);
                                     BlockState srcAttachedState = level.getBlockState(attachedPos);
 
-                                    // A transformer in AUTO mode should not back-feed into an accumulator in AUTO mode
-                                    if (srcAttachedState.getBlock() instanceof TransformerBlock &&
-                                            sinkAttachedState.getBlock() instanceof HeavyAccumulatorBlock) {
-                                        continue;
-                                    }
+                                    boolean srcIsStorage = srcAttachedState.getBlock() instanceof HeavyAccumulatorBlock || srcAttachedState.getBlock() instanceof TransformerBlock;
+                                    boolean sinkIsStorage = sinkAttachedState.getBlock() instanceof HeavyAccumulatorBlock || sinkAttachedState.getBlock() instanceof TransformerBlock;
 
-                                    // Between two storage nodes of the same type in AUTO mode, only transfer from higher to lower state of charge
-                                    int sinkCapacity = sinkEnergy.getCapacityAsInt();
-                                    int sourceCapacity = sourceNeighbor.getCapacityAsInt();
-                                    if (sinkCapacity > 0 && sourceCapacity > 0) {
-                                        if ((srcAttachedState.getBlock() instanceof HeavyAccumulatorBlock &&
-                                                sinkAttachedState.getBlock() instanceof HeavyAccumulatorBlock) ||
-                                            (srcAttachedState.getBlock() instanceof TransformerBlock &&
-                                                sinkAttachedState.getBlock() instanceof TransformerBlock)) {
-                                            double sinkRatio = (double) sinkEnergy.getAmountAsInt() / sinkCapacity;
-                                            double sourceRatio = (double) sourceNeighbor.getAmountAsInt() / sourceCapacity;
-                                            if (sourceRatio <= sinkRatio + 0.001) {
-                                                continue;
-                                            }
-                                        }
+                                    // Never transfer between two bidirectional storage nodes (Accumulators/Transformers) when both are in AUTO mode!
+                                    // They are both reservoirs on the same grid. Transferring between them creates an infinite
+                                    // harmonic sloshing loop where line resistance burns away all stored energy.
+                                    // To intentionally transfer from one battery bank to another, set the sender to INPUT and receiver to OUTPUT.
+                                    if (srcIsStorage && sinkIsStorage) {
+                                        continue;
                                     }
                                 }
 
@@ -167,11 +156,11 @@ public class EnergyGridManager {
         int maxToPull = Math.min(rate, totalRequested);
         int available = source.energyStorage.getAmountAsInt();
 
-        // If connector buffer is not full, check neighbor energy
+        // Check how much sourceNeighbor can actually provide using a simulation
         if (available < maxToPull && sourceNeighbor != null) {
-            try (var tx = Transaction.openRoot()) {
-                int extracted = sourceNeighbor.extract(maxToPull - available, tx);
-                available += extracted;
+            try (var simTx = Transaction.openRoot()) {
+                int simExtracted = sourceNeighbor.extract(maxToPull - available, simTx);
+                available += simExtracted;
             }
         }
 
@@ -179,43 +168,49 @@ public class EnergyGridManager {
 
         int toTransmit = Math.min(maxToPull, available);
 
-        // 3. Extract and deliver in a unified transaction
+        // 3. Deliver to sinks and extract ONLY what was actually accepted (+ line loss)
         int totalTransferred = 0;
         try (var tx = Transaction.openRoot()) {
-            int extracted = 0;
-            if (source.energyStorage.getAmountAsInt() > 0) {
-                extracted += source.energyStorage.extract(toTransmit, tx);
-            }
-            if (extracted < toTransmit && sourceNeighbor != null) {
-                extracted += sourceNeighbor.extract(toTransmit - extracted, tx);
-            }
+            int budgetRemaining = toTransmit;
 
-            if (extracted > 0) {
-                int remaining = extracted;
-                for (SinkCandidate sink : sinks) {
-                    if (remaining <= 0) break;
+            for (SinkCandidate sink : sinks) {
+                if (budgetRemaining <= 0) break;
 
-                    int alloc = (int) Math.round((double) extracted * (sink.requestedFromSource / (double) totalRequested));
-                    alloc = Math.min(alloc, remaining);
-                    if (alloc <= 0) continue;
+                int alloc = (int) Math.round((double) toTransmit * (sink.requestedFromSource / (double) totalRequested));
+                alloc = Math.min(alloc, budgetRemaining);
+                if (alloc <= 0) continue;
 
-                    int netForSink = Math.max(1, Math.round(alloc * sink.efficiency));
-                    int inserted = sink.sinkEnergy.insert(netForSink, tx);
-                    if (inserted > 0) {
-                        remaining -= alloc;
-                        totalTransferred += inserted;
-                        sink.connector.setChanged();
-                        BlockState targetSt = sink.connector.getBlockState();
-                        if (targetSt.hasProperty(WireConnectorBlock.FACING)) {
-                            BlockPos sinkBEPos = sink.connector.getBlockPos().relative(targetSt.getValue(WireConnectorBlock.FACING).getOpposite());
-                            BlockEntity sinkBE = level.getBlockEntity(sinkBEPos);
-                            if (sinkBE != null) {
-                                sinkBE.setChanged();
-                            }
+                int netForSink = Math.max(1, Math.round(alloc * sink.efficiency));
+                int inserted = sink.sinkEnergy.insert(netForSink, tx);
+                if (inserted > 0) {
+                    // Calculate exact energy consumed from source including transmission loss
+                    int sourceConsumed = (int) Math.ceil((double) inserted / sink.efficiency);
+                    sourceConsumed = Math.min(sourceConsumed, alloc);
+
+                    // Extract exact energy consumed from source
+                    int extractedForThisSink = 0;
+                    if (source.energyStorage.getAmountAsInt() > 0) {
+                        extractedForThisSink += source.energyStorage.extract(sourceConsumed, tx);
+                    }
+                    if (extractedForThisSink < sourceConsumed && sourceNeighbor != null) {
+                        extractedForThisSink += sourceNeighbor.extract(sourceConsumed - extractedForThisSink, tx);
+                    }
+
+                    budgetRemaining -= sourceConsumed;
+                    totalTransferred += inserted;
+                    sink.connector.setChanged();
+                    BlockState targetSt = sink.connector.getBlockState();
+                    if (targetSt.hasProperty(WireConnectorBlock.FACING)) {
+                        BlockPos sinkBEPos = sink.connector.getBlockPos().relative(targetSt.getValue(WireConnectorBlock.FACING).getOpposite());
+                        BlockEntity sinkBE = level.getBlockEntity(sinkBEPos);
+                        if (sinkBE != null) {
+                            sinkBE.setChanged();
                         }
                     }
                 }
+            }
 
+            if (totalTransferred > 0) {
                 tx.commit();
                 source.setChanged();
                 BlockEntity srcBE = level.getBlockEntity(attachedPos);
