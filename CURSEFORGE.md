@@ -130,7 +130,16 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.5.1)
+## 📦 Recent Release Notes (v1.6.0)
+- **Pole-Mounted High-Pressure Sodium (HPS) Street Lights (`powergrid:pole_street_light`)**:
+  - Clamps directly onto the side of Treated Wood Utility Poles, Steel Truss Poles, or Crossarms.
+  - **Overhead Wire Powered Only**: Implements `IWireNode` with a ceramic insulator terminal atop the bracket, accepting LV, MV, and HV wires directly from the overhead line (daisy-chainable up to 2 connections). Does not connect to ground cables.
+  - **Dual-Tier Lighting**: Standby glow (Light Level 7) right out of the box when unpowered; boosts to brilliant golden sodium radiance (Light Level 15) when powered with 5 FE/t.
+  - **Dusk-to-Dawn Photocell Sensor**: Sneak-Right-Click with Engineer's Hammer toggles automatic night/storm sensor vs. 24/7 Always Active mode. Normal right-click rotates the lamp.
+
+---
+
+## 📦 Previous Release Notes (v1.5.1)
 - **Treated Wood Planks Crafting Recipes (`powergrid:treated_wood`)**:
   - Added shaped crafting: 8x Planks (`#minecraft:planks`) surrounding 1x Coal or Charcoal (`#minecraft:coals`) yields 8x Treated Wood Planks.
   - Added shapeless crafting: 4x Planks + 1x Coal/Charcoal yields 4x Treated Wood Planks for convenient on-the-go survival crafting.

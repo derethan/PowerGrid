@@ -4,6 +4,31 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.6.0] - 2026-11-07
+
+### Added
+- **Pole-Mounted High-Pressure Sodium (HPS) Street Lights (`powergrid:pole_street_light`)**:
+  - Overhead utility pole attachment fixture modeled after classic North American municipal cobrahead street lights mounted to wooden or steel utility poles.
+  - **Exclusively Powered via Overhead Utility Wires**:
+    - Implements `IWireNode` with a dedicated ceramic insulator bushing wire terminal mounted atop the structural steel pole clamp bracket.
+    - Connects directly to Low Voltage (LV), Medium Voltage (MV), and High Voltage (HV) wire coils, drawing power directly from overhead transmission lines.
+    - Does not connect to indoor/underground power cables, reserving its electrical input strictly for overhead pole circuits.
+    - Supports up to 2 concurrent wire connections, enabling seamless in-line drops and pole-to-pole daisy-chaining.
+  - **Dual-Tier Illumination & Radius**:
+    - **Default Standby Mode (Unpowered)**: Emits a warm amber standby illumination (Light Level 7, ~7 block radius) immediately upon placement without needing power.
+    - **Active Energized Mode (Powered)**: Emits brilliant high brightness (Light Level 15, full 15-block radius) when energized with 5 FE/t supplied from the overhead pole wires.
+  - **Dusk-to-Dawn Photocell Sensor**:
+    - Features an authentic NEMA twist-lock photocell sensor on the cobrahead housing.
+    - Sneak-Right-Click with the Grid Engineer's Hammer toggles between **Automatic (Dusk-to-Dawn)** (activates only during dark hours or storms) and **Always Active (24/7)** continuous illumination.
+    - Normal Right-Click with the Grid Engineer's Hammer rotates the mounting orientation.
+  - **Voltmeter Diagnostics**:
+    - Inspecting the fixture with the Grid Voltmeter reports energized status, stored energy (`X / 1,000 FE`), active power draw (5 FE/t), photocell mode, and active overhead wire connections.
+  - **Survival Crafting Recipe & Ultra-HD 1024x Pack**:
+    - Craftable with Glowstone, Iron Ingots, and a Ceramic Insulator.
+    - Full procedural 32x32 textures and Ultra-HD 1024x resource pack support with authentic amber sodium-vapor glow.
+
+---
+
 ## [1.5.1] - 2026-11-07
 
 ### Added

@@ -97,5 +97,8 @@
   "tooltip.powergrid.wall_floodlight.desc": "§7Architectural outdoor security floodlight with dual angled heads and PIR motion-sensor styling. Right-click to toggle on/off (Light Level 15).§r",
   "block.powergrid.carriage_lantern": "Carriage Lantern",
   "item.powergrid.carriage_lantern": "Carriage Lantern",
-  "tooltip.powergrid.carriage_lantern.desc": "§7Traditional coach and carriage exterior wall lantern with glowing incandescent filament bulb. Right-click to toggle on/off (Light Level 15).§r"
+  "tooltip.powergrid.carriage_lantern.desc": "§7Traditional coach and carriage exterior wall lantern with glowing incandescent filament bulb. Right-click to toggle on/off (Light Level 15).§r",
+  "block.powergrid.pole_street_light": "Pole-Mounted HPS Street Light",
+  "item.powergrid.pole_street_light": "Pole-Mounted HPS Street Light",
+  "tooltip.powergrid.pole_street_light.desc": "§7Utility pole attachment street light. Powered exclusively by overhead pole wires via its built-in wire terminal insulator. Standby glow (Level 7) when unpowered; boosts to brilliant golden sodium radiance (Level 15) when energized with 5 FE/t. Sneak-Right-Click with Engineer's Hammer toggles Dusk-to-Dawn photocell sensor.§r"
 }

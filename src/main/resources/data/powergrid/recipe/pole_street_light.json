@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " GI",
+    " I ",
+    " S "
+  ],
+  "key": {
+    "G": "minecraft:glowstone",
+    "I": "minecraft:iron_ingot",
+    "S": "powergrid:ceramic_insulator"
+  },
+  "result": {
+    "id": "powergrid:pole_street_light",
+    "count": 1
+  }
+}

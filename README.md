@@ -32,6 +32,7 @@
    - [High-Voltage Breaker Switches](#high-voltage-breaker-switches)
    - [Heavy Accumulator Banks](#heavy-accumulator-banks)
    - [HPS Street Lights](#hps-street-lights)
+   - [Pole-Mounted HPS Street Lights](#pole-mounted-hps-street-lights)
    - [Wooden Water Wheels (Hydroelectric Generation)](#wooden-water-wheels-hydroelectric-generation)
    - [Windmill Rotors (Aerodynamic Wind Generation)](#windmill-rotors-aerodynamic-wind-generation)
    - [Solar Panel Arrays (Standard, Gold 2x, Diamond 5x)](#solar-panel-arrays-standard-gold-2x-diamond-5x)
@@ -224,6 +225,12 @@ Following standard electrical engineering conventions, lower AWG numbers denote 
 - Massive industrial capacitor banks storing up to **4,000,000 FE** per unit.
 - Supports blazing **16,384 FE/t** simultaneous charge and discharge rates.
 - Automatically pushes energy to connected low-buffer machines and wire connectors.
+
+### Pole-Mounted HPS Street Lights
+- Authentic utility pole attachment fixture modeled after classic North American municipal cobrahead street lights mounted to wooden or steel utility poles.
+- **Overhead Wire Powered Only**: Implements `IWireNode` with a dedicated ceramic insulator terminal atop the mounting clamp. Accepts LV, MV, and HV wire lines directly from overhead poles (supports up to 2 concurrent wire connections for line drops and daisy-chaining). Does not accept power from indoor cables.
+- **Dual-Tier Illumination**: Emits warm standby glow (Level 7) when unpowered; boosts to full brightness (Level 15) when energized with 5 FE/t from the overhead line.
+- **Dusk-to-Dawn Photocell Sensor**: Sneak-Right-Click with Engineer's Hammer toggles Dusk-to-Dawn sensor mode (energizes only during dark hours/storms) vs. 24/7 Always Active mode. Normal right-click rotates orientation.
 
 ### HPS Street Lights
 - Authentic 4-block municipal street lights modeled after classic North American cobrahead fixtures.
