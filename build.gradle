@@ -141,6 +141,11 @@ sourceSets.main.resources {
     exclude("src/generated/**/.cache")
 }
 
+sourceSets.test {
+    compileClasspath += sourceSets.main.compileClasspath
+    runtimeClasspath += sourceSets.main.runtimeClasspath
+}
+
 repositories {
     mavenCentral()
 }
@@ -190,7 +195,12 @@ configurations {
 }
 
 dependencies {
-    // Optional integration dependencies can be added here
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {

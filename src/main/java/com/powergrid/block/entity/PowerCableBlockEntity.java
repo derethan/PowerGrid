@@ -2,18 +2,26 @@ package com.powergrid.block.entity;
 
 import com.powergrid.PowerGridMod;
 import com.powergrid.block.PowerCableBlock;
+import com.powergrid.compat.refinery.CableFacadeData;
+import com.powergrid.compat.refinery.RefineryFacadeCompat;
 import com.powergrid.grid.CableGauge;
 import com.powergrid.grid.CableNetworkRouter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -24,10 +32,15 @@ import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
+
 public class PowerCableBlockEntity extends BlockEntity {
     private CableGauge gauge;
     private final SimpleEnergyHandler energyStorage;
     private int disabledSidesMask = 0; // 6-bit mask (1 << Direction.get3DDataValue())
+    private final Map<Direction, CableFacadeData> facades = new EnumMap<>(Direction.class);
 
     private long lastTickTime = -1;
     private int transferredThisTick = 0;
@@ -109,6 +122,58 @@ public class PowerCableBlockEntity extends BlockEntity {
         }
     }
 
+    public Map<Direction, CableFacadeData> getFacades() {
+        return Collections.unmodifiableMap(this.facades);
+    }
+
+    @Nullable
+    public CableFacadeData getFacade(Direction dir) {
+        return dir != null ? this.facades.get(dir) : null;
+    }
+
+    public boolean hasFacade(Direction dir) {
+        return dir != null && this.facades.containsKey(dir);
+    }
+
+    public boolean hasFacades() {
+        return !this.facades.isEmpty();
+    }
+
+    public void setFacade(Direction dir, @Nullable CableFacadeData data) {
+        if (dir == null) return;
+        if (data == null || !data.isValid()) {
+            this.facades.remove(dir);
+        } else {
+            this.facades.put(dir, data);
+        }
+        setChanged();
+        if (this.level != null && !this.level.isClientSide()) {
+            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), 3);
+            this.level.updateNeighborsAt(this.worldPosition, getBlockState().getBlock());
+        }
+    }
+
+    public void dropAllFacades() {
+        if (this.level == null || this.level.isClientSide() || this.facades.isEmpty()) return;
+        for (CableFacadeData data : this.facades.values()) {
+            if (data != null && data.isValid()) {
+                ItemStack drop = RefineryFacadeCompat.createFacadeStack(data.block(), data.hollow(), 1);
+                if (!drop.isEmpty()) {
+                    Containers.dropItemStack(this.level, this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 0.5, this.worldPosition.getZ() + 0.5, drop);
+                }
+            }
+        }
+        this.facades.clear();
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (this.level != null && !this.level.isClientSide()) {
+            dropAllFacades();
+        }
+    }
+
     public int getRemainingThroughput() {
         if (this.level != null) {
             long now = this.level.getGameTime();
@@ -172,6 +237,18 @@ public class PowerCableBlockEntity extends BlockEntity {
         output.putString("gauge", getGauge().getSerializedName());
         output.putInt("storedEnergy", 0);
         output.putInt("disabledSides", this.disabledSidesMask);
+        if (!this.facades.isEmpty()) {
+            var facList = output.childrenList("Facades");
+            for (Map.Entry<Direction, CableFacadeData> entry : this.facades.entrySet()) {
+                CableFacadeData fd = entry.getValue();
+                if (fd != null && fd.isValid()) {
+                    var facOut = facList.addChild();
+                    facOut.putInt("Side", entry.getKey().get3DDataValue());
+                    facOut.putString("Block", fd.getBlockId().toString());
+                    facOut.putBoolean("Hollow", fd.hollow());
+                }
+            }
+        }
     }
 
     @Override
@@ -185,6 +262,22 @@ public class PowerCableBlockEntity extends BlockEntity {
         }
         this.energyStorage.set(0);
         this.disabledSidesMask = input.getIntOr("disabledSides", 0);
+
+        this.facades.clear();
+        for (ValueInput facIn : input.childrenListOrEmpty("Facades")) {
+            int sideIdx = facIn.getIntOr("Side", -1);
+            String blockIdStr = facIn.getStringOr("Block", "");
+            boolean hollow = facIn.getBooleanOr("Hollow", false);
+            if (sideIdx >= 0 && sideIdx < 6 && !blockIdStr.isEmpty()) {
+                Identifier id = Identifier.tryParse(blockIdStr);
+                if (id != null) {
+                    Block blk = BuiltInRegistries.BLOCK.getValue(id);
+                    if (blk != null && blk != Blocks.AIR) {
+                        this.facades.put(Direction.from3DDataValue(sideIdx), new CableFacadeData(blk, hollow));
+                    }
+                }
+            }
+        }
     }
 
     private class CableSideEnergyHandler implements EnergyHandler {

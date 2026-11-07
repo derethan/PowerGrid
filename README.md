@@ -136,6 +136,12 @@ Following standard electrical engineering conventions, lower AWG numbers denote 
 - **Side Isolation**: Right-click any face or arm of a cable with the **Grid Engineer's Hammer** to disconnect or reconnect that specific face. Disconnected sides render as open air gaps and will not connect to adjacent machines or cables.
 - **Fast Dismantling**: Right-click any cable with **Insulated Wire Cutters** to instantly dismantle it directly into your inventory.
 - **Diagnostics**: Right-click any cable with the **Grid Voltmeter** to inspect its current throughput, gauge rating, and internal buffer.
+- **Refinery Pipe Facade Support**: Fully compatible with pipe facades from the *Industrial Refinery* mod (both Solid Panels `refinery:pipe_facade` and Pass-Through Frames `refinery:pipe_facade_hole`) across all 4 AWG cable sizes (12, 14, 16, and 18 AWG).
+  - **Attach & Swap**: Right-click any cable face with a facade to attach it. Right-clicking with a different facade cleanly swaps it and returns the old facade to your inventory.
+  - **Wall Concealment**: Solid facades cover cable faces flush with adjacent walls, floors, and ceilings; hollow frames cleanly frame cable arms passing through wall penetrations.
+  - **Intuitive Removal**: Sneak-Right-Click (Shift + Right-Click) with an empty hand, the **Grid Engineer's Hammer**, or a **Refinery Wrench** to pop the facade off. Breaking the cable block also drops all attached facades.
+  - **Wrench Support**: Right-clicking a cable with a Refinery Wrench toggles face connections identically to the Engineer's Hammer.
+  - *(Industrial Refinery is completely optional; Power Grid runs with zero hard dependencies.)*
 
 ---
 
@@ -250,7 +256,10 @@ Following standard electrical engineering conventions, lower AWG numbers denote 
 
 Power Grid is built directly on NeoForge's official **Transfer API**:
 - **Forge Energy Standard**: Any block registered with `Capabilities.Energy.BLOCK` can directly receive or supply power via `WireConnectorBlock` or **Indoor AWG Power Cables**.
-- **Refinery Mod Synergy**: Place an HV Wire Connector directly against an *Industrial Refinery* Diesel Generator or Steam Turbine to instantly export refinery power directly to your municipal power grid.
+- **Refinery Mod Synergy**:
+  - Connect HV Wire Connectors or indoor AWG cables directly to *Industrial Refinery* Diesel Generators, Steam Turbines, or industrial machines to export or supply power seamlessly.
+  - Conceal indoor AWG cables within walls and floors using *Industrial Refinery* Pipe Facades (Solid Panels and Hollow Pass-Through Frames) with full dynamic textures, lighting, and collision.
+  - Use the Refinery Wrench to toggle cable connections or remove attached facades.
 - **Logistics Mod Synergy**: Feed automation machinery, item pipes, and craft tables directly from indoor AWG cables or overhead drop lines.
 
 ---

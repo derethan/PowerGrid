@@ -1,5 +1,6 @@
 package com.powergrid;
 
+import com.powergrid.client.renderer.PowerCableRenderer;
 import com.powergrid.client.renderer.WireNodeRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -24,5 +25,6 @@ public class PowerGridClient {
         event.registerBlockEntityRenderer(PowerGridMod.WIRE_CONNECTOR_BE.get(), WireNodeRenderer::new);
         event.registerBlockEntityRenderer(PowerGridMod.WIRE_RELAY_BE.get(), WireNodeRenderer::new);
         event.registerBlockEntityRenderer(PowerGridMod.BREAKER_SWITCH_BE.get(), WireNodeRenderer::new);
+        event.registerBlockEntityRenderer(PowerGridMod.POWER_CABLE_BE.get(), PowerCableRenderer::new);
     }
 }

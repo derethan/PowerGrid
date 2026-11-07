@@ -1,13 +1,18 @@
 package com.powergrid.block;
 
 import com.powergrid.block.entity.PowerCableBlockEntity;
+import com.powergrid.compat.refinery.CableFacadeData;
+import com.powergrid.compat.refinery.RefineryFacadeCompat;
 import com.powergrid.grid.CableConnectionType;
 import com.powergrid.grid.CableGauge;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -187,7 +192,109 @@ public class PowerCableBlock extends BaseEntityBlock implements SimpleWaterlogge
         if (state.getValue(WEST).isConnected()) shape = Shapes.or(shape, WEST_SHAPE);
         if (state.getValue(UP).isConnected()) shape = Shapes.or(shape, UP_SHAPE);
         if (state.getValue(DOWN).isConnected()) shape = Shapes.or(shape, DOWN_SHAPE);
+
+        if (level.getBlockEntity(pos) instanceof PowerCableBlockEntity cableBE && cableBE.hasFacades()) {
+            for (Direction dir : Direction.values()) {
+                if (cableBE.hasFacade(dir)) {
+                    VoxelShape facShape = RefineryFacadeCompat.FACADE_SHAPES.get(dir);
+                    if (facShape != null) {
+                        shape = Shapes.or(shape, facShape);
+                    }
+                }
+            }
+        }
         return shape;
+    }
+
+    @Override
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        // 1. Attaching or swapping a pipe facade
+        if (RefineryFacadeCompat.isFacadeItem(stack)) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof PowerCableBlockEntity cableBE) {
+                Direction targetSide = RefineryFacadeCompat.resolveTargetFace(pos, hitResult);
+                Block facadeBlock = RefineryFacadeCompat.getFacadeBlock(stack);
+                boolean hollow = RefineryFacadeCompat.isHollowFacade(stack);
+                CableFacadeData existing = cableBE.getFacade(targetSide);
+                if (existing != null && existing.block() == facadeBlock && existing.hollow() == hollow) {
+                    return InteractionResult.PASS;
+                }
+                if (!level.isClientSide()) {
+                    if (existing != null) {
+                        ItemStack oldStack = RefineryFacadeCompat.createFacadeStack(existing.block(), existing.hollow(), 1);
+                        if (!oldStack.isEmpty() && !player.getInventory().add(oldStack)) {
+                            Containers.dropItemStack(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, oldStack);
+                        }
+                    }
+                    cableBE.setFacade(targetSide, new CableFacadeData(facadeBlock, hollow));
+                    SoundType soundType = facadeBlock.defaultBlockState().getSoundType(level, pos, player);
+                    level.playSound(null, pos, soundType.getPlaceSound(), SoundSource.BLOCKS, 1.0f, 1.0f);
+                    if (!player.getAbilities().instabuild) {
+                        stack.shrink(1);
+                    }
+                }
+                return InteractionResult.SUCCESS;
+            }
+        }
+
+        // 2. Removing facade with Wrench or Hammer while crouching (Shift)
+        if (player.isShiftKeyDown() && RefineryFacadeCompat.isWrenchOrHammer(stack)) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof PowerCableBlockEntity cableBE) {
+                Direction targetSide = RefineryFacadeCompat.resolveTargetFace(pos, hitResult);
+                CableFacadeData existing = cableBE.getFacade(targetSide);
+                if (existing != null) {
+                    if (!level.isClientSide()) {
+                        cableBE.setFacade(targetSide, null);
+                        ItemStack drop = RefineryFacadeCompat.createFacadeStack(existing.block(), existing.hollow(), 1);
+                        if (!drop.isEmpty() && !player.getInventory().add(drop)) {
+                            Containers.dropItemStack(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, drop);
+                        }
+                        SoundType soundType = existing.block().defaultBlockState().getSoundType(level, pos, player);
+                        level.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS, 1.0f, 1.0f);
+                    }
+                    return InteractionResult.SUCCESS;
+                }
+            }
+        }
+
+        // 3. Toggling side connection with a Wrench (e.g. Refinery wrench or Forge/Common wrench)
+        if (!player.isShiftKeyDown() && RefineryFacadeCompat.isWrench(stack) && !(stack.getItem() instanceof com.powergrid.item.EngineerHammerItem)) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof PowerCableBlockEntity cableBE) {
+                if (!level.isClientSide()) {
+                    Direction clickedSide = getTargetedSide(hitResult.getLocation(), hitResult.getDirection(), pos);
+                    cableBE.toggleSide(clickedSide, player);
+                }
+                return InteractionResult.SUCCESS;
+            }
+        }
+
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (player.isShiftKeyDown()) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof PowerCableBlockEntity cableBE) {
+                Direction targetSide = RefineryFacadeCompat.resolveTargetFace(pos, hitResult);
+                CableFacadeData existing = cableBE.getFacade(targetSide);
+                if (existing != null) {
+                    if (!level.isClientSide()) {
+                        cableBE.setFacade(targetSide, null);
+                        ItemStack drop = RefineryFacadeCompat.createFacadeStack(existing.block(), existing.hollow(), 1);
+                        if (!drop.isEmpty() && !player.getInventory().add(drop)) {
+                            Containers.dropItemStack(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, drop);
+                        }
+                        SoundType soundType = existing.block().defaultBlockState().getSoundType(level, pos, player);
+                        level.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS, 1.0f, 1.0f);
+                    }
+                    return InteractionResult.SUCCESS;
+                }
+            }
+        }
+        return super.useWithoutItem(state, level, pos, player, hitResult);
     }
 
     /**

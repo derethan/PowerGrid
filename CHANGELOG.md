@@ -4,6 +4,33 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.2.1] - 2026-11-06
+
+### Added
+- **Refinery Pipe Facade Compatibility for AWG Power Cables**:
+  - Full, zero-hard-dependency compatibility with Pipe Facades from the *Industrial Refinery* mod (`refinery:pipe_facade` and `refinery:pipe_facade_hole`).
+  - **All 4 AWG Cable Gauges Supported**: Compatible with 12 AWG, 14 AWG, 16 AWG, and 18 AWG Indoor Power Cables (`powergrid:cable_12_gauge`, `powergrid:cable_14_gauge`, `powergrid:cable_16_gauge`, `powergrid:cable_18_gauge`).
+  - **Solid & Pass-Through (Hollow) Facade Styles**:
+    - **Solid Panels (`refinery:pipe_facade`)**: Completely conceals the cable face inside walls, floors, and ceilings with a 2-pixel architectural slab matching the facade material.
+    - **Pass-Through / Hollow Frames (`refinery:pipe_facade_hole`)**: Adds a decorative 2-pixel outer frame while preserving the central opening, allowing connected 4-pixel AWG cable arms to pass cleanly through wall penetrations.
+  - **Dynamic In-World Attachment & Swapping**:
+    - Right-click any face of an AWG cable block with a facade item to attach it.
+    - Right-clicking with a different facade cleanly swaps the facade and returns the previous facade item to the player's inventory (or drops it in the world if inventory is full).
+    - Plays the authentic placement sound corresponding to the facade block's material.
+  - **Intuitive Removal & Drops**:
+    - Sneak-Right-Clicking (Shift + Right-Click) with an empty hand, the **Grid Engineer's Hammer**, or a **Refinery Wrench** removes the targeted facade panel and returns the exact facade item to the player.
+    - Breaking the cable block cleanly drops all attached facades in addition to the cable block itself.
+  - **Adaptive Collision & Selection Bounding Boxes**:
+    - Cable selection and collision shapes automatically expand to include the 2-pixel facade slab on all faced sides, enabling intuitive raycasting, interaction, and physical entity collision.
+  - **High-Performance Dynamic Client Rendering**:
+    - Dedicated `PowerCableRenderer` and `CableFacadeRenderer` dynamically render 3D facade panels using the target block's own texture atlas sprites and normals, fully compatible with vanilla lighting and LabPBR shaders with zero rendering overhead when no facades are attached.
+  - **Wrench Cross-Compatibility**:
+    - Right-clicking an AWG cable with a Refinery Wrench (or any wrench tagged under `c:tools/wrench`) now toggles that side's connection, matching the Grid Engineer's Hammer functionality.
+  - **Zero Hard Dependency**:
+    - Power Grid remains 100% standalone and functional when the Industrial Refinery mod is not installed. Facade integration operates dynamically through soft registry and data component lookups.
+
+---
+
 ## [1.2.0] - 2026-11-06
 
 ### Added

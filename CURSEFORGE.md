@@ -79,6 +79,7 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 - **Ultra-Low Buffer Conductance**: Maintains an ultra-lightweight 1-tick internal energy buffer ($1 \times \text{transfer rate}$), transferring power without acting as bulky energy storage blocks.
 - **Intelligent Flow Routing**: Automatically calculates shortest paths, bottlenecks, and available sinks across connected networks without artificial line-loss loops.
 - **Side Isolation**: Right-click any cable face or arm with the Engineer's Hammer to isolate or disconnect that face.
+- **Refinery Pipe Facade Support**: Fully compatible with pipe facades from the *Industrial Refinery* mod (both Solid Panels and Hollow Pass-Through Frames) across all 4 AWG cable gauges. Conceal cables flush inside walls or frame them through wall openings. Sneak-right-click with an empty hand, Engineer's Hammer, or Refinery Wrench to pop them off.
 - **Waterloggable**: Fully waterloggable for submerged industrial routing.
 
 ### 6. Specialized Engineering Tools
@@ -91,12 +92,23 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ## 🛠️ Mod Compatibility & Integration
 - **Universal Forge Energy (FE)**: Built natively on NeoForge's Transfer API. Fully compatible with any mod supporting standard FE capabilities (`Capabilities.Energy.BLOCK`).
-- **Industrial Refinery Synergy**: Connect an HV Wire Connector directly to refinery diesel generators or steam boilers to power your entire base from a central power station.
+- **Industrial Refinery Synergy**: Connect HV Wire Connectors or AWG cables directly to refinery diesel generators or steam boilers to power your entire base from a central power station. Conceal AWG cables using *Industrial Refinery* Pipe Facades (both Solid and Hollow frames) with dynamic texture mapping and collision bounding boxes. Configure cables using either the Engineer's Hammer or the Refinery Wrench.
 - **Logistics Mod Synergy**: Feed automation sorters, item pipes, and craft tables directly from indoor AWG cables or overhead wire drop lines.
 
 ---
 
-## 📦 Recent Release Notes (v1.2.0)
+## 📦 Recent Release Notes (v1.2.1)
+- **Refinery Pipe Facade Support for AWG Power Cables**:
+  - Full compatibility with *Industrial Refinery* Pipe Facades (Solid Panels `refinery:pipe_facade` and Hollow Pass-Through Frames `refinery:pipe_facade_hole`) across all 4 AWG power cable gauges (12, 14, 16, and 18 AWG).
+  - **Dynamic In-World Snapping & Swapping**: Right-click any cable face with a facade to attach it. Right-clicking with another facade cleanly swaps it and returns the old facade to inventory.
+  - **Flush Concealment & Pass-Through**: Solid panels cleanly hide cables within walls and floors; hollow frames frame the cable passing through walls with a 6.4x6.4 pixel opening.
+  - **Multiple Removal Options**: Sneak-Right-Click with an empty hand, the Grid Engineer's Hammer, or a Refinery Wrench to pop facades off. Breaking the cable also drops all attached facades.
+  - **Adaptive Collision & Dynamic BER**: Bounding boxes expand to include facade slabs; dedicated `PowerCableRenderer` renders 3D facade panels using the target block's texture atlas sprites and normals with zero overhead when no facades are present.
+  - **Zero Hard Dependency**: Power Grid remains 100% standalone and functional when Industrial Refinery is not installed.
+
+---
+
+## 📦 Previous Release Notes (v1.2.0)
 - **North American High-Pressure Sodium (HPS) Street Lights (`powergrid:street_light`)**:
   - Full-height 4-block municipal street lights featuring a concrete footing pedestal, slender metal pole, and curved davit mast arm with classic cobrahead luminaire.
   - **Dual-Tier Illumination**: Emits warm standby light (Level 7) when unpowered, boosting to full brightness (Level 15) when powered at the base with 5 FE/t.
