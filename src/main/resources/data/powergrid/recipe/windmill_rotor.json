@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CWC",
+    "WIW",
+    "CWC"
+  ],
+  "key": {
+    "W": "powergrid:treated_wood",
+    "C": "#minecraft:wool",
+    "I": "minecraft:iron_ingot"
+  },
+  "result": {
+    "id": "powergrid:windmill_rotor",
+    "count": 1
+  }
+}

@@ -120,6 +120,36 @@ public class VoltmeterItem extends Item {
             }
         }
 
+        // Check if Windmill Rotor
+        if (state.getBlock() instanceof com.powergrid.block.WindmillRotorBlock) {
+            foundInfo = true;
+            BlockPos centerPos = com.powergrid.block.WindmillRotorBlock.getCenterPos(pos, state);
+            BlockEntity centerBE = level.getBlockEntity(centerPos);
+            if (centerBE instanceof com.powergrid.block.entity.WindmillRotorBlockEntity rotor) {
+                int clearance = rotor.getGroundClearance();
+                int minClearance = PowerGridConfig.CONFIG.windmillMinGroundClearance.get();
+                player.sendSystemMessage(Component.literal("§6===== [Power Grid Windmill Rotor Diagnostic] =====§r"));
+                player.sendSystemMessage(Component.literal("§7Status: " + (rotor.isSpinning() ? "§aSpinning (Air Flow Operating)§r" : "§cStopped (Requires >= " + minClearance + " blocks ground clearance)§r")));
+                player.sendSystemMessage(Component.literal("§7Ground Clearance: §b" + clearance + " air block(s) below bottom§r (Min: " + minClearance + ")"));
+                player.sendSystemMessage(Component.literal("§7Generation Rate: §a" + rotor.getFeGeneratedLastTick() + " FE/t§r" + (level.isThundering() ? " §e[Thunderstorm Bonus +50%]§r" : (level.isRaining() ? " §b[Rain Bonus +20%]§r" : ""))));
+                player.sendSystemMessage(Component.literal("§7Stored Energy: §b" + rotor.energyStorage.getAmountAsInt() + " / " + PowerGridConfig.CONFIG.windmillCapacity.get() + " FE§r"));
+                player.sendSystemMessage(Component.literal("§8(Tip: Elevate higher above ground for increased wind velocity and generation, up to " + PowerGridConfig.CONFIG.windmillMaxFePerTick.get() + " FE/t!)§r"));
+            }
+        }
+
+        // Check if Solar Panel
+        if (be instanceof com.powergrid.block.entity.SolarPanelBlockEntity solar) {
+            foundInfo = true;
+            com.powergrid.block.SolarPanelTier tier = solar.getTier();
+            boolean generating = com.powergrid.block.entity.SolarPanelBlockEntity.isExposedToDaylight(level, pos);
+            player.sendSystemMessage(Component.literal("§6===== [Power Grid Solar Diagnostic] =====§r"));
+            player.sendSystemMessage(Component.literal("§7Type: §e" + tier.getDisplayName()));
+            player.sendSystemMessage(Component.literal("§7Status: " + (generating ? "§aGenerating (" + tier.getGenerationRate() + " FE/t)§r" : "§eIdle (No Daylight)§r")));
+            player.sendSystemMessage(Component.literal("§7Stored Buffer: §b" + solar.getEnergyStored() + " / " + tier.getCapacity() + " FE§r"));
+            player.sendSystemMessage(Component.literal("§7Max Export Rate: §6" + tier.getMaxExportRate() + " FE/t§r"));
+            player.sendSystemMessage(Component.literal("§8(Tip: Adjacent solar panels automatically balance buffers and output to bottom/sides)§r"));
+        }
+
         // Check if wire node
         if (be instanceof IWireNode node) {
             foundInfo = true;

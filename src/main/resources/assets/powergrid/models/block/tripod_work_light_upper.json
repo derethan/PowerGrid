@@ -1,0 +1,111 @@
+﻿{
+  "credit": "Work Lights Mod",
+  "textures": {
+    "particle": "powergrid:block/tripod_yellow",
+    "yellow": "powergrid:block/tripod_yellow",
+    "black": "powergrid:block/tripod_black",
+    "lens": "powergrid:block/worklight_lens_off"
+  },
+  "elements": [
+    {
+      "name": "upper_mast",
+      "from": [7, 0, 7],
+      "to": [9, 6, 9],
+      "faces": {
+        "north": { "uv": [7, 0, 9, 6], "texture": "#yellow" },
+        "south": { "uv": [7, 0, 9, 6], "texture": "#yellow" },
+        "west":  { "uv": [7, 0, 9, 6], "texture": "#yellow" },
+        "east":  { "uv": [7, 0, 9, 6], "texture": "#yellow" }
+      }
+    },
+    {
+      "name": "crossbar",
+      "from": [2, 6, 7],
+      "to": [14, 7.5, 9],
+      "faces": {
+        "north": { "uv": [2, 6, 14, 8], "texture": "#yellow" },
+        "south": { "uv": [2, 6, 14, 8], "texture": "#yellow" },
+        "west":  { "uv": [7, 6, 9, 8], "texture": "#yellow" },
+        "east":  { "uv": [7, 6, 9, 8], "texture": "#yellow" },
+        "up":    { "uv": [2, 7, 14, 9], "texture": "#yellow" },
+        "down":  { "uv": [2, 7, 14, 9], "texture": "#yellow" }
+      }
+    },
+    {
+      "name": "left_light_bracket",
+      "from": [3.5, 7.5, 7.5],
+      "to": [5.5, 9, 8.5],
+      "faces": {
+        "north": { "uv": [4, 7, 6, 9], "texture": "#black" },
+        "south": { "uv": [4, 7, 6, 9], "texture": "#black" },
+        "west":  { "uv": [7, 7, 9, 9], "texture": "#black" },
+        "east":  { "uv": [7, 7, 9, 9], "texture": "#black" },
+        "up":    { "uv": [4, 7, 6, 9], "texture": "#black" },
+        "down":  { "uv": [4, 7, 6, 9], "texture": "#black" }
+      }
+    },
+    {
+      "name": "left_lamp_body",
+      "from": [2, 9, 6],
+      "to": [7, 14, 10],
+      "faces": {
+        "north": { "uv": [2, 2, 7, 7], "texture": "#lens" },
+        "south": { "uv": [2, 2, 7, 7], "texture": "#yellow" },
+        "west":  { "uv": [6, 2, 10, 7], "texture": "#yellow" },
+        "east":  { "uv": [6, 2, 10, 7], "texture": "#yellow" },
+        "up":    { "uv": [2, 6, 7, 10], "texture": "#yellow" },
+        "down":  { "uv": [2, 6, 7, 10], "texture": "#yellow" }
+      }
+    },
+    {
+      "name": "left_lamp_handle",
+      "from": [3.5, 14, 7.5],
+      "to": [5.5, 15.5, 8.5],
+      "faces": {
+        "north": { "uv": [3, 14, 5, 16], "texture": "#black" },
+        "south": { "uv": [3, 14, 5, 16], "texture": "#black" },
+        "west":  { "uv": [7, 14, 9, 16], "texture": "#black" },
+        "east":  { "uv": [7, 14, 9, 16], "texture": "#black" },
+        "up":    { "uv": [3, 7, 5, 9], "texture": "#black" }
+      }
+    },
+    {
+      "name": "right_light_bracket",
+      "from": [10.5, 7.5, 7.5],
+      "to": [12.5, 9, 8.5],
+      "faces": {
+        "north": { "uv": [10, 7, 12, 9], "texture": "#black" },
+        "south": { "uv": [10, 7, 12, 9], "texture": "#black" },
+        "west":  { "uv": [7, 7, 9, 9], "texture": "#black" },
+        "east":  { "uv": [7, 7, 9, 9], "texture": "#black" },
+        "up":    { "uv": [10, 7, 12, 9], "texture": "#black" },
+        "down":  { "uv": [10, 7, 12, 9], "texture": "#black" }
+      }
+    },
+    {
+      "name": "right_lamp_body",
+      "from": [9, 9, 6],
+      "to": [14, 14, 10],
+      "faces": {
+        "north": { "uv": [9, 2, 14, 7], "texture": "#lens" },
+        "south": { "uv": [9, 2, 14, 7], "texture": "#yellow" },
+        "west":  { "uv": [6, 2, 10, 7], "texture": "#yellow" },
+        "east":  { "uv": [6, 2, 10, 7], "texture": "#yellow" },
+        "up":    { "uv": [9, 6, 14, 10], "texture": "#yellow" },
+        "down":  { "uv": [9, 6, 14, 10], "texture": "#yellow" }
+      }
+    },
+    {
+      "name": "right_lamp_handle",
+      "from": [10.5, 14, 7.5],
+      "to": [12.5, 15.5, 8.5],
+      "faces": {
+        "north": { "uv": [10, 14, 12, 16], "texture": "#black" },
+        "south": { "uv": [10, 14, 12, 16], "texture": "#black" },
+        "west":  { "uv": [7, 14, 9, 16], "texture": "#black" },
+        "east":  { "uv": [7, 14, 9, 16], "texture": "#black" },
+        "up":    { "uv": [10, 7, 12, 9], "texture": "#black" }
+      }
+    }
+  ]
+}

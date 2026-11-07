@@ -3,6 +3,7 @@
   "values": [
     "powergrid:treated_wood_pole",
     "powergrid:pole_crossarm",
-    "powergrid:wooden_water_wheel"
+    "powergrid:wooden_water_wheel",
+    "powergrid:windmill_rotor"
   ]
 }

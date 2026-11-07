@@ -1,0 +1,63 @@
+﻿{
+  "credit": "Work Lights Mod",
+  "textures": {
+    "particle": "powergrid:block/floodlight_housing",
+    "housing": "powergrid:block/floodlight_housing",
+    "sensor": "powergrid:block/floodlight_sensor",
+    "lens": "powergrid:block/floodlight_lens_on"
+  },
+  "elements": [
+    {
+      "name": "wall_mounting_plate",
+      "from": [4.5, 5, 14.5],
+      "to": [11.5, 12, 16],
+      "faces": {
+        "north": { "uv": [4, 5, 12, 12], "texture": "#housing" },
+        "south": { "uv": [4, 5, 12, 12], "texture": "#housing" },
+        "west":  { "uv": [14, 5, 16, 12], "texture": "#housing" },
+        "east":  { "uv": [14, 5, 16, 12], "texture": "#housing" },
+        "up":    { "uv": [4, 14, 12, 16], "texture": "#housing" },
+        "down":  { "uv": [4, 14, 12, 16], "texture": "#housing" }
+      }
+    },
+    {
+      "name": "sensor_dome",
+      "from": [6.5, 4, 11.5],
+      "to": [9.5, 7, 14.5],
+      "faces": {
+        "north": { "uv": [6, 4, 10, 7], "texture": "#sensor" },
+        "south": { "uv": [6, 4, 10, 7], "texture": "#housing" },
+        "west":  { "uv": [11, 4, 15, 7], "texture": "#sensor" },
+        "east":  { "uv": [11, 4, 15, 7], "texture": "#sensor" },
+        "up":    { "uv": [6, 11, 10, 15], "texture": "#housing" },
+        "down":  { "uv": [6, 11, 10, 15], "texture": "#sensor" }
+      }
+    },
+    {
+      "name": "left_cone",
+      "from": [2, 6, 8.5],
+      "to": [6, 10, 13.5],
+      "faces": {
+        "north": { "uv": [2, 6, 6, 10], "texture": "#lens" },
+        "south": { "uv": [2, 6, 6, 10], "texture": "#housing" },
+        "west":  { "uv": [8, 6, 14, 10], "texture": "#housing" },
+        "east":  { "uv": [8, 6, 14, 10], "texture": "#housing" },
+        "up":    { "uv": [2, 8, 6, 14], "texture": "#housing" },
+        "down":  { "uv": [2, 8, 6, 14], "texture": "#housing" }
+      }
+    },
+    {
+      "name": "right_cone",
+      "from": [10, 6, 8.5],
+      "to": [14, 10, 13.5],
+      "faces": {
+        "north": { "uv": [10, 6, 14, 10], "texture": "#lens" },
+        "south": { "uv": [10, 6, 14, 10], "texture": "#housing" },
+        "west":  { "uv": [8, 6, 14, 10], "texture": "#housing" },
+        "east":  { "uv": [8, 6, 14, 10], "texture": "#housing" },
+        "up":    { "uv": [10, 8, 14, 14], "texture": "#housing" },
+        "down":  { "uv": [10, 8, 14, 14], "texture": "#housing" }
+      }
+    }
+  ]
+}

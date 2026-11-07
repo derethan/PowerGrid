@@ -14,6 +14,13 @@
     "powergrid:cable_18_gauge",
     "powergrid:cable_16_gauge",
     "powergrid:cable_14_gauge",
-    "powergrid:cable_12_gauge"
+    "powergrid:cable_12_gauge",
+    "powergrid:solar_panel",
+    "powergrid:gold_solar_panel",
+    "powergrid:diamond_solar_panel",
+    "powergrid:tripod_work_light",
+    "powergrid:ceiling_shop_light",
+    "powergrid:wall_floodlight",
+    "powergrid:carriage_lantern"
   ]
 }

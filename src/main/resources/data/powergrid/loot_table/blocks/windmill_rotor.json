@@ -1,0 +1,25 @@
+﻿{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "powergrid:windmill_rotor",
+          "properties": {
+            "part": "center"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "powergrid:windmill_rotor"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}
+

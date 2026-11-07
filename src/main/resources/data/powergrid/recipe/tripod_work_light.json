@@ -1,0 +1,19 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "LGL",
+    " Y ",
+    "I I"
+  ],
+  "key": {
+    "L": "minecraft:redstone_lamp",
+    "G": "minecraft:glowstone",
+    "Y": "minecraft:yellow_dye",
+    "I": "minecraft:iron_ingot"
+  },
+  "result": {
+    "count": 1,
+    "id": "powergrid:tripod_work_light"
+  }
+}

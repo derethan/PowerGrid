@@ -1,0 +1,116 @@
+﻿{
+  "credit": "Work Lights Mod - 3D Solar Panel Monolith",
+  "textures": {
+    "particle": "powergrid:block/solar_panel_top",
+    "top": "powergrid:block/solar_panel_top",
+    "side": "powergrid:block/solar_panel_side",
+    "bottom": "powergrid:block/solar_panel_bottom"
+  },
+  "elements": [
+    {
+      "name": "wafer_deck",
+      "from": [0, 3.8, 0],
+      "to": [16, 7.0, 16],
+      "faces": {
+        "north": { "uv": [0, 9, 16, 12], "texture": "#side" },
+        "south": { "uv": [0, 9, 16, 12], "texture": "#side" },
+        "west":  { "uv": [0, 9, 16, 12], "texture": "#side" },
+        "east":  { "uv": [0, 9, 16, 12], "texture": "#side" },
+        "up":    { "uv": [0, 0, 16, 16], "texture": "#top" },
+        "down":  { "uv": [0, 0, 16, 16], "texture": "#bottom" }
+      }
+    },
+    {
+      "name": "inverter_box",
+      "from": [3.5, 1.0, 3.5],
+      "to": [12.5, 3.8, 12.5],
+      "faces": {
+        "north": { "uv": [3, 12, 13, 15], "texture": "#side" },
+        "south": { "uv": [3, 12, 13, 15], "texture": "#side" },
+        "west":  { "uv": [3, 12, 13, 15], "texture": "#side" },
+        "east":  { "uv": [3, 12, 13, 15], "texture": "#side" },
+        "down":  { "uv": [3, 3, 13, 13], "texture": "#bottom" }
+      }
+    },
+    {
+      "name": "leg_nw",
+      "from": [0.5, 0, 0.5],
+      "to": [2.5, 3.8, 2.5],
+      "faces": {
+        "north": { "uv": [0, 12, 2, 16], "texture": "#side" },
+        "south": { "uv": [0, 12, 2, 16], "texture": "#side" },
+        "west":  { "uv": [0, 12, 2, 16], "texture": "#side" },
+        "east":  { "uv": [0, 12, 2, 16], "texture": "#side" },
+        "down":  { "uv": [0, 0, 2, 2], "texture": "#bottom" }
+      }
+    },
+    {
+      "name": "leg_ne",
+      "from": [13.5, 0, 0.5],
+      "to": [15.5, 3.8, 2.5],
+      "faces": {
+        "north": { "uv": [14, 12, 16, 16], "texture": "#side" },
+        "south": { "uv": [14, 12, 16, 16], "texture": "#side" },
+        "west":  { "uv": [14, 12, 16, 16], "texture": "#side" },
+        "east":  { "uv": [14, 12, 16, 16], "texture": "#side" },
+        "down":  { "uv": [14, 0, 16, 2], "texture": "#bottom" }
+      }
+    },
+    {
+      "name": "leg_sw",
+      "from": [0.5, 0, 13.5],
+      "to": [2.5, 3.8, 15.5],
+      "faces": {
+        "north": { "uv": [0, 12, 2, 16], "texture": "#side" },
+        "south": { "uv": [0, 12, 2, 16], "texture": "#side" },
+        "west":  { "uv": [0, 12, 2, 16], "texture": "#side" },
+        "east":  { "uv": [0, 12, 2, 16], "texture": "#side" },
+        "down":  { "uv": [0, 14, 2, 16], "texture": "#bottom" }
+      }
+    },
+    {
+      "name": "leg_se",
+      "from": [13.5, 0, 13.5],
+      "to": [15.5, 3.8, 15.5],
+      "faces": {
+        "north": { "uv": [14, 12, 16, 16], "texture": "#side" },
+        "south": { "uv": [14, 12, 16, 16], "texture": "#side" },
+        "west":  { "uv": [14, 12, 16, 16], "texture": "#side" },
+        "east":  { "uv": [14, 12, 16, 16], "texture": "#side" },
+        "down":  { "uv": [14, 14, 16, 16], "texture": "#bottom" }
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [ 30, 225, 0 ],
+      "translation": [ 0, 1.5, 0 ],
+      "scale": [ 0.65, 0.65, 0.65 ]
+    },
+    "ground": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0, 3, 0 ],
+      "scale": [ 0.35, 0.35, 0.35 ]
+    },
+    "fixed": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.5, 0.5, 0.5 ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [ 75, 45, 0 ],
+      "translation": [ 0, 2.5, 1.5 ],
+      "scale": [ 0.4, 0.4, 0.4 ]
+    },
+    "firstperson_righthand": {
+      "rotation": [ 0, 45, 0 ],
+      "translation": [ 0, 2.5, 0 ],
+      "scale": [ 0.45, 0.45, 0.45 ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [ 0, 225, 0 ],
+      "translation": [ 0, 2.5, 0 ],
+      "scale": [ 0.45, 0.45, 0.45 ]
+    }
+  }
+}

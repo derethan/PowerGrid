@@ -33,6 +33,9 @@
    - [Heavy Accumulator Banks](#heavy-accumulator-banks)
    - [HPS Street Lights](#hps-street-lights)
    - [Wooden Water Wheels (Hydroelectric Generation)](#wooden-water-wheels-hydroelectric-generation)
+   - [Windmill Rotors (Aerodynamic Wind Generation)](#windmill-rotors-aerodynamic-wind-generation)
+   - [Solar Panel Arrays (Standard, Gold 2x, Diamond 5x)](#solar-panel-arrays-standard-gold-2x-diamond-5x)
+   - [Work-Site & Architectural Illumination](#work-site--architectural-illumination)
 7. [Comprehensive Recipe Codex](#7-comprehensive-recipe-codex)
 8. [Cross-Mod Interoperability & Capabilities](#8-cross-mod-interoperability--capabilities)
 9. [Frequently Asked Questions (FAQ) & Troubleshooting](#9-frequently-asked-questions-faq--troubleshooting)
@@ -255,6 +258,55 @@ Following standard electrical engineering conventions, lower AWG numbers denote 
   - Breaking any part deconstructs the 3x3 assembly and drops a single `Wooden Water Wheel` item.
   - Right-click with the Grid Engineer's Hammer rotates the axle axis by 90 degrees; right-click with the Grid Voltmeter inspects live telemetry.
 
+### Windmill Rotors (Aerodynamic Wind Generation)
+- **Kinetic Wind Turbine Multiblock (3x3x1)**: Authentic 3-block diameter, 1-block wide industrial windmill rotor harvesting kinetic energy from open atmospheric air currents.
+- **Ground Clearance Requirement (3 Air Blocks)**:
+  - Requires **at least 3 air blocks of open vertical clearance** directly beneath the bottom edge of the rotor (`center.below(2..4)`) to catch laminar wind flow.
+  - If ground, trees, or structures are within 3 blocks underneath the rotor, it enters a stopped stall state and produces **0 FE/t**.
+- **Altitude-Based Power Scaling**:
+  - The higher above the ground the windmill rotor is placed, the faster the wind currents and the more energy it generates!
+  - Generates **10 FE/tick** at minimum clearance (3 air blocks), scaling by **+2 FE/tick for each additional block of open air clearance** beneath it, up to a maximum ceiling of **64 FE/tick** (reached at 30+ blocks above ground).
+  - Weather Wind Boost: Automatically gains **+20% generation during rain** and a **+50% storm surge generation during thunderstorms**.
+- **Central Axle Power Hub & Axle Stacking**:
+  - Central axle hub natively exposes standard `Capabilities.Energy.BLOCK`, directly outputting Forge Energy to adjacent substation transformers, heavy accumulators, AWG cables, or wire connectors.
+  - Rotors placed side-by-side along their axle axis automatically form a unified wind farm drive shaft line, pooling power cleanly across the entire stack to terminal rotors that push into downstream transformers or batteries without internal sloshing.
+- **Monolithic 3D Zero-Flicker Model & Smooth Continuous Rotation**:
+  - Custom 256x256 procedural texture atlas with 0.5px UV inset margin padding, PoseStack normal transformations, and pre-allocated geometry for flicker-free rendering.
+  - Continuously interpolates rotation speed based on active generation, game time, and partial ticks (`(animTicks * spinSpeed) % 360°`), providing ultra-smooth 60/120/144+ FPS motion.
+  - Features a heavy banded timber axle, cast iron hub flange with hex bolts, brass bearing nose cap, 4 heavy structural spars, steel brackets, angled aerodynamic wood/canvas sail slats, and 4 diagonal bracing struts.
+- **Placement & Hammer Alignment**:
+  - Checks 3x3 clearance upon placement. Placing against an existing rotor automatically aligns the axle orientation for effortless stacking.
+  - Right-clicking with the Grid Engineer's Hammer rotates the axle axis by 90 degrees if clearance permits.
+  - Right-clicking with the Grid Voltmeter inspects live status: spinning state, air clearance below, generation rate, and buffer levels.
+
+### Solar Panel Arrays (Standard, Gold 2x, Diamond 5x)
+- **Compact Photovoltaic Monoliths (1x1x7px)**: Modern, low-profile solar generation panels with under-deck inverter enclosures, cooling heatsink fins, and corner rubber isolation feet.
+- **Three Progressive Generation Tiers**:
+  - **Standard Solar Panel (`powergrid:solar_panel`)**: Baseline photovoltaic generator crafted with iron. Produces **1 FE/tick** in daylight with a **10,000 FE** internal buffer and 100 FE/t export rate.
+  - **Gold Solar Panel (`powergrid:gold_solar_panel`)**: Advanced gold-doped photovoltaic generator crafted with Gold Ingots. Produces **2 FE/tick (2x baseline)** in daylight with a **20,000 FE** internal buffer and 200 FE/t export rate. Warm golden-amber cells with polished brass/gold bezel.
+  - **Diamond Solar Panel (`powergrid:diamond_solar_panel`)**: Elite diamond-doped photovoltaic generator crafted with Diamonds. Produces **5 FE/tick (5x baseline)** in daylight with a **50,000 FE** internal buffer and 500 FE/t export rate. Brilliant cyan crystal facets with sleek platinum bezel.
+- **Connected Multi-Block Array Architecture**:
+  - Placing identical solar panels side-by-side automatically merges their outer bezels, extending continuous 3D raised silver busbars across cells and forming shared under-deck structural trusses.
+  - Automatically balances stored energy across connected panel arrays to prevent localized bottlenecks.
+- **Omnidirectional Power Export**:
+  - Central bottom port and all four side faces implement standard `Capabilities.Energy.BLOCK`, directly feeding adjacent substation transformers, heavy accumulators, AWG power cables, or wire connectors. The top photovoltaic glass surface is sealed.
+- **Live Diagnostics**:
+  - Right-click any panel (or use the Grid Voltmeter) to inspect tier name, real-time daylight/idle status, active FE/t generation, and internal buffer levels.
+
+### Work-Site & Architectural Illumination
+- **Tripod Work Light (`powergrid:tripod_work_light`)**:
+  - 2-block-tall industrial job-site dual halogen floodlight mounted on a heavy safety-yellow telescoping tripod stand with non-slip rubber feet.
+  - Right-click anywhere on the stand or light heads to toggle on/off with tactile switch audio (Light Level 15).
+- **Ceiling Shop Light (`powergrid:ceiling_shop_light`)**:
+  - 2-block-long commercial dual-tube fluorescent fixture with powder-coated sheet metal housing and electrical punch-outs.
+  - Mounts flush to the underside of solid ceilings; right-click to toggle tubes on/off (Light Level 15).
+- **Wall Floodlight (`powergrid:wall_floodlight`)**:
+  - Architectural outdoor security floodlight with dark bronze base, dual angled conical floodlight heads, textured lenses, and central PIR motion-sensor dome styling.
+  - Mounts flush to wall surfaces; right-click to toggle on/off (Light Level 15).
+- **Carriage Lantern (`powergrid:carriage_lantern`)**:
+  - Traditional coach and carriage exterior wall lantern featuring an ornate cast-iron bracket, pagoda hood, top finial, clear glass enclosure, and glowing 3D incandescent filament bulb.
+  - Mounts directly to wall surfaces; right-click to toggle on/off (Warm Light Level 15).
+
 ---
 
 ## 7. Comprehensive Recipe Codex
@@ -279,6 +331,16 @@ Following standard electrical engineering conventions, lower AWG numbers denote 
 | **Pole Crossarm**        | `WWW` / ` S ` / `   ` | 3x Spruce/Treated Planks (`W`), 1x Stick (`S`) | 2x Crossarms |
 | **Safety Breaker Switch**| ` R ` / ` L ` / ` I ` | 1x Redstone (`R`), 1x Lever (`L`), 1x Iron Ingot (`I`) | 1x Breaker Switch |
 | **Wooden Water Wheel**   | `WTW` / `TIT` / `WTW` | 4x Treated Wood (`W`), 4x Planks (`T`), 1x Iron Ingot (`I`) | 1x Wooden Water Wheel |
+| **Windmill Rotor**       | `CWC` / `WIW` / `CWC` | 4x Wool (`C`), 4x Treated Wood (`W`), 1x Iron Ingot (`I`) | 1x Windmill Rotor |
+| **Standard Solar Panel** | `GGG` / `LQL` / `IRI` | 3x Glass (`G`), 2x Lapis (`L`), 1x Quartz (`Q`), 2x Iron (`I`), 1x Redstone (`R`) | 1x Solar Panel |
+| **Gold Solar Panel**     | `GGG` / `LQL` / `URU` | 3x Glass (`G`), 2x Lapis (`L`), 1x Quartz (`Q`), 2x Gold Ingot (`U`), 1x Redstone (`R`) | 1x Gold Solar Panel |
+| **Gold Solar (Upgrade)** | ` G ` / `GSG` / ` G ` | 4x Gold Ingot (`G`), 1x Standard Solar Panel (`S`) | 1x Gold Solar Panel |
+| **Diamond Solar Panel**  | `GGG` / `LQL` / `DRD` | 3x Glass (`G`), 2x Lapis (`L`), 1x Quartz (`Q`), 2x Diamond (`D`), 1x Redstone (`R`) | 1x Diamond Solar Panel |
+| **Diamond Solar (Upgrade)**|` D ` / `DSD` / ` D `| 4x Diamond (`D`), 1x Gold Solar Panel (`S`) | 1x Diamond Solar Panel |
+| **Tripod Work Light**    | `LGL` / ` Y ` / `I I` | 2x Redstone Lamp (`L`), 1x Glowstone (`G`), 1x Yellow Dye (`Y`), 2x Iron Ingot (`I`) | 1x Tripod Work Light |
+| **Ceiling Shop Light**   | `III` / `GGG` / `R R` | 3x Iron Ingot (`I`), 3x Glowstone (`G`), 2x Redstone (`R`) | 2x Ceiling Shop Light |
+| **Wall Floodlight**      | ` I ` / `LSL` / ` R ` | 1x Iron Ingot (`I`), 2x Redstone Lamp (`L`), 1x Quartz (`S`), 1x Redstone (`R`) | 1x Wall Floodlight |
+| **Carriage Lantern**     | ` I ` / `GTG` / ` I ` | 2x Iron Ingot (`I`), 2x Glass Pane (`G`), 1x Torch (`T`) | 1x Carriage Lantern |
 
 ---
 
@@ -307,6 +369,12 @@ Power Grid is built directly on NeoForge's official **Transfer API**:
 
 **Q: My Wooden Water Wheel is placed in water but isn't spinning or generating power.**
 > **A**: To generate torque and spin, the water wheel requires **flowing water** (currents, waterfalls, or flumes). Static standing source water will not turn the wheel. Ensure water is actively dropping or flowing past the wheel blades!
+
+**Q: Why isn't my Windmill Rotor turning or generating FE?**
+> **A**: The Windmill Rotor requires **at least 3 air blocks of open vertical clearance** directly beneath the rotor's bottom segment (`center.below(2..4)`). If placed too close to the ground, roofs, or vegetation, it stalls with 0 FE/t. Build it higher off the ground to increase wind velocity and FE output (up to 64 FE/t)!
+
+**Q: Do Solar Panels work indoors or during thunderstorms?**
+> **A**: Solar panels require clear access to daylight and direct sky exposure above them. During night or heavy dark weather, panels enter an idle standby state. Arrays placed together automatically balance energy and discharge power downwards or sideways into attached cables and machines.
 
 ---
 

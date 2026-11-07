@@ -1,0 +1,12 @@
+﻿{
+  "variants": {
+    "facing=north,lit=false": { "model": "powergrid:block/carriage_lantern" },
+    "facing=south,lit=false": { "model": "powergrid:block/carriage_lantern", "y": 180 },
+    "facing=west,lit=false":  { "model": "powergrid:block/carriage_lantern", "y": 270 },
+    "facing=east,lit=false":  { "model": "powergrid:block/carriage_lantern", "y": 90 },
+    "facing=north,lit=true":  { "model": "powergrid:block/carriage_lantern_lit" },
+    "facing=south,lit=true":  { "model": "powergrid:block/carriage_lantern_lit", "y": 180 },
+    "facing=west,lit=true":   { "model": "powergrid:block/carriage_lantern_lit", "y": 270 },
+    "facing=east,lit=true":   { "model": "powergrid:block/carriage_lantern_lit", "y": 90 }
+  }
+}

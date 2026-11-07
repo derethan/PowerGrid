@@ -1,0 +1,20 @@
+﻿{
+  "variants": {
+    "facing=north,part=foot,lit=false": { "model": "powergrid:block/ceiling_shop_light_foot" },
+    "facing=south,part=foot,lit=false": { "model": "powergrid:block/ceiling_shop_light_foot", "y": 180 },
+    "facing=west,part=foot,lit=false":  { "model": "powergrid:block/ceiling_shop_light_foot", "y": 270 },
+    "facing=east,part=foot,lit=false":  { "model": "powergrid:block/ceiling_shop_light_foot", "y": 90 },
+    "facing=north,part=foot,lit=true":  { "model": "powergrid:block/ceiling_shop_light_foot_lit" },
+    "facing=south,part=foot,lit=true":  { "model": "powergrid:block/ceiling_shop_light_foot_lit", "y": 180 },
+    "facing=west,part=foot,lit=true":   { "model": "powergrid:block/ceiling_shop_light_foot_lit", "y": 270 },
+    "facing=east,part=foot,lit=true":   { "model": "powergrid:block/ceiling_shop_light_foot_lit", "y": 90 },
+    "facing=north,part=head,lit=false": { "model": "powergrid:block/ceiling_shop_light_head" },
+    "facing=south,part=head,lit=false": { "model": "powergrid:block/ceiling_shop_light_head", "y": 180 },
+    "facing=west,part=head,lit=false":  { "model": "powergrid:block/ceiling_shop_light_head", "y": 270 },
+    "facing=east,part=head,lit=false":  { "model": "powergrid:block/ceiling_shop_light_head", "y": 90 },
+    "facing=north,part=head,lit=true":  { "model": "powergrid:block/ceiling_shop_light_head_lit" },
+    "facing=south,part=head,lit=true":  { "model": "powergrid:block/ceiling_shop_light_head_lit", "y": 180 },
+    "facing=west,part=head,lit=true":   { "model": "powergrid:block/ceiling_shop_light_head_lit", "y": 270 },
+    "facing=east,part=head,lit=true":   { "model": "powergrid:block/ceiling_shop_light_head_lit", "y": 90 }
+  }
+}

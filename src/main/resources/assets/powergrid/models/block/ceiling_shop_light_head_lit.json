@@ -1,0 +1,59 @@
+﻿{
+  "credit": "Work Lights Mod",
+  "textures": {
+    "particle": "powergrid:block/shop_light_casing",
+    "casing": "powergrid:block/shop_light_casing",
+    "tube": "powergrid:block/fluorescent_tube_on"
+  },
+  "elements": [
+    {
+      "name": "ceiling_channel",
+      "from": [4, 14, 0],
+      "to": [12, 16, 16],
+      "faces": {
+        "north": { "uv": [4, 14, 12, 16], "texture": "#casing" },
+        "south": { "uv": [4, 14, 12, 16], "texture": "#casing" },
+        "west":  { "uv": [0, 14, 16, 16], "texture": "#casing" },
+        "east":  { "uv": [0, 14, 16, 16], "texture": "#casing" },
+        "up":    { "uv": [4, 0, 12, 16], "texture": "#casing" },
+        "down":  { "uv": [4, 0, 12, 16], "texture": "#casing" }
+      }
+    },
+    {
+      "name": "outer_end_cap",
+      "from": [3.5, 12, 15],
+      "to": [12.5, 16, 16],
+      "faces": {
+        "north": { "uv": [3, 12, 13, 16], "texture": "#casing" },
+        "south": { "uv": [3, 12, 13, 16], "texture": "#casing" },
+        "west":  { "uv": [0, 12, 1, 16], "texture": "#casing" },
+        "east":  { "uv": [0, 12, 1, 16], "texture": "#casing" },
+        "down":  { "uv": [3, 0, 13, 1], "texture": "#casing" }
+      }
+    },
+    {
+      "name": "tube_left",
+      "from": [5, 12, 0],
+      "to": [7, 13.5, 16],
+      "faces": {
+        "north": { "uv": [5, 12, 7, 14], "texture": "#tube" },
+        "south": { "uv": [5, 12, 7, 14], "texture": "#tube" },
+        "west":  { "uv": [0, 12, 16, 14], "texture": "#tube" },
+        "east":  { "uv": [0, 12, 16, 14], "texture": "#tube" },
+        "down":  { "uv": [5, 0, 7, 16], "texture": "#tube" }
+      }
+    },
+    {
+      "name": "tube_right",
+      "from": [9, 12, 0],
+      "to": [11, 13.5, 16],
+      "faces": {
+        "north": { "uv": [9, 12, 11, 14], "texture": "#tube" },
+        "south": { "uv": [9, 12, 11, 14], "texture": "#tube" },
+        "west":  { "uv": [0, 12, 16, 14], "texture": "#tube" },
+        "east":  { "uv": [0, 12, 16, 14], "texture": "#tube" },
+        "down":  { "uv": [9, 0, 11, 16], "texture": "#tube" }
+      }
+    }
+  ]
+}

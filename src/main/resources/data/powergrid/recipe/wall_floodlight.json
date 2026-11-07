@@ -1,0 +1,19 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " I ",
+    "LSL",
+    " R "
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "L": "minecraft:redstone_lamp",
+    "S": "minecraft:quartz",
+    "R": "minecraft:redstone"
+  },
+  "result": {
+    "count": 1,
+    "id": "powergrid:wall_floodlight"
+  }
+}

@@ -116,6 +116,41 @@ public class PowerGridMod {
     public static final DeferredItem<WoodenWaterWheelBlockItem> WOODEN_WATER_WHEEL_ITEM = ITEMS.registerItem("wooden_water_wheel",
             p -> new WoodenWaterWheelBlockItem(WOODEN_WATER_WHEEL.get(), p));
 
+    public static final DeferredBlock<WindmillRotorBlock> WINDMILL_ROTOR = BLOCKS.registerBlock("windmill_rotor",
+            WindmillRotorBlock::new);
+    public static final DeferredItem<WindmillRotorBlockItem> WINDMILL_ROTOR_ITEM = ITEMS.registerItem("windmill_rotor",
+            p -> new WindmillRotorBlockItem(WINDMILL_ROTOR.get(), p));
+
+    // Solar Generation (1x, 2x Gold, 5x Diamond)
+    public static final DeferredBlock<SolarPanelBlock> SOLAR_PANEL = BLOCKS.registerBlock("solar_panel",
+            p -> new SolarPanelBlock(SolarPanelTier.STANDARD, p));
+    public static final DeferredItem<BlockItem> SOLAR_PANEL_ITEM = ITEMS.registerSimpleBlockItem("solar_panel", SOLAR_PANEL);
+
+    public static final DeferredBlock<SolarPanelBlock> GOLD_SOLAR_PANEL = BLOCKS.registerBlock("gold_solar_panel",
+            p -> new SolarPanelBlock(SolarPanelTier.GOLD, p));
+    public static final DeferredItem<BlockItem> GOLD_SOLAR_PANEL_ITEM = ITEMS.registerSimpleBlockItem("gold_solar_panel", GOLD_SOLAR_PANEL);
+
+    public static final DeferredBlock<SolarPanelBlock> DIAMOND_SOLAR_PANEL = BLOCKS.registerBlock("diamond_solar_panel",
+            p -> new SolarPanelBlock(SolarPanelTier.DIAMOND, p));
+    public static final DeferredItem<BlockItem> DIAMOND_SOLAR_PANEL_ITEM = ITEMS.registerSimpleBlockItem("diamond_solar_panel", DIAMOND_SOLAR_PANEL);
+
+    // Architectural & Work Site Lighting
+    public static final DeferredBlock<TripodWorkLightBlock> TRIPOD_WORK_LIGHT = BLOCKS.registerBlock("tripod_work_light",
+            TripodWorkLightBlock::new);
+    public static final DeferredItem<BlockItem> TRIPOD_WORK_LIGHT_ITEM = ITEMS.registerSimpleBlockItem("tripod_work_light", TRIPOD_WORK_LIGHT);
+
+    public static final DeferredBlock<CeilingShopLightBlock> CEILING_SHOP_LIGHT = BLOCKS.registerBlock("ceiling_shop_light",
+            CeilingShopLightBlock::new);
+    public static final DeferredItem<BlockItem> CEILING_SHOP_LIGHT_ITEM = ITEMS.registerSimpleBlockItem("ceiling_shop_light", CEILING_SHOP_LIGHT);
+
+    public static final DeferredBlock<WallFloodlightBlock> WALL_FLOODLIGHT = BLOCKS.registerBlock("wall_floodlight",
+            WallFloodlightBlock::new);
+    public static final DeferredItem<BlockItem> WALL_FLOODLIGHT_ITEM = ITEMS.registerSimpleBlockItem("wall_floodlight", WALL_FLOODLIGHT);
+
+    public static final DeferredBlock<CarriageLanternBlock> CARRIAGE_LANTERN = BLOCKS.registerBlock("carriage_lantern",
+            CarriageLanternBlock::new);
+    public static final DeferredItem<BlockItem> CARRIAGE_LANTERN_ITEM = ITEMS.registerSimpleBlockItem("carriage_lantern", CARRIAGE_LANTERN);
+
     // Street Lighting
     public static final DeferredBlock<StreetLightBlock> STREET_LIGHT = BLOCKS.registerBlock("street_light",
             StreetLightBlock::new);
@@ -183,6 +218,15 @@ public class PowerGridMod {
             BLOCK_ENTITY_TYPES.register("wooden_water_wheel",
                     () -> new BlockEntityType<>(WoodenWaterWheelBlockEntity::new, WOODEN_WATER_WHEEL.get()));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WindmillRotorBlockEntity>> WINDMILL_ROTOR_BE =
+            BLOCK_ENTITY_TYPES.register("windmill_rotor",
+                    () -> new BlockEntityType<>(WindmillRotorBlockEntity::new, WINDMILL_ROTOR.get()));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>> SOLAR_PANEL_BE =
+            BLOCK_ENTITY_TYPES.register("solar_panel",
+                    () -> new BlockEntityType<>(SolarPanelBlockEntity::new,
+                            SOLAR_PANEL.get(), GOLD_SOLAR_PANEL.get(), DIAMOND_SOLAR_PANEL.get()));
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StreetLightBlockEntity>> STREET_LIGHT_BE =
             BLOCK_ENTITY_TYPES.register("street_light",
                     () -> new BlockEntityType<>(StreetLightBlockEntity::new, STREET_LIGHT.get()));
@@ -233,10 +277,20 @@ public class PowerGridMod {
 
                         // Grid Gear & Generation
                         output.accept(WOODEN_WATER_WHEEL_ITEM.get());
+                        output.accept(WINDMILL_ROTOR_ITEM.get());
+                        output.accept(SOLAR_PANEL_ITEM.get());
+                        output.accept(GOLD_SOLAR_PANEL_ITEM.get());
+                        output.accept(DIAMOND_SOLAR_PANEL_ITEM.get());
                         output.accept(TRANSFORMER_ITEM.get());
                         output.accept(BREAKER_SWITCH_ITEM.get());
                         output.accept(HEAVY_ACCUMULATOR_ITEM.get());
+
+                        // Lighting & Illumination
                         output.accept(STREET_LIGHT_ITEM.get());
+                        output.accept(TRIPOD_WORK_LIGHT_ITEM.get());
+                        output.accept(CEILING_SHOP_LIGHT_ITEM.get());
+                        output.accept(WALL_FLOODLIGHT_ITEM.get());
+                        output.accept(CARRIAGE_LANTERN_ITEM.get());
                     })
                     .build());
 
@@ -275,8 +329,16 @@ public class PowerGridMod {
         event.registerBlockEntity(Capabilities.Energy.BLOCK, WOODEN_WATER_WHEEL_BE.get(),
                 (be, side) -> be.getEnergyStorage(side));
 
+        // Windmill Rotor
+        event.registerBlockEntity(Capabilities.Energy.BLOCK, WINDMILL_ROTOR_BE.get(),
+                (be, side) -> be.getEnergyStorage(side));
+
         // Street Light
         event.registerBlockEntity(Capabilities.Energy.BLOCK, STREET_LIGHT_BE.get(),
                 (be, side) -> be.energyStorage);
+
+        // Solar Panels (Bottom and horizontal sides export/import; top photovoltaic surface is sealed)
+        event.registerBlockEntity(Capabilities.Energy.BLOCK, SOLAR_PANEL_BE.get(),
+                (be, side) -> side == net.minecraft.core.Direction.UP ? null : be.energyStorage);
     }
 }

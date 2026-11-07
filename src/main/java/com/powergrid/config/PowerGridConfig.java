@@ -26,6 +26,26 @@ public class PowerGridConfig {
     public final ModConfigSpec.IntValue waterWheelCapacity;
     public final ModConfigSpec.IntValue waterWheelMaxTransfer;
 
+    public final ModConfigSpec.IntValue solarPanelBaseFePerTick;
+    public final ModConfigSpec.IntValue solarPanelGoldFePerTick;
+    public final ModConfigSpec.IntValue solarPanelDiamondFePerTick;
+
+    public final ModConfigSpec.IntValue solarPanelBaseCapacity;
+    public final ModConfigSpec.IntValue solarPanelGoldCapacity;
+    public final ModConfigSpec.IntValue solarPanelDiamondCapacity;
+
+    public final ModConfigSpec.IntValue solarPanelBaseMaxExport;
+    public final ModConfigSpec.IntValue solarPanelGoldMaxExport;
+    public final ModConfigSpec.IntValue solarPanelDiamondMaxExport;
+
+    public final ModConfigSpec.IntValue windmillMinGroundClearance;
+    public final ModConfigSpec.IntValue windmillBaseFePerTick;
+    public final ModConfigSpec.IntValue windmillFePerBlockAboveMin;
+    public final ModConfigSpec.IntValue windmillMaxFePerTick;
+    public final ModConfigSpec.IntValue windmillMaxClearanceChecked;
+    public final ModConfigSpec.IntValue windmillCapacity;
+    public final ModConfigSpec.IntValue windmillMaxTransfer;
+
     public PowerGridConfig(ModConfigSpec.Builder builder) {
         builder.push("Transmission_Line_Loss");
 
@@ -92,6 +112,94 @@ public class PowerGridConfig {
                 .comment("Maximum rate in FE/t that the water wheel pushes energy along the axle stack or into external consumers.",
                         "Default: 2000 FE/t.")
                 .defineInRange("waterWheelMaxTransfer", 2000, 10, 100_000);
+
+        builder.pop();
+
+        builder.push("Solar_Panels");
+
+        solarPanelBaseFePerTick = builder
+                .comment("Energy generation rate of standard Solar Panels in FE/tick during full daylight.",
+                        "Default: 1 FE/t.")
+                .defineInRange("solarPanelBaseFePerTick", 1, 1, 1000);
+
+        solarPanelGoldFePerTick = builder
+                .comment("Energy generation rate of Gold Solar Panels in FE/tick during full daylight (2x baseline).",
+                        "Default: 2 FE/t.")
+                .defineInRange("solarPanelGoldFePerTick", 2, 1, 2000);
+
+        solarPanelDiamondFePerTick = builder
+                .comment("Energy generation rate of Diamond Solar Panels in FE/tick during full daylight (5x baseline).",
+                        "Default: 5 FE/t.")
+                .defineInRange("solarPanelDiamondFePerTick", 5, 1, 5000);
+
+        solarPanelBaseCapacity = builder
+                .comment("Internal energy storage capacity of standard Solar Panels in FE.",
+                        "Default: 10,000 FE.")
+                .defineInRange("solarPanelBaseCapacity", 10_000, 100, 1_000_000);
+
+        solarPanelGoldCapacity = builder
+                .comment("Internal energy storage capacity of Gold Solar Panels in FE.",
+                        "Default: 20,000 FE.")
+                .defineInRange("solarPanelGoldCapacity", 20_000, 200, 2_000_000);
+
+        solarPanelDiamondCapacity = builder
+                .comment("Internal energy storage capacity of Diamond Solar Panels in FE.",
+                        "Default: 50,000 FE.")
+                .defineInRange("solarPanelDiamondCapacity", 50_000, 500, 5_000_000);
+
+        solarPanelBaseMaxExport = builder
+                .comment("Maximum energy export rate of standard Solar Panels in FE/tick.",
+                        "Default: 100 FE/t.")
+                .defineInRange("solarPanelBaseMaxExport", 100, 1, 10_000);
+
+        solarPanelGoldMaxExport = builder
+                .comment("Maximum energy export rate of Gold Solar Panels in FE/tick.",
+                        "Default: 200 FE/t.")
+                .defineInRange("solarPanelGoldMaxExport", 200, 1, 20_000);
+
+        solarPanelDiamondMaxExport = builder
+                .comment("Maximum energy export rate of Diamond Solar Panels in FE/tick.",
+                        "Default: 500 FE/t.")
+                .defineInRange("solarPanelDiamondMaxExport", 500, 1, 50_000);
+
+        builder.pop();
+
+        builder.push("Windmill_Rotor");
+
+        windmillMinGroundClearance = builder
+                .comment("Minimum air blocks required directly beneath the rotor bottom to operate.",
+                        "Default: 3 blocks.")
+                .defineInRange("windmillMinGroundClearance", 3, 1, 32);
+
+        windmillBaseFePerTick = builder
+                .comment("Base FE/tick generated at minimum ground clearance.",
+                        "Default: 10 FE/t.")
+                .defineInRange("windmillBaseFePerTick", 10, 1, 1000);
+
+        windmillFePerBlockAboveMin = builder
+                .comment("Additional FE/tick generated for each air block above minimum ground clearance.",
+                        "Default: 2 FE/t per block.")
+                .defineInRange("windmillFePerBlockAboveMin", 2, 0, 100);
+
+        windmillMaxFePerTick = builder
+                .comment("Maximum generation ceiling in FE/tick for high-altitude wind rotors.",
+                        "Default: 64 FE/t.")
+                .defineInRange("windmillMaxFePerTick", 64, 10, 10_000);
+
+        windmillMaxClearanceChecked = builder
+                .comment("Maximum vertical depth in blocks checked beneath rotor bottom for ground clearance.",
+                        "Default: 32 blocks.")
+                .defineInRange("windmillMaxClearanceChecked", 32, 3, 128);
+
+        windmillCapacity = builder
+                .comment("Internal energy buffer capacity of the windmill rotor center block in FE.",
+                        "Default: 10,000 FE.")
+                .defineInRange("windmillCapacity", 10_000, 100, 1_000_000);
+
+        windmillMaxTransfer = builder
+                .comment("Maximum rate in FE/t that the windmill rotor pushes energy along the axle stack or to external consumers.",
+                        "Default: 2000 FE/t.")
+                .defineInRange("windmillMaxTransfer", 2000, 10, 100_000);
 
         builder.pop();
     }

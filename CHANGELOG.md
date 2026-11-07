@@ -4,6 +4,74 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.5.0] - 2026-11-07
+
+### Added
+- **Kinetic Windmill Rotor Generator (`powergrid:windmill_rotor`)**:
+  - **Large 3x3x1 Footprint**: Authentic aerodynamic windmill rotor multiblock standing 3 blocks high, 3 blocks wide/long, and 1 block deep along its central axle shaft.
+  - **Ground Clearance & Altitude Scaling Generation**:
+    - Requires **at least 3 air blocks of open vertical clearance** directly beneath the rotor bottom to operate; obstructed ground stops the rotor and produces 0 FE/t.
+    - Power generation scales smoothly with height above the minimum clearance threshold: generates a base 10 FE/t at 3 air blocks, +2 FE/t for each additional block of open clearance up to a configurable maximum of 64 FE/t.
+    - Weather Wind Boost: Automatically gains a +20% generation bonus during rain and a +50% storm surge generation bonus during thunderstorms.
+  - **Central Axle Power Hub & Axle Stacking**:
+    - Central axle hub outputs accumulated Forge Energy directly into adjacent transformers, accumulators, AWG cables, or wire connectors via standard NeoForge `Capabilities.Energy.BLOCK`.
+    - Rotors placed adjacent to each other along their axle axis automatically stack into a unified drive shaft line, pooling and transferring energy cleanly through the stack to terminal rotors pushing into downstream transformers or battery banks.
+  - **Monolithic 3D Zero-Flicker Model & Smooth Dynamic Rotation**:
+    - Designed to Monolithic 3D standards with a custom 256x256 procedural texture atlas, 0.5px UV inset margin padding, pre-allocated geometry, and PoseStack-transformed normal vectors.
+    - Dynamic continuous rotation animation using `(animTicks * spinSpeed) % 360°`, interpolating with game time and partial ticks for silky-smooth 60/120/144+ FPS motion.
+    - Detailed geometry featuring a heavy banded timber axle, cast iron hub flange with hex bolts, brass bearing cap, four structural timber spars, steel brackets, angled aerodynamic sail slats, and diagonal cross braces.
+  - **Smart Placement & Engineer's Hammer Rotation**:
+    - Checks 3x3 clearance upon placement. Placing against an existing rotor automatically aligns the axle axis.
+    - Breaking any segment cleanly deconstructs the multiblock and returns exactly 1 `Windmill Rotor` item.
+    - Right-clicking with the Grid Engineer's Hammer rotates the axle orientation by 90 degrees if clearance exists.
+  - **Diagnostics & Configuration**:
+    - Grid Voltmeter integration displays live status: spinning state, air clearance below rotor bottom, real-time FE/t generation (including rain/thunderstorm boosts), and internal energy buffer.
+    - Comprehensive configuration in `powergrid.toml` (`windmillMinGroundClearance`, `windmillBaseFePerTick`, `windmillFePerBlockAboveMin`, `windmillMaxFePerTick`, `windmillMaxClearanceChecked`, `windmillCapacity`, `windmillMaxTransfer`).
+
+---
+
+## [1.4.0] - 2026-11-07
+
+### Added
+- **Photovoltaic Solar Panel Arrays (Standard, Gold 2x, Diamond 5x)**:
+  - **Standard Solar Panel (`powergrid:solar_panel`)**:
+    - Low-profile (7px tall) monocrystalline photovoltaic panel with an under-deck inverter chassis, heatsink cooling fins, and corner isolation feet.
+    - Generates **1 FE/tick** during full daylight with a **10,000 FE** internal buffer and 100 FE/t export rate.
+  - **Gold Solar Panel (`powergrid:gold_solar_panel`)**:
+    - Advanced gold-doped photovoltaic generator crafted with Gold Ingots.
+    - Generates **2 FE/tick (2x baseline)** during full daylight with a **20,000 FE** internal buffer and 200 FE/t export rate.
+    - Features a custom procedural texture atlas with warm golden-amber silicon cells and polished brass/gold frame bezels.
+  - **Diamond Solar Panel (`powergrid:diamond_solar_panel`)**:
+    - Elite diamond-doped photovoltaic generator crafted with Diamonds.
+    - Generates **5 FE/tick (5x baseline)** during full daylight with a **50,000 FE** internal buffer and 500 FE/t export rate.
+    - Features a custom procedural texture atlas with brilliant cyan diamond facets and sleek platinum frame bezels.
+  - **Seamless Connected Array Architecture**:
+    - Placing solar panels adjacent to one another automatically merges inner borders, extending continuous 3D raised silver busbars across cells and shared structural under-deck trusses.
+    - Automatically balances stored energy across horizontally connected panel arrays to prevent localized starvation.
+    - Pushes accumulated Forge Energy downwards and through side ports into adjacent transformers, accumulators, AWG cables, or wire connectors (`Capabilities.Energy.BLOCK`).
+  - **Direct & Upgrade Crafting**:
+    - Direct crafting recipes from raw materials for each tier.
+    - Convenient upgrade recipes surrounding existing solar panels with Gold Ingots or Diamonds.
+- **Architectural & Work-Site Illumination Suite (Migrated from Work Lights)**:
+  - **Tripod Work Light (`powergrid:tripod_work_light`)**:
+    - 2-block-tall industrial job-site dual halogen floodlight mounted on a safety-yellow telescoping tripod stand with non-slip rubber feet.
+    - Right-click anywhere on the stand or light heads to toggle on/off with authentic switch audio (Light Level 15).
+  - **Ceiling Shop Light (`powergrid:ceiling_shop_light`)**:
+    - 2-block-long commercial dual-tube fluorescent fixture with powder-coated sheet metal housing and electrical punch-outs.
+    - Mounts flush to the underside of ceilings; right-click to toggle tubes on/off (Light Level 15).
+  - **Wall Floodlight (`powergrid:wall_floodlight`)**:
+    - Compact wall-mounted outdoor security floodlight with dual angled floodlight heads, textured reflector lenses, and PIR motion-sensor dome styling.
+    - Right-click to toggle on/off (Light Level 15).
+  - **Carriage Lantern (`powergrid:carriage_lantern`)**:
+    - Traditional coach and carriage exterior wall lantern featuring an ornate cast-iron bracket, pagoda hood, top finial, and glowing incandescent filament bulb.
+    - Right-click to toggle on/off (Light Level 15).
+- **Tool & Diagnostic Integration**:
+  - **Grid Voltmeter Integration**: Right-clicking any solar panel displays live telemetry: panel tier, daylight exposure status, active generation rate, current buffer / capacity, and maximum export limit.
+- **Configuration Support**:
+  - Added configurable generation rates, capacities, and export limits in `powergrid.toml` (`solarPanelBaseFePerTick`, `solarPanelGoldFePerTick`, `solarPanelDiamondFePerTick`, `solarPanelBaseCapacity`, etc.).
+
+---
+
 ## [1.3.1] - 2026-11-07
 
 ### Fixed

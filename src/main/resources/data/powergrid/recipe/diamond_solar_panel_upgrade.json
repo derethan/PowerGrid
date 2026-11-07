@@ -1,0 +1,17 @@
+﻿{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " D ",
+    "DSD",
+    " D "
+  ],
+  "key": {
+    "D": "minecraft:diamond",
+    "S": "powergrid:gold_solar_panel"
+  },
+  "result": {
+    "count": 1,
+    "id": "powergrid:diamond_solar_panel"
+  }
+}

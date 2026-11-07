@@ -1,6 +1,8 @@
 package com.powergrid;
 
 import com.powergrid.client.renderer.PowerCableRenderer;
+import com.powergrid.client.renderer.SolarPanelRenderer;
+import com.powergrid.client.renderer.WindmillRotorRenderer;
 import com.powergrid.client.renderer.WireNodeRenderer;
 import com.powergrid.client.renderer.WoodenWaterWheelRenderer;
 import net.neoforged.api.distmarker.Dist;
@@ -28,5 +30,7 @@ public class PowerGridClient {
         event.registerBlockEntityRenderer(PowerGridMod.BREAKER_SWITCH_BE.get(), WireNodeRenderer::new);
         event.registerBlockEntityRenderer(PowerGridMod.POWER_CABLE_BE.get(), PowerCableRenderer::new);
         event.registerBlockEntityRenderer(PowerGridMod.WOODEN_WATER_WHEEL_BE.get(), WoodenWaterWheelRenderer::new);
+        event.registerBlockEntityRenderer(PowerGridMod.WINDMILL_ROTOR_BE.get(), WindmillRotorRenderer::new);
+        event.registerBlockEntityRenderer(PowerGridMod.SOLAR_PANEL_BE.get(), SolarPanelRenderer::new);
     }
 }

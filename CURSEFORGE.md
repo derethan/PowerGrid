@@ -91,7 +91,31 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 - **Flicker-Free Monolithic 3D Geometry**: High-fidelity 3D model designed to Monolithic 3D standards with a custom 256x256 procedural texture atlas, 0.5px UV inset margins, PoseStack normal transformations, and smooth client rotation physics.
 - **Survival Utility**: Fully waterloggable (`SimpleWaterloggedBlock`) to preserve natural water currents, deconstructs cleanly on break, and integrates with the Grid Engineer's Hammer (axis rotation) and Grid Voltmeter (live diagnostics).
 
-### 7. Specialized Engineering Tools
+### 7. Windmill Rotors (Aerodynamic Wind Generation)
+- **Kinetic Wind Turbine Multiblock (3x3x1)**: Authentic 3-block diameter, 1-block wide industrial windmill rotor harvesting kinetic energy from open atmospheric air currents.
+- **Ground Clearance Requirement (3 Air Blocks)**: Requires at least 3 air blocks of open vertical clearance directly beneath the bottom edge of the rotor (`center.below(2..4)`). If ground, trees, or structures obstruct this clearance zone, the rotor stalls (0 FE/t).
+- **Altitude-Based Power Scaling**: Higher clearance yields higher wind speeds and more energy! Generates **10 FE/tick** at minimum clearance (3 air blocks), scaling by **+2 FE/tick for each additional block of open air clearance** beneath it, up to a maximum ceiling of **64 FE/tick** (reached at 30+ blocks above ground).
+- **Weather Wind Surge**: Automatically gains **+20% generation during rain** and a **+50% storm surge generation during thunderstorms**.
+- **Axle Stacking & Linear Transfer**: Rotors placed side-by-side along their axle axis automatically form a unified wind farm drive shaft line, pooling power cleanly across the entire stack to terminal rotors that push into downstream transformers or batteries.
+- **Monolithic 3D Zero-Flicker Model & Smooth Continuous Rotation**: Custom 256x256 procedural texture atlas with 0.5px UV inset margin padding, PoseStack normal transformations, pre-allocated geometry, and frame-rate independent rotation physics (`(animTicks * spinSpeed) % 360°`).
+
+### 8. Photovoltaic Solar Panel Arrays (Standard, Gold 2x, Diamond 5x)
+- **Low-Profile Connected 3D Monoliths**: 1x1x7px photovoltaic modules featuring an under-deck inverter chassis, heatsink cooling fins, and corner isolation feet.
+- **Three Progressive Generation Tiers**:
+  - **Standard Solar Panel (`powergrid:solar_panel`)**: Crafted with iron. Generates **1 FE/tick** in daylight with a **10,000 FE** buffer and 100 FE/t export rate.
+  - **Gold Solar Panel (`powergrid:gold_solar_panel`)**: Crafted with gold. Generates **2 FE/tick (2x baseline)** in daylight with a **20,000 FE** buffer and 200 FE/t export rate. Custom warm golden-amber cells with polished gold bezel.
+  - **Diamond Solar Panel (`powergrid:diamond_solar_panel`)**: Crafted with diamonds. Generates **5 FE/tick (5x baseline)** in daylight with a **50,000 FE** buffer and 500 FE/t export rate. Brilliant cyan crystal facets with sleek platinum bezel.
+- **Seamless Connected Array Architecture**: Placing identical panels side-by-side automatically merges outer borders into continuous arrays with shared 3D silver busbars and structural under-deck trusses.
+- **Dynamic Energy Balancing & Omnidirectional Export**: Connected arrays balance power evenly across panels and export energy downwards or sideways to adjacent transformers, cables, accumulators, and machines.
+- **Upgrade Crafting**: Direct crafting from raw ingredients or surround existing panels with gold or diamonds for instant field upgrades.
+
+### 9. Work-Site & Architectural Illumination Suite
+- **Tripod Work Light (`powergrid:tripod_work_light`)**: 2-block-tall job-site dual halogen floodlight mounted on an industrial safety-yellow telescoping tripod. Right-click to toggle on/off (Light Level 15).
+- **Ceiling Shop Light (`powergrid:ceiling_shop_light`)**: Commercial 2-block-long dual-tube fluorescent garage fixture mounted flush to ceilings. Right-click to toggle on/off (Light Level 15).
+- **Wall Floodlight (`powergrid:wall_floodlight`)**: Compact wall-mounted security floodlight with dual angled heads and PIR motion-sensor styling. Right-click to toggle on/off (Light Level 15).
+- **Carriage Lantern (`powergrid:carriage_lantern`)**: Ornate cast-iron coach lantern with glowing incandescent filament bulb. Right-click to toggle on/off (Light Level 15).
+
+### 10. Specialized Engineering Tools
 - **Wire Coils (LV, MV, HV)**: Right-click the starting terminal, then right-click the destination terminal to string physical catenary wires.
 - **Grid Voltmeter**: Live diagnostic multimeter reporting stored FE, throughput, voltage tier, cable throughput/gauge, and all connected terminal coordinates.
 - **Grid Engineer's Hammer**: Rotates directional grid gear, configures connector input/output modes, and toggles individual cable connection sides.
@@ -106,7 +130,38 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.3.1)
+## 📦 Recent Release Notes (v1.5.0)
+- **Windmill Rotor Kinetic Wind Turbine Multiblock (3x3x1)**:
+  - **Authentic Aerodynamic Multiblock**: 3-block diameter, 1-block wide industrial windmill rotor designed to harvest kinetic energy from ambient atmospheric wind currents.
+  - **Ground Clearance Requirement (3 Air Blocks)**: Requires at least 3 air blocks of open vertical clearance directly beneath the bottom rotor segment (`center.below(2..4)`). If ground, buildings, or vegetation obstruct this space, the rotor stalls (0 FE/t).
+  - **Altitude-Based Power Scaling**: Higher placement catches faster laminar wind currents! Generates **10 FE/tick** at minimum clearance (3 air blocks), scaling by **+2 FE/tick for each additional block of open clearance** beneath it, up to a maximum ceiling of **64 FE/tick** (reached at 30+ blocks above ground).
+  - **Weather Wind Surge**: Automatically gains **+20% generation during rain** and a **+50% storm surge generation during thunderstorms**.
+  - **Center Axle Power Hub & Axle Stacking**: Central axle hub natively exposes standard `Capabilities.Energy.BLOCK` to push FE directly into adjacent transformers, accumulators, AWG cables, or wire connectors. Placing rotors side-by-side along their axle creates a continuous drive shaft that pools power across the stack to terminal rotors.
+  - **Monolithic 3D Zero-Flicker Model & Smooth Continuous Rotation**: Custom 256x256 procedural texture atlas with 0.5px UV inset margin padding, PoseStack normal transformations, pre-allocated geometry, and frame-rate independent rotation physics (`(animTicks * spinSpeed) % 360°`).
+  - **Engineering Tool & Diagnostic Integration**: Full support for Grid Engineer's Hammer (90° axle rotation), Grid Voltmeter (live clearance, spin state, FE/t, and buffer inspection), and axe harvest tag.
+  - **Configurability**: Full customization in `powergrid.toml` for minimum clearance, base FE, scaling rate, maximum ceiling, and buffer capacity.
+
+---
+
+## 📦 Previous Release Notes (v1.4.0)
+- **Photovoltaic Solar Panel Arrays (Standard, Gold 2x, Diamond 5x)**:
+  - **Standard Solar Panel (`powergrid:solar_panel`)**: Baseline 1x1 low-profile photovoltaic panel generating **1 FE/tick** in daylight with a **10,000 FE** buffer.
+  - **Gold Solar Panel (`powergrid:gold_solar_panel`)**: Advanced gold-doped photovoltaic generator crafted with Gold Ingots. Generates **2 FE/tick (2x baseline)** in daylight with a **20,000 FE** buffer and custom golden-amber procedural texture atlas.
+  - **Diamond Solar Panel (`powergrid:diamond_solar_panel`)**: Elite diamond-doped photovoltaic generator crafted with Diamonds. Generates **5 FE/tick (5x baseline)** in daylight with a **50,000 FE** buffer and custom cyan diamond procedural texture atlas.
+  - **Connected Monolith Multi-Block System**: Horizontally placed panels merge seamlessly into continuous arrays with shared 3D silver busbars, under-deck trusses, and automatic energy balancing.
+  - **Power Export & Upgrades**: Pushes power downwards and through sides into adjacent transformers, accumulators, AWG cables, or wire connectors (`Capabilities.Energy.BLOCK`). Includes direct crafting and surround-upgrade recipes.
+- **Architectural & Work-Site Illumination Suite (Full Work Lights Mod Migration)**:
+  - **Tripod Work Light (`powergrid:tripod_work_light`)**: 2-block-tall job-site dual halogen floodlight mounted on a safety-yellow telescoping tripod. Interactive on/off click (Light Level 15).
+  - **Ceiling Shop Light (`powergrid:ceiling_shop_light`)**: Commercial 2-block-long dual-tube fluorescent fixture mounted flush to ceilings (Light Level 15).
+  - **Wall Floodlight (`powergrid:wall_floodlight`)**: Compact exterior security floodlight with dual angled heads and PIR motion-sensor styling (Light Level 15).
+  - **Carriage Lantern (`powergrid:carriage_lantern`)**: Traditional coach lantern with ornate bracket and glowing incandescent filament bulb (Light Level 15).
+- **Diagnostics & Config**:
+  - Full Grid Voltmeter telemetry for solar panels (Tier, Daylight exposure, Generation rate, Buffer, Export limit).
+  - Complete configuration options in `powergrid.toml` for all solar generation rates, capacities, and export speeds.
+
+---
+
+## 📦 Previous Release Notes (v1.3.1)
 - **Dynamic Water Wheel Kinetic Rotation Animation**:
   - Implemented the `OPERATING` blockstate property on `WoodenWaterWheelBlock` to provide instantaneous, zero-lag operational state synchronization across all clients within render distance.
   - Upgraded `WoodenWaterWheelRenderer` with continuous game time and partial-tick animation (`(animTicks * spinSpeed) % 360°`), providing ultra-smooth 60/120/144+ FPS rotation when operating in flowing water.
