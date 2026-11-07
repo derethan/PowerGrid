@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "KKK",
+    "WWW",
+    "KKK"
+  ],
+  "key": {
+    "K": "minecraft:dried_kelp",
+    "W": "powergrid:copper_wire"
+  },
+  "result": {
+    "id": "powergrid:cable_18_gauge",
+    "count": 8
+  }
+}

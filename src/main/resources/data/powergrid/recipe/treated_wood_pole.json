@@ -6,7 +6,7 @@
     " W "
   ],
   "key": {
-    "W": "minecraft:spruce_planks"
+    "W": "#powergrid:treated_wood"
   },
   "result": {
     "id": "powergrid:treated_wood_pole",

@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "powergrid:treated_wood",
+    "minecraft:spruce_planks"
+  ]
+}

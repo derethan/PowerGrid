@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " W ",
+    "WSW",
+    " W "
+  ],
+  "key": {
+    "W": "powergrid:steel_strand",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "powergrid:hv_wire_coil",
+    "count": 4
+  }
+}

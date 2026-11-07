@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": "minecraft:iron_ingot",
+  "result": {
+    "id": "powergrid:steel_strand",
+    "count": 1
+  },
+  "experience": 0.35,
+  "cookingtime": 200
+}

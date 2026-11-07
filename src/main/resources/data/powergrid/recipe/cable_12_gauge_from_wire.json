@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "KKK",
+    "WWW",
+    "KKK"
+  ],
+  "key": {
+    "K": "minecraft:dried_kelp",
+    "W": "powergrid:electrum_wire"
+  },
+  "result": {
+    "id": "powergrid:cable_12_gauge",
+    "count": 8
+  }
+}

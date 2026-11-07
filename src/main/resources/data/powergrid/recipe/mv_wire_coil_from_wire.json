@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " W ",
+    "WSW",
+    " W "
+  ],
+  "key": {
+    "W": "powergrid:electrum_wire",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "powergrid:mv_wire_coil",
+    "count": 4
+  }
+}

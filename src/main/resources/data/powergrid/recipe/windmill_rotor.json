@@ -7,7 +7,7 @@
     "CWC"
   ],
   "key": {
-    "W": "powergrid:treated_wood",
+    "W": "#powergrid:treated_wood",
     "C": "#minecraft:wool",
     "I": "minecraft:iron_ingot"
   },

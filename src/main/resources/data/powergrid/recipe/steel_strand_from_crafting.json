@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "III",
+    " C "
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "C": "#minecraft:coals"
+  },
+  "result": {
+    "id": "powergrid:steel_strand",
+    "count": 4
+  }
+}

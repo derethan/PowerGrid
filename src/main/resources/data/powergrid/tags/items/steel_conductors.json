@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "powergrid:steel_strand",
+    {
+      "id": "#c:ingots/steel",
+      "required": false
+    }
+  ]
+}

@@ -20,7 +20,7 @@
     "RRR"
   ],
   "key": {
-    "S": "#c:ingots/steel",
+    "S": "#powergrid:steel_conductors",
     "R": "#c:ingots/rubber"
   }
 }

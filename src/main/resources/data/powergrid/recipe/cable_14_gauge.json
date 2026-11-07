@@ -12,6 +12,6 @@
   ],
   "key": {
     "K": "minecraft:dried_kelp",
-    "S": "#c:ingots/steel"
+    "S": "#powergrid:steel_conductors"
   }
 }

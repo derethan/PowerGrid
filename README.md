@@ -316,22 +316,33 @@ Following standard electrical engineering conventions, lower AWG numbers denote 
 | **Grid Engineer's Hammer** | `  I` / ` S ` / `S  ` | 1x Iron Ingot (`I`), 2x Stick (`S`) | 1x Engineer's Hammer |
 | **Grid Voltmeter** | ` C ` / `RGR` / ` I ` | 1x Copper (`C`), 2x Redstone (`R`), 1x Glass Pane (`G`), 1x Iron Ingot (`I`) | 1x Voltmeter |
 | **Insulated Wire Cutters** | `I I` / ` S ` / `S S` | 2x Iron Ingot (`I`), 3x Stick (`S`) | 1x Wire Cutters |
-| **Copper Wire Strand** | `CCC` (Shapeless) | 3x Copper Ingot (`C`) | 4x Copper Wire Strand |
-| **Iron Wire Strand** | `III` (Shapeless) | 3x Iron Ingot (`I`) | 4x Iron Wire Strand |
-| **Steel Wire Strand** | Blasting / Smelting | 1x Iron Wire Strand (or 3x Steel Ingot) | 1x (or 4x) Steel Wire Strand |
-| **Gold Wire Strand** | `GGG` (Shapeless) | 3x Gold Ingot (`G`) | 4x Gold Wire Strand |
-| **18 AWG Power Cable** | ` K ` / ` W ` / ` K ` | 1x Copper Wire Strand (`W`), 2x Rubber / Dried Kelp (`K`) | 6x 18 AWG Cable |
-| **16 AWG Power Cable** | ` K ` / ` W ` / ` K ` | 1x Iron Wire Strand (`W`), 2x Rubber / Dried Kelp (`K`) | 6x 16 AWG Cable |
-| **14 AWG Power Cable** | ` K ` / ` W ` / ` K ` | 1x Steel Wire Strand (`W`), 2x Rubber / Dried Kelp (`K`) | 6x 14 AWG Cable |
-| **12 AWG Power Cable** | ` K ` / ` W ` / ` K ` | 1x Gold Wire Strand (`W`), 2x Rubber / Dried Kelp (`K`) | 6x 12 AWG Cable |
-| **LV Copper Wire Coil** | ` C ` / `CSC` / ` C ` | 4x Copper Ingot (`C`), 1x Stick (`S`) | 4x LV Wire Coil |
-| **MV Electrum Wire Coil**| ` G ` / `CSC` / ` G ` | 2x Gold Ingot (`G`), 2x Copper Ingot (`C`), 1x Stick (`S`) | 4x MV Wire Coil |
-| **HV Steel-Core Coil**   | ` I ` / `ISI` / ` I ` | 4x Iron Ingot (`I`), 1x Stick (`S`) | 4x HV Cable Coil |
-| **Treated Wood Pole**    | ` W ` / ` W ` / ` W ` | 3x Spruce/Treated Planks (`W`) | 6x Wood Poles |
-| **Pole Crossarm**        | `WWW` / ` S ` / `   ` | 3x Spruce/Treated Planks (`W`), 1x Stick (`S`) | 2x Crossarms |
-| **Safety Breaker Switch**| ` R ` / ` L ` / ` I ` | 1x Redstone (`R`), 1x Lever (`L`), 1x Iron Ingot (`I`) | 1x Breaker Switch |
-| **Wooden Water Wheel**   | `WTW` / `TIT` / `WTW` | 4x Treated Wood (`W`), 4x Planks (`T`), 1x Iron Ingot (`I`) | 1x Wooden Water Wheel |
-| **Windmill Rotor**       | `CWC` / `WIW` / `CWC` | 4x Wool (`C`), 4x Treated Wood (`W`), 1x Iron Ingot (`I`) | 1x Windmill Rotor |
+| **Treated Wood Planks**   | `PPP` / `PCP` / `PPP` | 8x Planks (`P`), 1x Coal / Charcoal (`C`) | 8x Treated Wood Planks |
+| **Copper Wire Strand**   | `CCC` (or 1x Shapeless) | 3x Copper Ingot (`C`) (or 1x $\rightarrow$ 2) | 6x Copper Wire Strand |
+| **Electrum Wire Strand** | `GC` (Shapeless) | 1x Gold Ingot (`G`), 1x Copper Ingot (`C`) | 4x Electrum Wire Strand |
+| **Reinforced Steel Strand** | Blasting / Smelting / Crafting | 1x Iron Ingot (Furnace/Blast) or 3x Iron + 1x Coal | 1x (or 4x) Steel Strand |
+| **Ceramic Insulator**    | ` C ` / ` T ` / ` I ` | 1x Clay (`C`), 1x Terracotta (`T`), 1x Iron Ingot (`I`) | 4x Ceramic Insulator |
+| **18 AWG Power Cable**   | `KKK` / `CCC` / `KKK` | 3x Copper Ingot or Wire (`C`), 6x Kelp / Rubber (`K`) | 8x 18 AWG Cable |
+| **16 AWG Power Cable**   | `KKK` / `III` / `KKK` | 3x Iron Ingot (`I`), 6x Kelp / Rubber (`K`) | 8x 16 AWG Cable |
+| **14 AWG Power Cable**   | `KKK` / `SSS` / `KKK` | 3x Steel Strand or Steel Ingot (`S`), 6x Kelp / Rubber (`K`) | 8x 14 AWG Cable |
+| **12 AWG Power Cable**   | `KKK` / `GGG` / `KKK` | 3x Gold Ingot or Electrum Wire (`G`), 6x Kelp / Rubber (`K`) | 8x 12 AWG Cable |
+| **LV Copper Wire Coil**  | ` C ` / `CSC` / ` C ` | 4x Copper Ingot or Wire (`C`), 1x Stick (`S`) | 4x LV Wire Coil |
+| **MV Electrum Wire Coil**| ` G ` / `CSC` / ` G ` | 2x Gold Ingot (`G`), 2x Copper Ingot (`C`) (or 4x Electrum Wire), 1x Stick (`S`) | 4x MV Wire Coil |
+| **HV Steel-Core Coil**   | ` I ` / `ISI` / ` I ` | 4x Iron Ingot or Steel Strand (`I`), 1x Stick (`S`) | 4x HV Cable Coil |
+| **LV Wire Connector**    | ` C ` / ` C ` / ` I ` | 2x Copper Ingot (`C`), 1x Ceramic Insulator (`I`) | 4x LV Wire Connector |
+| **MV Wire Connector**    | ` G ` / ` G ` / ` I ` | 2x Gold Ingot (`G`), 1x Ceramic Insulator (`I`) | 4x MV Wire Connector |
+| **HV Wire Connector**    | ` S ` / ` S ` / ` I ` | 2x Iron Ingot (`S`), 1x Ceramic Insulator (`I`) | 4x HV Wire Connector |
+| **LV Wire Relay**        | ` I ` / ` I ` | 2x Ceramic Insulator (`I`) | 4x LV Wire Relay |
+| **MV Wire Relay**        | ` I ` / ` G ` / ` I ` | 2x Ceramic Insulator (`I`), 1x Gold Ingot (`G`) | 4x MV Wire Relay |
+| **HV Wire Relay**        | ` I ` / ` S ` / ` I ` | 2x Ceramic Insulator (`I`), 1x Iron Ingot (`S`) | 4x HV Wire Relay |
+| **Treated Wood Pole**    | ` W ` / ` W ` / ` W ` | 3x Treated Wood or Spruce Planks (`W`) | 6x Wood Poles |
+| **Pole Crossarm**        | `WWW` / ` S ` / `   ` | 3x Treated Wood or Spruce Planks (`W`), 1x Stick (`S`) | 2x Crossarms |
+| **Steel Truss Tower**    | ` I ` / `ISI` / ` I ` | 4x Iron Bars (`I`), 1x Iron Ingot (`S`) | 6x Steel Truss Towers |
+| **Substation Transformer**| `ICI` / `CRC` / `ICI` | 4x Iron Ingot (`I`), 4x Copper Ingot (`C`), 1x Redstone (`R`) | 1x Substation Transformer |
+| **Heavy Accumulator**    | `III` / `RBR` / `III` | 6x Iron Ingot (`I`), 2x Redstone Block (`R`), 1x Copper Block (`B`) | 1x Heavy Accumulator |
+| **Safety Breaker Switch**| `III` / `ILI` / `IRI` | 7x Iron Ingot (`I`), 1x Lever (`L`), 1x Redstone (`R`) | 1x Breaker Switch |
+| **Wooden Water Wheel**   | `WTW` / `TIT` / `WTW` | 4x Treated Wood Planks (`W`), 4x Planks (`T`), 1x Iron Ingot (`I`) | 1x Wooden Water Wheel |
+| **Windmill Rotor**       | `CWC` / `WIW` / `CWC` | 4x Wool (`C`), 4x Treated Wood Planks (`W`), 1x Iron Ingot (`I`) | 1x Windmill Rotor |
+| **Street Light**         | ` GI` / ` I ` / `CRC` | 1x Glowstone (`G`), 2x Iron (`I`), 2x Smooth Stone (`C`), 1x Redstone (`R`) | 1x Street Light |
 | **Standard Solar Panel** | `GGG` / `LQL` / `IRI` | 3x Glass (`G`), 2x Lapis (`L`), 1x Quartz (`Q`), 2x Iron (`I`), 1x Redstone (`R`) | 1x Solar Panel |
 | **Gold Solar Panel**     | `GGG` / `LQL` / `URU` | 3x Glass (`G`), 2x Lapis (`L`), 1x Quartz (`Q`), 2x Gold Ingot (`U`), 1x Redstone (`R`) | 1x Gold Solar Panel |
 | **Gold Solar (Upgrade)** | ` G ` / `GSG` / ` G ` | 4x Gold Ingot (`G`), 1x Standard Solar Panel (`S`) | 1x Gold Solar Panel |

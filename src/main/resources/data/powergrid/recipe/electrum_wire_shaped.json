@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GCG"
+  ],
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "C": "minecraft:copper_ingot"
+  },
+  "result": {
+    "id": "powergrid:electrum_wire",
+    "count": 6
+  }
+}

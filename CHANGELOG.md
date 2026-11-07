@@ -4,6 +4,34 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.5.1] - 2026-11-07
+
+### Added
+- **Treated Wood Planks Crafting Recipes (`powergrid:treated_wood`)**:
+  - Shaped crafting: 8x Planks (`#minecraft:planks`) surrounding 1x Coal or Charcoal (`#minecraft:coals`) yields 8x Treated Wood Planks.
+  - Shapeless crafting: 4x Planks + 1x Coal/Charcoal yields 4x Treated Wood Planks for crafting on the go in 2x2 player inventory.
+- **Conductor Wire Strand Crafting Recipes**:
+  - **Copper Wire Strand (`powergrid:copper_wire`)**: Horizontal row of 3x Copper Ingot yields 6x Copper Wire Strands (or 1x Copper Ingot shapeless yields 2x strands).
+  - **Electrum Wire Strand (`powergrid:electrum_wire`)**: Shapeless crafting with 1x Gold Ingot + 1x Copper Ingot yields 4x Electrum Wire Strands (or `GCG` row yields 6x strands).
+  - **Reinforced Steel Strand (`powergrid:steel_strand`)**: Added regular furnace smelting (Iron Ingot $\rightarrow$ Steel Strand) and shaped carburizing (3x Iron Ingot + 1x Coal/Charcoal $\rightarrow$ 4x Steel Strands) in addition to blast furnace processing.
+- **Alternative Wire Coil & Cable Recipes**:
+  - Added shaped crafting recipes for LV, MV, and HV Wire Coils directly using their corresponding wire strands (`copper_wire`, `electrum_wire`, `steel_strand`).
+  - Added 18 AWG and 12 AWG power cable recipes using wire strands in addition to raw ingots.
+- **Recipe Integrity Test Suite (`RecipeIntegrityTest`)**:
+  - Automated test verifying all 37 survival items and blocks registered in Power Grid possess valid, syntactically correct crafting recipes.
+
+### Fixed
+- **Water Wheel & Windmill Rotor Missing Recipe Bug**:
+  - Resolved an issue where `Wooden Water Wheel` and `Windmill Rotor` could not be crafted in survival mode due to `powergrid:treated_wood` lacking a recipe.
+- **Treated Wood Tag & Fallback Compatibility**:
+  - Created `#powergrid:treated_wood`, `#c:treated_wood`, and `#c:planks/treated` item tags encompassing `powergrid:treated_wood` with `minecraft:spruce_planks` as a seamless fallback.
+  - Updated `wooden_water_wheel`, `windmill_rotor`, `treated_wood_pole`, and `pole_crossarm` recipes to accept `#powergrid:treated_wood`.
+- **14 AWG Cable Vanilla Crafting Fix**:
+  - Fixed an issue where 14 AWG Cable recipes exclusively required `#c:ingots/steel` which was unattainable in pure vanilla Minecraft without a separate steel mod installed.
+  - Created `#powergrid:steel_conductors` allowing 14 AWG cables to craft using `powergrid:steel_strand` or any modded steel ingot.
+
+---
+
 ## [1.5.0] - 2026-11-07
 
 ### Added

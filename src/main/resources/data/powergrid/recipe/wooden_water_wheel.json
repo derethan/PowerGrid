@@ -7,7 +7,7 @@
     "WTW"
   ],
   "key": {
-    "W": "powergrid:treated_wood",
+    "W": "#powergrid:treated_wood",
     "T": "#minecraft:planks",
     "I": "minecraft:iron_ingot"
   },

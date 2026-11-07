@@ -130,7 +130,27 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.5.0)
+## 📦 Recent Release Notes (v1.5.1)
+- **Treated Wood Planks Crafting Recipes (`powergrid:treated_wood`)**:
+  - Added shaped crafting: 8x Planks (`#minecraft:planks`) surrounding 1x Coal or Charcoal (`#minecraft:coals`) yields 8x Treated Wood Planks.
+  - Added shapeless crafting: 4x Planks + 1x Coal/Charcoal yields 4x Treated Wood Planks for convenient on-the-go survival crafting.
+- **Conductor Wire Strand Crafting Recipes**:
+  - **Copper Wire Strand (`powergrid:copper_wire`)**: Horizontal row of 3x Copper Ingot yields 6x Copper Wire Strands (or 1x Copper Ingot shapeless yields 2x strands).
+  - **Electrum Wire Strand (`powergrid:electrum_wire`)**: Shapeless crafting with 1x Gold Ingot + 1x Copper Ingot yields 4x Electrum Wire Strands (or `GCG` row yields 6x strands).
+  - **Reinforced Steel Strand (`powergrid:steel_strand`)**: Added regular furnace smelting (Iron Ingot $\rightarrow$ Steel Strand) and shaped carburizing (3x Iron Ingot + 1x Coal/Charcoal $\rightarrow$ 4x Steel Strands) in addition to blast furnace processing.
+- **Alternative Wire Coil & Cable Recipes**:
+  - Added shaped crafting recipes for LV, MV, and HV Wire Coils directly using their corresponding wire strands (`copper_wire`, `electrum_wire`, `steel_strand`).
+  - Added 18 AWG and 12 AWG power cable recipes using wire strands in addition to raw ingots.
+- **Recipe Integrity Test Suite (`RecipeIntegrityTest`)**:
+  - Added automated test verifying that all 37 survival items and blocks registered in Power Grid possess valid, working crafting recipes.
+- **Water Wheel, Windmill Rotor & 14 AWG Cable Fixes**:
+  - Fixed an issue where `Wooden Water Wheel` and `Windmill Rotor` could not be crafted in survival due to missing treated wood recipes.
+  - Created `#powergrid:treated_wood`, `#c:treated_wood`, and `#c:planks/treated` item tags encompassing `powergrid:treated_wood` with `minecraft:spruce_planks` as a seamless fallback.
+  - Fixed 14 AWG Power Cable crafting in vanilla survival by creating `#powergrid:steel_conductors` (allowing `powergrid:steel_strand` or any modded `#c:ingots/steel`).
+
+---
+
+## 📦 Previous Release Notes (v1.5.0)
 - **Windmill Rotor Kinetic Wind Turbine Multiblock (3x3x1)**:
   - **Authentic Aerodynamic Multiblock**: 3-block diameter, 1-block wide industrial windmill rotor designed to harvest kinetic energy from ambient atmospheric wind currents.
   - **Ground Clearance Requirement (3 Air Blocks)**: Requires at least 3 air blocks of open vertical clearance directly beneath the bottom rotor segment (`center.below(2..4)`). If ground, buildings, or vegetation obstruct this space, the rotor stalls (0 FE/t).

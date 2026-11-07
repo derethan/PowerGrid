@@ -5,7 +5,7 @@
     " S "
   ],
   "key": {
-    "W": "minecraft:spruce_planks",
+    "W": "#powergrid:treated_wood",
     "S": "minecraft:stick"
   },
   "result": {
