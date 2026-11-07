@@ -2,6 +2,7 @@ package com.powergrid;
 
 import com.powergrid.client.renderer.PowerCableRenderer;
 import com.powergrid.client.renderer.WireNodeRenderer;
+import com.powergrid.client.renderer.WoodenWaterWheelRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -26,5 +27,6 @@ public class PowerGridClient {
         event.registerBlockEntityRenderer(PowerGridMod.WIRE_RELAY_BE.get(), WireNodeRenderer::new);
         event.registerBlockEntityRenderer(PowerGridMod.BREAKER_SWITCH_BE.get(), WireNodeRenderer::new);
         event.registerBlockEntityRenderer(PowerGridMod.POWER_CABLE_BE.get(), PowerCableRenderer::new);
+        event.registerBlockEntityRenderer(PowerGridMod.WOODEN_WATER_WHEEL_BE.get(), WoodenWaterWheelRenderer::new);
     }
 }

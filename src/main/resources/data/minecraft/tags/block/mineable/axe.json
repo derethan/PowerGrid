@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "powergrid:treated_wood_pole",
-    "powergrid:pole_crossarm"
+    "powergrid:pole_crossarm",
+    "powergrid:wooden_water_wheel"
   ]
 }

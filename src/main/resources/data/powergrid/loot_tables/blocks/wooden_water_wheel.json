@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "powergrid:wooden_water_wheel",
+          "properties": {
+            "part": "center"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "powergrid:wooden_water_wheel"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

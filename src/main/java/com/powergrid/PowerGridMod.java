@@ -106,10 +106,15 @@ public class PowerGridMod {
             BreakerSwitchBlock::new);
     public static final DeferredItem<BlockItem> BREAKER_SWITCH_ITEM = ITEMS.registerSimpleBlockItem("breaker_switch", BREAKER_SWITCH);
 
-    // Storage
+    // Storage & Generation
     public static final DeferredBlock<HeavyAccumulatorBlock> HEAVY_ACCUMULATOR = BLOCKS.registerBlock("heavy_accumulator",
             HeavyAccumulatorBlock::new);
     public static final DeferredItem<BlockItem> HEAVY_ACCUMULATOR_ITEM = ITEMS.registerSimpleBlockItem("heavy_accumulator", HEAVY_ACCUMULATOR);
+
+    public static final DeferredBlock<WoodenWaterWheelBlock> WOODEN_WATER_WHEEL = BLOCKS.registerBlock("wooden_water_wheel",
+            WoodenWaterWheelBlock::new);
+    public static final DeferredItem<WoodenWaterWheelBlockItem> WOODEN_WATER_WHEEL_ITEM = ITEMS.registerItem("wooden_water_wheel",
+            p -> new WoodenWaterWheelBlockItem(WOODEN_WATER_WHEEL.get(), p));
 
     // Street Lighting
     public static final DeferredBlock<StreetLightBlock> STREET_LIGHT = BLOCKS.registerBlock("street_light",
@@ -174,6 +179,10 @@ public class PowerGridMod {
             BLOCK_ENTITY_TYPES.register("heavy_accumulator",
                     () -> new BlockEntityType<>(HeavyAccumulatorBlockEntity::new, HEAVY_ACCUMULATOR.get()));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WoodenWaterWheelBlockEntity>> WOODEN_WATER_WHEEL_BE =
+            BLOCK_ENTITY_TYPES.register("wooden_water_wheel",
+                    () -> new BlockEntityType<>(WoodenWaterWheelBlockEntity::new, WOODEN_WATER_WHEEL.get()));
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StreetLightBlockEntity>> STREET_LIGHT_BE =
             BLOCK_ENTITY_TYPES.register("street_light",
                     () -> new BlockEntityType<>(StreetLightBlockEntity::new, STREET_LIGHT.get()));
@@ -222,7 +231,8 @@ public class PowerGridMod {
                         output.accept(CABLE_14_GAUGE_ITEM.get());
                         output.accept(CABLE_12_GAUGE_ITEM.get());
 
-                        // Grid Gear
+                        // Grid Gear & Generation
+                        output.accept(WOODEN_WATER_WHEEL_ITEM.get());
                         output.accept(TRANSFORMER_ITEM.get());
                         output.accept(BREAKER_SWITCH_ITEM.get());
                         output.accept(HEAVY_ACCUMULATOR_ITEM.get());
@@ -260,6 +270,10 @@ public class PowerGridMod {
         // Heavy Accumulator (Capacitor Bank)
         event.registerBlockEntity(Capabilities.Energy.BLOCK, HEAVY_ACCUMULATOR_BE.get(),
                 (be, side) -> be.energyStorage);
+
+        // Wooden Water Wheel
+        event.registerBlockEntity(Capabilities.Energy.BLOCK, WOODEN_WATER_WHEEL_BE.get(),
+                (be, side) -> be.getEnergyStorage(side));
 
         // Street Light
         event.registerBlockEntity(Capabilities.Energy.BLOCK, STREET_LIGHT_BE.get(),

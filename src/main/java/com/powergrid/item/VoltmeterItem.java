@@ -1,9 +1,12 @@
 package com.powergrid.item;
 
 import com.powergrid.block.StreetLightBlock;
+import com.powergrid.block.WoodenWaterWheelBlock;
 import com.powergrid.block.entity.PowerCableBlockEntity;
 import com.powergrid.block.entity.StreetLightBlockEntity;
 import com.powergrid.block.entity.WireConnectorBlockEntity;
+import com.powergrid.block.entity.WoodenWaterWheelBlockEntity;
+import com.powergrid.config.PowerGridConfig;
 import com.powergrid.grid.CableGauge;
 import com.powergrid.grid.CableNetworkRouter;
 import com.powergrid.grid.IWireNode;
@@ -99,6 +102,21 @@ public class VoltmeterItem extends Item {
                 player.sendSystemMessage(Component.literal("§7Power Draw: §6" + StreetLightBlockEntity.POWER_DRAW_PER_TICK + " FE/t (when energized)§r"));
                 player.sendSystemMessage(Component.literal("§7Photocell Mode: " + (streetLight.isPhotocellEnabled() ? "§aAutomatic (Dusk-to-Dawn)§r" : "§6Always On (24/7)§r")));
                 player.sendSystemMessage(Component.literal("§8(Tip: Sneak-Right-Click with Engineer's Hammer to toggle Photocell mode)§r"));
+            }
+        }
+
+        // Check if Wooden Water Wheel
+        if (state.getBlock() instanceof WoodenWaterWheelBlock) {
+            foundInfo = true;
+            BlockPos centerPos = WoodenWaterWheelBlock.getCenterPos(pos, state);
+            BlockEntity centerBE = level.getBlockEntity(centerPos);
+            if (centerBE instanceof WoodenWaterWheelBlockEntity wheel) {
+                player.sendSystemMessage(Component.literal("§6===== [Power Grid Water Wheel Diagnostic] =====§r"));
+                player.sendSystemMessage(Component.literal("§7Status: " + (wheel.isSpinning() ? "§aSpinning (Flowing Water Detected)§r" : "§cStopped (Requires Flowing Water)§r")));
+                player.sendSystemMessage(Component.literal("§7Water Drop Height: §b" + wheel.getWaterDropHeight() + " block(s)§r"));
+                player.sendSystemMessage(Component.literal("§7Generation Rate: §a" + wheel.getFeGeneratedLastTick() + " FE/t§r §8(10 FE/t per drop level)§r"));
+                player.sendSystemMessage(Component.literal("§7Stored Energy: §b" + wheel.energyStorage.getAmountAsInt() + " / " + PowerGridConfig.CONFIG.waterWheelCapacity.get() + " FE§r"));
+                player.sendSystemMessage(Component.literal("§8(Tip: Stack wheels along axle to transfer accumulated energy to transformers or batteries)§r"));
             }
         }
 

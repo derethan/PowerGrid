@@ -21,6 +21,11 @@ public class PowerGridConfig {
     public final ModConfigSpec.IntValue mvLossFreeDistance;
     public final ModConfigSpec.IntValue hvLossFreeDistance;
 
+    public final ModConfigSpec.IntValue waterWheelFePerDrop;
+    public final ModConfigSpec.IntValue waterWheelMaxDrop;
+    public final ModConfigSpec.IntValue waterWheelCapacity;
+    public final ModConfigSpec.IntValue waterWheelMaxTransfer;
+
     public PowerGridConfig(ModConfigSpec.Builder builder) {
         builder.push("Transmission_Line_Loss");
 
@@ -63,6 +68,30 @@ public class PowerGridConfig {
                         "Wire runs under or equal to this distance incur 0% transmission loss.",
                         "Default value: 24 blocks.")
                 .defineInRange("hvLossFreeDistance", 24, 0, 512);
+
+        builder.pop();
+
+        builder.push("Wooden_Water_Wheel");
+
+        waterWheelFePerDrop = builder
+                .comment("Base FE/tick generated per vertical height level of flowing water drop.",
+                        "Default: 10 FE/tick per drop level.")
+                .defineInRange("waterWheelFePerDrop", 10, 1, 1000);
+
+        waterWheelMaxDrop = builder
+                .comment("Maximum water drop height levels counted for energy generation.",
+                        "Default: 5 height levels.")
+                .defineInRange("waterWheelMaxDrop", 5, 1, 32);
+
+        waterWheelCapacity = builder
+                .comment("Internal energy buffer capacity of the water wheel center block in FE.",
+                        "Default: 10000 FE.")
+                .defineInRange("waterWheelCapacity", 10_000, 100, 1_000_000);
+
+        waterWheelMaxTransfer = builder
+                .comment("Maximum rate in FE/t that the water wheel pushes energy along the axle stack or into external consumers.",
+                        "Default: 2000 FE/t.")
+                .defineInRange("waterWheelMaxTransfer", 2000, 10, 100_000);
 
         builder.pop();
     }

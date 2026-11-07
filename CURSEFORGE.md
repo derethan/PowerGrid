@@ -82,7 +82,16 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 - **Refinery Pipe Facade Support**: Fully compatible with pipe facades from the *Industrial Refinery* mod (both Solid Panels and Hollow Pass-Through Frames) across all 4 AWG cable gauges. Conceal cables flush inside walls or frame them through wall openings. Sneak-right-click with an empty hand, Engineer's Hammer, or Refinery Wrench to pop them off.
 - **Waterloggable**: Fully waterloggable for submerged industrial routing.
 
-### 6. Specialized Engineering Tools
+### 6. Wooden Water Wheels (Hydroelectric Generation)
+- **Kinetic Hydroelectric Multiblock (3x3x1)**: 3-block diameter, 1-block wide wooden water wheel harvesting renewable energy from moving water currents.
+- **Water Drop Head Scaling**: Generates **10 FE/tick per vertical height level of flowing water drop** (e.g. 1 drop level = 10 FE/t, 2 levels = 20 FE/t, 3 levels = 30 FE/t, up to 50 FE/t with waterfall plunges).
+- **Flowing Water Requirement**: Must be placed in flowing water (`!fluidState.isSource()` or falling/directional flow vectors) to generate torque and spin; still water produces zero torque/FE.
+- **Center Axle Power Hub**: Outputs generated Forge Energy directly into adjacent substation transformers, heavy accumulators, AWG cables, or wire connectors (`Capabilities.Energy.BLOCK`).
+- **Axle Stacking & Linear Transfer**: Wheels placed side by side along their axle automatically form a unified drive shaft line, pooling and transferring energy through the entire stack to the end wheel(s) pushing into downstream batteries or transformers.
+- **Flicker-Free Monolithic 3D Geometry**: High-fidelity 3D model designed to Monolithic 3D standards with a custom 256x256 procedural texture atlas, 0.5px UV inset margins, PoseStack normal transformations, and smooth client rotation physics.
+- **Survival Utility**: Fully waterloggable (`SimpleWaterloggedBlock`) to preserve natural water currents, deconstructs cleanly on break, and integrates with the Grid Engineer's Hammer (axis rotation) and Grid Voltmeter (live diagnostics).
+
+### 7. Specialized Engineering Tools
 - **Wire Coils (LV, MV, HV)**: Right-click the starting terminal, then right-click the destination terminal to string physical catenary wires.
 - **Grid Voltmeter**: Live diagnostic multimeter reporting stored FE, throughput, voltage tier, cable throughput/gauge, and all connected terminal coordinates.
 - **Grid Engineer's Hammer**: Rotates directional grid gear, configures connector input/output modes, and toggles individual cable connection sides.
@@ -97,7 +106,29 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.2.1)
+## 📦 Recent Release Notes (v1.3.1)
+- **Dynamic Water Wheel Kinetic Rotation Animation**:
+  - Implemented the `OPERATING` blockstate property on `WoodenWaterWheelBlock` to provide instantaneous, zero-lag operational state synchronization across all clients within render distance.
+  - Upgraded `WoodenWaterWheelRenderer` with continuous game time and partial-tick animation (`(animTicks * spinSpeed) % 360°`), providing ultra-smooth 60/120/144+ FPS rotation when operating in flowing water.
+  - Synchronized block entity data tags and packet keys between client and server, ensuring reliable state sync.
+  - Added intelligent water flow vector and drop-side detection to drive wheel rotation in the physical direction of incoming currents or waterfall plunges.
+  - Dynamically scales rotation speed from 2.0°/tick up to 8.0°/tick based on hydraulic drop height.
+
+---
+
+## 📦 Previous Release Notes (v1.3.0)
+- **Wooden Water Wheel Kinetic Generator (`powergrid:wooden_water_wheel`)**:
+  - **Large 3x3x1 Footprint**: Authentic industrial wooden water wheel multiblock standing 3 blocks high, 3 blocks in diameter, and 1 block wide along its central axle shaft.
+  - **Dynamic Water Drop Hydroelectric Generation**: Generates 10 FE/tick per vertical height level of flowing water drop (e.g. 1-block drop = 10 FE/t, 2-block drop = 20 FE/t, 3-block drop = 30 FE/t, up to 50 FE/t for overhead waterfall plunges).
+  - **Flowing Water Requirement**: Requires **flowing water** (`!fluidState.isSource()` or falling/directional flow vectors) to generate torque and spin; still standing water produces zero torque/FE.
+  - **Center Axle Power Output**: Central axle hub outputs accumulated Forge Energy directly to adjacent batteries, transformers, power cables, and wire connectors (`Capabilities.Energy.BLOCK`).
+  - **Axle Stacking & Linear Multi-Wheel Transfer**: Water wheels placed adjacent to each other along their axle axis automatically stack into a unified drive shaft line, pooling and transferring energy through the stack to terminal wheels that output to transformers or energy storage.
+  - **Monolithic 3D Zero-Flicker Model**: High-fidelity 3D model designed to Monolithic 3D standards with a custom 256x256 procedural texture atlas, 0.5px UV inset margins, PoseStack normal transformations, and smooth client rotation physics.
+  - **Survival Mechanics**: Fully waterloggable (`SimpleWaterloggedBlock`) to preserve natural streams, deconstructs cleanly on break, and integrates with the Grid Engineer's Hammer (axis rotation) and Grid Voltmeter (live diagnostics).
+
+---
+
+## 📦 Previous Release Notes (v1.2.1)
 - **Refinery Pipe Facade Support for AWG Power Cables**:
   - Full compatibility with *Industrial Refinery* Pipe Facades (Solid Panels `refinery:pipe_facade` and Hollow Pass-Through Frames `refinery:pipe_facade_hole`) across all 4 AWG power cable gauges (12, 14, 16, and 18 AWG).
   - **Dynamic In-World Snapping & Swapping**: Right-click any cable face with a facade to attach it. Right-clicking with another facade cleanly swaps it and returns the old facade to inventory.

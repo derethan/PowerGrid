@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "WTW",
+    "TIT",
+    "WTW"
+  ],
+  "key": {
+    "W": "powergrid:treated_wood",
+    "T": "#minecraft:planks",
+    "I": "minecraft:iron_ingot"
+  },
+  "result": {
+    "id": "powergrid:wooden_water_wheel",
+    "count": 1
+  }
+}
