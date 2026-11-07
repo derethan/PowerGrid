@@ -64,5 +64,8 @@
   "tooltip.powergrid.cable_rate": "§7Max Throughput: §6%s FE/t§r",
   "tooltip.powergrid.cable_buffer": "§7Internal Buffer: §b%s FE§r",
   "tooltip.powergrid.hammer.desc_3": "§7Right-click Power Cable: Toggle side connection on/off.§r",
-  "message.powergrid.cable_dismantled": "§a[Power Grid]§r Power Cable cleanly snipped & retrieved."
+  "message.powergrid.cable_dismantled": "§a[Power Grid]§r Power Cable cleanly snipped & retrieved.",
+  "block.powergrid.street_light": "HPS Street Light",
+  "item.powergrid.street_light": "HPS Street Light",
+  "tooltip.powergrid.street_light.desc": "§7North American municipal street light. Default standby illumination (Level 7) when unpowered; boosts to brilliant golden sodium radiance (Level 15) when powered at base with 5 FE/t. Sneak-Right-Click with Engineer's Hammer toggles Dusk-to-Dawn photocell sensor.§r"
 }

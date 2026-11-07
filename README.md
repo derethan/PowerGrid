@@ -31,6 +31,7 @@
    - [Substation Transformers (Step-Up / Step-Down)](#substation-transformers-step-up--step-down)
    - [High-Voltage Breaker Switches](#high-voltage-breaker-switches)
    - [Heavy Accumulator Banks](#heavy-accumulator-banks)
+   - [HPS Street Lights](#hps-street-lights)
 7. [Comprehensive Recipe Codex](#7-comprehensive-recipe-codex)
 8. [Cross-Mod Interoperability & Capabilities](#8-cross-mod-interoperability--capabilities)
 9. [Frequently Asked Questions (FAQ) & Troubleshooting](#9-frequently-asked-questions-faq--troubleshooting)
@@ -208,6 +209,16 @@ Following standard electrical engineering conventions, lower AWG numbers denote 
 - Massive industrial capacitor banks storing up to **4,000,000 FE** per unit.
 - Supports blazing **16,384 FE/t** simultaneous charge and discharge rates.
 - Automatically pushes energy to connected low-buffer machines and wire connectors.
+
+### HPS Street Lights
+- Authentic 4-block municipal street lights modeled after classic North American cobrahead fixtures.
+- **Architectural Construction**: Features a square concrete footing foundation with steel anchor bolts, slender galvanized metal pole column, and sweeping davit mast arm with a teardrop HPS luminaire.
+- **Dual-Tier Illumination**:
+  - **Standby Mode (Unpowered)**: Emits warm amber standby illumination (Light Level 7, ~7 block radius) upon placement without needing external power.
+  - **Energized Mode (Powered)**: Emits brilliant high brightness (Light Level 15, full 15-block radius) when energized with 5 FE/t supplied to the concrete base.
+- **Base Energy Capability**: The concrete footing base implements `Capabilities.Energy.BLOCK` (1,000 FE buffer, 32 FE/t max receive), connecting directly to indoor AWG power cables, wire connectors, and energy sources.
+- **Dusk-to-Dawn Photocell**: Sneak-Right-Click with the Grid Engineer's Hammer toggles between Automatic Dusk-to-Dawn photocell sensor mode (lights up during night/storms) and 24/7 Always Active mode. Normal right-click rotates the fixture.
+- **Coordinated Assembly Placement**: Placing 1 item deploys all 4 blocks (`BASE`, `POLE_LOWER`, `POLE_UPPER`, `HEAD`). Breaking any section cleanly deconstructs the whole fixture.
 
 ---
 

@@ -4,6 +4,33 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.2.0] - 2026-11-06
+
+### Added
+- **North American High-Pressure Sodium (HPS) Street Lights (`powergrid:street_light`)**:
+  - Authentic 4-block municipal street lighting structure featuring a concrete footing pedestal with galvanized anchor bolts, slender tubular metal pole shaft, and curved davit mast arm with a classic teardrop HPS cobrahead luminaire.
+  - **Dual-Tier Brightness & Radius**:
+    - **Default Standby Mode (Unpowered)**: Emits warm amber standby illumination (Light Level 7, ~7 block radius) immediately upon placement without needing external power.
+    - **Active Energized Mode (Powered)**: Emits brilliant high brightness (Light Level 15, full 15-block radius) when energized with 5 FE/t supplied to the base.
+  - **Base Energy Capability & Power Consumption**:
+    - Concrete footing base implements `Capabilities.Energy.BLOCK` (1,000 FE internal buffer, 32 FE/t max receive rate), accepting connections from Power Cables, Wire Connectors, and adjacent FE energy sources.
+    - Active power consumption draws 5 FE/t when illuminated.
+  - **Intelligent 4-Block Coordinated Placement**:
+    - Placing a single `HPS Street Light` automatically places the complete 4-block vertical assembly (`BASE`, `POLE_LOWER`, `POLE_UPPER`, `HEAD`) facing the player's direction.
+    - Breaking any segment cleanly deconstructs the entire light structure and drops a single `HPS Street Light` item, preventing orphaned ghost blocks.
+  - **Dusk-to-Dawn Photocell Sensor**:
+    - Simulates an authentic NEMA photocell twist-lock sensor on top of the cobrahead fixture.
+    - Sneak-Right-Clicking the street light with the Grid Engineer's Hammer toggles between **Automatic (Dusk-to-Dawn)** (only energizes during night/storms when power is available) and **Always Active (24/7)** continuous operation.
+    - Normal Right-Clicking with the Grid Engineer's Hammer rotates the fixture's facing direction.
+  - **Diagnostic Voltmeter Integration**:
+    - Inspecting any part of the street light with the Grid Voltmeter reports real-time energized status, internal buffer level (`X / 1,000 FE`), active power draw (5 FE/t), and photocell sensor state.
+  - **HD Models & Ultra-HD 1024x Pack**:
+    - Full procedural 32x32 textures and 1024x resource pack support (`(v1.0) 1024x Power Grid.zip`), complete with distinct unpowered and powered sodium-vapor discharge glow states.
+  - **Survival Crafting Recipe**:
+    - Craftable in crafting tables with Smooth Stone, Redstone, Iron Ingots, and Glowstone.
+
+---
+
 ## [1.1.8] - 2026-11-01
 
 ### Added

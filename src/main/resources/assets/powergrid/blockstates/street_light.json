@@ -1,0 +1,106 @@
+{
+  "variants": {
+    "facing=north,part=base,powered=false": {
+      "model": "powergrid:block/street_light_base"
+    },
+    "facing=north,part=base,powered=true": {
+      "model": "powergrid:block/street_light_base"
+    },
+    "facing=north,part=pole_lower,powered=false": {
+      "model": "powergrid:block/street_light_pole_lower"
+    },
+    "facing=north,part=pole_lower,powered=true": {
+      "model": "powergrid:block/street_light_pole_lower"
+    },
+    "facing=north,part=pole_upper,powered=false": {
+      "model": "powergrid:block/street_light_pole_upper"
+    },
+    "facing=north,part=pole_upper,powered=true": {
+      "model": "powergrid:block/street_light_pole_upper"
+    },
+    "facing=north,part=head,powered=false": {
+      "model": "powergrid:block/street_light_head_unpowered"
+    },
+    "facing=north,part=head,powered=true": {
+      "model": "powergrid:block/street_light_head_powered"
+    },
+    "facing=east,part=base,powered=false": {
+      "model": "powergrid:block/street_light_base"
+    },
+    "facing=east,part=base,powered=true": {
+      "model": "powergrid:block/street_light_base"
+    },
+    "facing=east,part=pole_lower,powered=false": {
+      "model": "powergrid:block/street_light_pole_lower"
+    },
+    "facing=east,part=pole_lower,powered=true": {
+      "model": "powergrid:block/street_light_pole_lower"
+    },
+    "facing=east,part=pole_upper,powered=false": {
+      "model": "powergrid:block/street_light_pole_upper"
+    },
+    "facing=east,part=pole_upper,powered=true": {
+      "model": "powergrid:block/street_light_pole_upper"
+    },
+    "facing=east,part=head,powered=false": {
+      "model": "powergrid:block/street_light_head_unpowered",
+      "y": 90
+    },
+    "facing=east,part=head,powered=true": {
+      "model": "powergrid:block/street_light_head_powered",
+      "y": 90
+    },
+    "facing=south,part=base,powered=false": {
+      "model": "powergrid:block/street_light_base"
+    },
+    "facing=south,part=base,powered=true": {
+      "model": "powergrid:block/street_light_base"
+    },
+    "facing=south,part=pole_lower,powered=false": {
+      "model": "powergrid:block/street_light_pole_lower"
+    },
+    "facing=south,part=pole_lower,powered=true": {
+      "model": "powergrid:block/street_light_pole_lower"
+    },
+    "facing=south,part=pole_upper,powered=false": {
+      "model": "powergrid:block/street_light_pole_upper"
+    },
+    "facing=south,part=pole_upper,powered=true": {
+      "model": "powergrid:block/street_light_pole_upper"
+    },
+    "facing=south,part=head,powered=false": {
+      "model": "powergrid:block/street_light_head_unpowered",
+      "y": 180
+    },
+    "facing=south,part=head,powered=true": {
+      "model": "powergrid:block/street_light_head_powered",
+      "y": 180
+    },
+    "facing=west,part=base,powered=false": {
+      "model": "powergrid:block/street_light_base"
+    },
+    "facing=west,part=base,powered=true": {
+      "model": "powergrid:block/street_light_base"
+    },
+    "facing=west,part=pole_lower,powered=false": {
+      "model": "powergrid:block/street_light_pole_lower"
+    },
+    "facing=west,part=pole_lower,powered=true": {
+      "model": "powergrid:block/street_light_pole_lower"
+    },
+    "facing=west,part=pole_upper,powered=false": {
+      "model": "powergrid:block/street_light_pole_upper"
+    },
+    "facing=west,part=pole_upper,powered=true": {
+      "model": "powergrid:block/street_light_pole_upper"
+    },
+    "facing=west,part=head,powered=false": {
+      "model": "powergrid:block/street_light_head_unpowered",
+      "y": 270
+    },
+    "facing=west,part=head,powered=true": {
+      "model": "powergrid:block/street_light_head_powered",
+      "y": 270
+    }
+  }
+}

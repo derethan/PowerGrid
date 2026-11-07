@@ -1,6 +1,8 @@
 package com.powergrid.item;
 
+import com.powergrid.block.StreetLightBlock;
 import com.powergrid.block.entity.PowerCableBlockEntity;
+import com.powergrid.block.entity.StreetLightBlockEntity;
 import com.powergrid.block.entity.WireConnectorBlockEntity;
 import com.powergrid.grid.CableGauge;
 import com.powergrid.grid.CableNetworkRouter;
@@ -80,6 +82,23 @@ public class VoltmeterItem extends Item {
             player.sendSystemMessage(Component.literal("§7Reachable Sinks: §f" + sinks.size()));
             for (CableNetworkRouter.FoundDevice sink : sinks) {
                 player.sendSystemMessage(Component.literal(" §8-§r Target: §b" + sink.target.devicePos().toShortString() + "§r (Path limit: §6" + sink.bottleneck + " FE/t§r)"));
+            }
+        }
+
+        // Check if Street Light
+        net.minecraft.world.level.block.state.BlockState state = level.getBlockState(pos);
+        if (state.getBlock() instanceof StreetLightBlock) {
+            foundInfo = true;
+            StreetLightBlock.StreetLightPart part = state.getValue(StreetLightBlock.PART);
+            BlockPos basePos = StreetLightBlock.getBasePos(pos, part);
+            BlockEntity baseBE = level.getBlockEntity(basePos);
+            if (baseBE instanceof StreetLightBlockEntity streetLight) {
+                player.sendSystemMessage(Component.literal("§6===== [Power Grid Street Light Diagnostic] =====§r"));
+                player.sendSystemMessage(Component.literal("§7Status: " + (streetLight.isPowered() ? "§aEnergized (High Brightness - 15)§r" : "§eStandby Glow (Default - 7)§r")));
+                player.sendSystemMessage(Component.literal("§7Internal Buffer: §b" + streetLight.energyStorage.getAmountAsInt() + " / " + StreetLightBlockEntity.BUFFER_CAPACITY + " FE§r"));
+                player.sendSystemMessage(Component.literal("§7Power Draw: §6" + StreetLightBlockEntity.POWER_DRAW_PER_TICK + " FE/t (when energized)§r"));
+                player.sendSystemMessage(Component.literal("§7Photocell Mode: " + (streetLight.isPhotocellEnabled() ? "§aAutomatic (Dusk-to-Dawn)§r" : "§6Always On (24/7)§r")));
+                player.sendSystemMessage(Component.literal("§8(Tip: Sneak-Right-Click with Engineer's Hammer to toggle Photocell mode)§r"));
             }
         }
 

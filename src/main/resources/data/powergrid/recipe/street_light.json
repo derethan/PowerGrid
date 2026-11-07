@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " GI",
+    " I ",
+    "CRC"
+  ],
+  "key": {
+    "G": "minecraft:glowstone",
+    "I": "minecraft:iron_ingot",
+    "C": "minecraft:smooth_stone",
+    "R": "minecraft:redstone"
+  },
+  "result": {
+    "id": "powergrid:street_light",
+    "count": 1
+  }
+}

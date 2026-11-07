@@ -96,7 +96,17 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.1.8)
+## 📦 Recent Release Notes (v1.2.0)
+- **North American High-Pressure Sodium (HPS) Street Lights (`powergrid:street_light`)**:
+  - Full-height 4-block municipal street lights featuring a concrete footing pedestal, slender metal pole, and curved davit mast arm with classic cobrahead luminaire.
+  - **Dual-Tier Illumination**: Emits warm standby light (Level 7) when unpowered, boosting to full brightness (Level 15) when powered at the base with 5 FE/t.
+  - **Base Energy Capability**: Concrete base connects directly to Power Cables, Wire Connectors, and FE devices (`Capabilities.Energy.BLOCK`).
+  - **Automatic Photocell**: Sneak-Right-Click with Engineer's Hammer toggles Dusk-to-Dawn photocell sensor vs. 24/7 Always Active mode. Normal right-click rotates the light.
+  - **Full 1024x Pack Support & Survival Crafting**: Included in the 1024x Ultra-HD pack with authentic amber sodium-vapor glow.
+
+---
+
+## 📦 Previous Release Notes (v1.1.8)
 - **Loss-Free Distance Thresholds for Short Runs (`powergrid.toml`)**:
   - Added configurable distance thresholds (`lvLossFreeDistance: 8`, `mvLossFreeDistance: 16`, `hvLossFreeDistance: 24`) below which transmission line loss is completely bypassed.
   - Wire spans shorter than or equal to the threshold operate at 100% transmission efficiency with 0% line loss. For longer spans, resistance applies only to the distance exceeding the threshold.

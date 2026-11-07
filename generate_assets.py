@@ -385,6 +385,93 @@ def render_heavy_accumulator_top(size):
     draw_ellipse(d, size, 6.5, 6.5, 9.5, 9.5, fill=(60, 66, 76), outline=(90, 100, 115))
     return im
 
+def render_street_light_concrete(size):
+    im = Image.new("RGBA", (size, size), (145, 145, 142, 255))
+    d = ImageDraw.Draw(im)
+    steps = size
+    for y in range(steps):
+        for x in range(steps):
+            noise = (hash((x * 17 + y * 31)) % 15) - 7
+            if noise != 0:
+                d.point((x, y), fill=(rgb_clamp(145 + noise), rgb_clamp(145 + noise), rgb_clamp(142 + noise), 255))
+    draw_line(d, size, 0, 0, 16, 0, fill=(175, 175, 172, 255), width=0.5)
+    draw_line(d, size, 0, 0, 0, 16, fill=(165, 165, 162, 255), width=0.5)
+    draw_line(d, size, 0, 15.5, 16, 15.5, fill=(115, 115, 112, 255), width=0.5)
+    draw_line(d, size, 15.5, 0, 15.5, 16, fill=(125, 125, 122, 255), width=0.5)
+    return im
+
+def render_street_light_concrete_top(size):
+    im = render_street_light_concrete(size)
+    d = ImageDraw.Draw(im)
+    draw_rect(d, size, 4.0, 4.0, 12.0, 12.0, fill=(90, 95, 102, 255), outline=(60, 65, 72, 255), width=0.5)
+    for bx, by in [(5.2, 5.2), (10.8, 5.2), (5.2, 10.8), (10.8, 10.8)]:
+        draw_ellipse(d, size, bx - 0.8, by - 0.8, bx + 0.8, by + 0.8, fill=(185, 192, 200, 255), outline=(70, 75, 82, 255), width=0.3)
+        draw_ellipse(d, size, bx - 0.3, by - 0.3, bx + 0.3, by + 0.3, fill=(45, 50, 55, 255))
+    draw_ellipse(d, size, 6.5, 6.5, 9.5, 9.5, fill=(55, 60, 68, 255), outline=(40, 45, 50, 255), width=0.5)
+    return im
+
+def render_street_light_metal(size):
+    im = Image.new("RGBA", (size, size), (160, 168, 175, 255))
+    d = ImageDraw.Draw(im)
+    steps = size
+    for x in range(steps):
+        fx = x / float(steps)
+        spec = int(25 * (1.0 - abs(fx - 0.45) * 2.2))
+        spec = max(-20, min(35, spec))
+        for y in range(steps):
+            noise = (hash((x * 43 + y * 13)) % 7) - 3
+            val = spec + noise
+            d.point((x, y), fill=(rgb_clamp(160 + val), rgb_clamp(168 + val), rgb_clamp(175 + val), 255))
+    draw_line(d, size, 0, 15.5, 16, 15.5, fill=(120, 125, 132, 255), width=0.5)
+    return im
+
+def render_street_light_cobrahead(size):
+    im = Image.new("RGBA", (size, size), (135, 142, 150, 255))
+    d = ImageDraw.Draw(im)
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, fill=(138, 145, 152, 255), outline=(105, 112, 120, 255), width=0.8)
+    draw_line(d, size, 8.0, 1.0, 8.0, 15.0, fill=(165, 172, 180, 255), width=0.8)
+    draw_rect(d, size, 5.0, 12.0, 11.0, 15.5, fill=(100, 106, 114, 255), outline=(75, 80, 88, 255), width=0.5)
+    draw_ellipse(d, size, 6.0, 4.0, 10.0, 8.0, fill=(28, 52, 95, 255), outline=(15, 30, 60, 255), width=0.5)
+    draw_ellipse(d, size, 7.0, 5.0, 9.0, 7.0, fill=(45, 80, 145, 255))
+    return im
+
+def render_street_light_hps_off(size):
+    im = Image.new("RGBA", (size, size), (145, 85, 30, 255))
+    d = ImageDraw.Draw(im)
+    steps = size
+    for y in range(steps):
+        for x in range(steps):
+            prism = ((x * 3 + y * 2) % 4) * 12 - 18
+            d.point((x, y), fill=(rgb_clamp(135 + prism), rgb_clamp(75 + prism), rgb_clamp(25 + prism), 255))
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, outline=(95, 50, 15, 255), width=1.0)
+    draw_rect(d, size, 6.0, 3.0, 10.0, 13.0, fill=(190, 120, 50, 255), outline=(110, 60, 20, 255), width=0.5)
+    return im
+
+def render_street_light_hps_on(size):
+    im = Image.new("RGBA", (size, size), (255, 160, 25, 255))
+    d = ImageDraw.Draw(im)
+    draw_rect(d, size, 0.5, 0.5, 15.5, 15.5, fill=(255, 165, 30, 255), outline=(230, 130, 15, 255), width=1.0)
+    steps = size
+    for y in range(steps):
+        for x in range(steps):
+            fresnel = ((x + y) % 3) * 15
+            d.point((x, y), fill=(rgb_clamp(245 + fresnel), rgb_clamp(170 + fresnel), rgb_clamp(45 + fresnel), 255))
+    draw_rect(d, size, 5.0, 3.0, 11.0, 13.0, fill=(255, 235, 150, 255), outline=(255, 195, 70, 255), width=0.8)
+    draw_rect(d, size, 6.5, 4.5, 9.5, 11.5, fill=(255, 255, 220, 255))
+    return im
+
+def render_street_light_item(size):
+    im = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    def s(v):
+        return v * size / 16.0
+    d.rectangle([s(5), s(13), s(11), s(16)], fill=(145, 145, 142, 255), outline=(115, 115, 112, 255), width=1)
+    d.rectangle([s(7.2), s(4), s(8.8), s(13)], fill=(160, 168, 175, 255), outline=(120, 125, 132, 255), width=1)
+    d.line([(s(8), s(4.5)), (s(7), s(2.5)), (s(3.5), s(2.5))], fill=(160, 168, 175, 255), width=max(1, int(s(1.2))))
+    d.rectangle([s(1), s(2.5), s(4.5), s(4.5)], fill=(135, 142, 150, 255), outline=(100, 105, 112, 255), width=1)
+    d.rectangle([s(1.5), s(4.0), s(4.0), s(5.2)], fill=(255, 185, 45, 255))
+    return im
+
 
 
 def render_grid_icon(size):
@@ -607,6 +694,12 @@ TEXTURE_DEFS = {
         ("breaker_handle", render_breaker_handle),
         ("heavy_accumulator_side", render_heavy_accumulator_side),
         ("heavy_accumulator_top", render_heavy_accumulator_top),
+        ("street_light_concrete", render_street_light_concrete),
+        ("street_light_concrete_top", render_street_light_concrete_top),
+        ("street_light_metal", render_street_light_metal),
+        ("street_light_cobrahead", render_street_light_cobrahead),
+        ("street_light_hps_off", render_street_light_hps_off),
+        ("street_light_hps_on", render_street_light_hps_on),
     ],
     "item": [
         ("engineer_hammer", render_engineer_hammer),
@@ -621,6 +714,7 @@ TEXTURE_DEFS = {
         ("steel_strand", lambda s: render_material_item(s, "steel_strand")),
         ("ceramic_insulator", lambda s: render_material_item(s, "ceramic_insulator")),
         ("grid_icon", render_grid_icon),
+        ("street_light", render_street_light_item),
     ]
 }
 
@@ -1145,6 +1239,89 @@ write_json(os.path.join(MODELS_BLOCK, "heavy_accumulator.json"), {
     }
 })
 
+# 9. Street Light Models
+write_json(os.path.join(MODELS_BLOCK, "street_light_base.json"), {
+    "textures": {
+        "particle": "powergrid:block/street_light_concrete",
+        "concrete": "powergrid:block/street_light_concrete",
+        "concrete_top": "powergrid:block/street_light_concrete_top",
+        "metal": "powergrid:block/street_light_metal"
+    },
+    "elements": [
+        make_element(2.0, 0.0, 3.0, 14.0, 14.0, 13.0, "concrete", cullface=["down"]),
+        make_element(3.0, 0.0, 2.0, 13.0, 14.0, 14.0, "concrete", cullface=["down"]),
+        make_element(4.0, 14.0, 4.0, 12.0, 15.5, 12.0, "metal"),
+        make_element(5.5, 15.5, 5.5, 10.5, 16.0, 10.5, "metal")
+    ]
+})
+
+write_json(os.path.join(MODELS_BLOCK, "street_light_pole_lower.json"), {
+    "textures": {
+        "particle": "powergrid:block/street_light_metal",
+        "metal": "powergrid:block/street_light_metal"
+    },
+    "elements": [
+        make_element(6.0, 0.0, 6.5, 10.0, 16.0, 9.5, "metal"),
+        make_element(6.5, 0.0, 6.0, 9.5, 16.0, 10.0, "metal"),
+        make_element(5.5, 0.0, 5.5, 10.5, 1.0, 10.5, "metal")
+    ]
+})
+
+write_json(os.path.join(MODELS_BLOCK, "street_light_pole_upper.json"), {
+    "textures": {
+        "particle": "powergrid:block/street_light_metal",
+        "metal": "powergrid:block/street_light_metal"
+    },
+    "elements": [
+        make_element(6.0, 0.0, 6.5, 10.0, 16.0, 9.5, "metal"),
+        make_element(6.5, 0.0, 6.0, 9.5, 16.0, 10.0, "metal"),
+        make_element(5.5, 13.0, 5.5, 10.5, 15.5, 10.5, "metal")
+    ]
+})
+
+def build_street_light_head(is_powered):
+    lens_tex = "street_light_hps_on" if is_powered else "street_light_hps_off"
+    return {
+        "textures": {
+            "particle": "powergrid:block/street_light_metal",
+            "metal": "powergrid:block/street_light_metal",
+            "head": "powergrid:block/street_light_cobrahead",
+            "lens": f"powergrid:block/{lens_tex}"
+        },
+        "elements": [
+            make_element(6.0, 0.0, 6.5, 10.0, 8.0, 9.5, "metal"),
+            make_element(6.5, 0.0, 6.0, 9.5, 8.0, 10.0, "metal"),
+            make_element(6.8, 7.5, 3.5, 9.2, 11.5, 7.5, "metal"),
+            make_element(6.8, 10.5, -1.5, 9.2, 13.5, 4.5, "metal"),
+            make_element(7.0, 11.8, -6.5, 9.0, 13.2, -0.5, "metal"),
+            make_element(4.5, 10.8, -14.0, 11.5, 13.0, -6.0, "head"),
+            make_element(5.5, 11.0, -15.5, 10.5, 12.8, -14.0, "head"),
+            make_element(7.0, 13.0, -10.5, 9.0, 14.5, -8.5, "head"),
+            make_element(5.0, 10.2, -13.5, 11.0, 10.8, -6.5, "lens")
+        ]
+    }
+
+write_json(os.path.join(MODELS_BLOCK, "street_light_head_unpowered.json"), build_street_light_head(False))
+write_json(os.path.join(MODELS_BLOCK, "street_light_head_powered.json"), build_street_light_head(True))
+
+write_json(os.path.join(MODELS_BLOCK, "street_light_inventory.json"), {
+    "textures": {
+        "particle": "powergrid:block/street_light_metal",
+        "concrete": "powergrid:block/street_light_concrete",
+        "metal": "powergrid:block/street_light_metal",
+        "head": "powergrid:block/street_light_cobrahead",
+        "lens": "powergrid:block/street_light_hps_on"
+    },
+    "elements": [
+        make_element(5.0, 0.0, 5.0, 11.0, 2.5, 11.0, "concrete"),
+        make_element(7.2, 2.5, 7.2, 8.8, 10.5, 8.8, "metal"),
+        make_element(7.2, 9.5, 4.5, 8.8, 12.0, 7.5, "metal"),
+        make_element(7.2, 11.0, 0.5, 8.8, 12.5, 5.0, "metal"),
+        make_element(5.5, 10.5, -4.0, 10.5, 12.0, 1.0, "head"),
+        make_element(6.0, 10.0, -3.5, 10.0, 10.5, 0.5, "lens")
+    ]
+})
+
 
 
 # ==============================================================================
@@ -1255,6 +1432,30 @@ write_json(os.path.join(BLOCKSTATES, "heavy_accumulator.json"), {
     "variants": {"": {"model": "powergrid:block/heavy_accumulator"}}
 })
 
+street_light_variants = {}
+for facing in ["north", "east", "south", "west"]:
+    for part in ["base", "pole_lower", "pole_upper", "head"]:
+        for powered in ["false", "true"]:
+            key = f"facing={facing},part={part},powered={powered}"
+            if part == "base":
+                model_def = {"model": "powergrid:block/street_light_base"}
+            elif part == "pole_lower":
+                model_def = {"model": "powergrid:block/street_light_pole_lower"}
+            elif part == "pole_upper":
+                model_def = {"model": "powergrid:block/street_light_pole_upper"}
+            else:
+                m = "powergrid:block/street_light_head_powered" if powered == "true" else "powergrid:block/street_light_head_unpowered"
+                model_def = {"model": m}
+                if facing == "east":
+                    model_def["y"] = 90
+                elif facing == "south":
+                    model_def["y"] = 180
+                elif facing == "west":
+                    model_def["y"] = 270
+            street_light_variants[key] = model_def
+
+write_json(os.path.join(BLOCKSTATES, "street_light.json"), {"variants": street_light_variants})
+
 # ==============================================================================
 # ITEM MODELS & ITEM DEFINITIONS (Modern 26.3 Specification)
 # ==============================================================================
@@ -1263,7 +1464,8 @@ ALL_BLOCKS = [
     "treated_wood_pole", "steel_truss_pole", "pole_crossarm",
     "lv_wire_connector", "mv_wire_connector", "hv_wire_connector",
     "lv_wire_relay", "mv_wire_relay", "hv_wire_relay",
-    "transformer", "breaker_switch", "heavy_accumulator"
+    "transformer", "breaker_switch", "heavy_accumulator",
+    "street_light"
 ]
 
 ALL_ITEMS = [
@@ -1289,6 +1491,8 @@ for b in ALL_BLOCKS:
         target_model = "powergrid:block/pole_crossarm_beam_x"
     elif b == "breaker_switch":
         target_model = "powergrid:block/breaker_switch_on"
+    elif b == "street_light":
+        target_model = "powergrid:block/street_light_inventory"
 
     write_json(os.path.join(MODELS_ITEM, f"{b}.json"), {
         "parent": target_model,
