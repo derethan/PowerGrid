@@ -121,6 +121,13 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 - **Grid Engineer's Hammer**: Rotates directional grid gear, configures connector input/output modes, and toggles individual cable connection sides.
 - **Insulated Wire Cutters**: Safely and cleanly disconnects all attached wire lines from any connector or relay, and instantly snips/recovers indoor power cables.
 
+### 11. Grid Engineer's Field Manual (Interactive In-Game Guidebook)
+- **Authentic Industrial Guidebook**: Matches the visual theme and architecture of the *Refinery* and *Track and Trains* manuals with riveted steel bezels, brass corner brackets, and dark slate binder styling.
+- **7 Categorical Sections**: Comprehensive documentation across *All Contents*, *Power Generation*, *Overhead Grid*, *Substation & Storage*, *Indoor Wiring*, *Illumination Suite*, and *Tools & Materials*.
+- **Multiblock Blueprints & Layer Visualizers**: Complete 2D top-down grid layouts, interactive layer selection pills (`L0`), symbol legends, and bill of materials with block counts for `Wooden Water Wheel` and `Windmill Rotor`.
+- **Interactive Recipe Cards & Engineering Specs**: Displays visual input items $\rightarrow$ arrow $\rightarrow$ output items with hover tooltips, crafting notes, voltage throughput ratings, loss-free distance thresholds, and clearance rules.
+- **Survival Crafting & HD Pack**: Craftable shapeless with 1x Book + 1x Copper Ingot (or Copper Wire Strand). Included in both 32x32 default resolution and 1024x1024 Ultra-HD resource pack.
+
 ---
 
 ## 🛠️ Mod Compatibility & Integration
@@ -130,7 +137,18 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.6.0)
+## 📦 Recent Release Notes (v1.7.0)
+- **Grid Engineer's Field Manual (`powergrid:guide_book`)**:
+  - Interactive industrial engineering guidebook matching the visual aesthetic and architecture of the *Refinery* and *Track and Trains* manuals.
+  - **Industrial Dark Slate & Riveted Steel UI**: Modeled with riveted steel bezel borders, heavy brass corner brackets, and authentic book page-turn and button audio (`SoundEvents.BOOK_PAGE_TURN`, `SoundEvents.UI_BUTTON_CLICK`).
+  - **7 Dedicated Categorical Sections**: Fast browsing across *All Contents*, *Power Generation*, *Overhead Grid*, *Substation & Storage*, *Indoor Wiring*, *Illumination Suite*, and *Tools & Materials*.
+  - **Multiblock Blueprints & Layer Visualizers**: Full 2D top-down grid layouts, interactive layer selection pills (`L0`), symbol legends, and bill of materials with block counts for `Wooden Water Wheel` and `Windmill Rotor`.
+  - **Interactive Recipe Cards & Engineering Specs**: Displays visual input items $\rightarrow$ arrow $\rightarrow$ output items with hover tooltips, crafting notes, voltage throughput ratings, loss-free distance thresholds, and clearance rules.
+  - **Survival Crafting & HD Pack**: Craftable shapeless with 1x Book + 1x Copper Ingot (or Copper Wire Strand). Included in both 32x32 default resolution and 1024x1024 Ultra-HD resource pack.
+
+---
+
+## 📦 Previous Release Notes (v1.6.0)
 - **Pole-Mounted High-Pressure Sodium (HPS) Street Lights (`powergrid:pole_street_light`)**:
   - Clamps directly onto the side of Treated Wood Utility Poles, Steel Truss Poles, or Crossarms.
   - **Overhead Wire Powered Only**: Implements `IWireNode` with a ceramic insulator terminal atop the bracket, accepting LV, MV, and HV wires directly from the overhead line (daisy-chainable up to 2 connections). Does not connect to ground cables.

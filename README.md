@@ -265,6 +265,12 @@ Following standard electrical engineering conventions, lower AWG numbers denote 
   - Breaking any part deconstructs the 3x3 assembly and drops a single `Wooden Water Wheel` item.
   - Right-click with the Grid Engineer's Hammer rotates the axle axis by 90 degrees; right-click with the Grid Voltmeter inspects live telemetry.
 
+### Grid Engineer's Field Manual (In-Game Guidebook)
+- **Interactive Engineering Manual**: Right-click to open an authentic industrial guidebook matching the styling of the *Refinery* and *Track and Trains* manuals, complete with riveted steel bezels, brass corner brackets, and dark slate binder aesthetics.
+- **7 Dedicated Topic Categories**: Fast categorical navigation across *All Contents*, *Power Generation*, *Overhead Grid*, *Substation & Storage*, *Indoor Wiring*, *Illumination Suite*, and *Tools & Materials*.
+- **Multiblock Layout & Blueprint Visualizers**: Full 2D top-down and front-facing layer visualizers with symbol legends, relative coordinates, and Bill of Materials for `Wooden Water Wheel` and `Windmill Rotor` multiblocks.
+- **Interactive Recipe Cards & Engineering Specs**: Visual recipe layouts showing inputs $\rightarrow$ arrow $\rightarrow$ outputs with item tooltips, throughput limits, voltage safety rules, and clearance requirements.
+
 ### Windmill Rotors (Aerodynamic Wind Generation)
 - **Kinetic Wind Turbine Multiblock (3x3x1)**: Authentic 3-block diameter, 1-block wide industrial windmill rotor harvesting kinetic energy from open atmospheric air currents.
 - **Ground Clearance Requirement (3 Air Blocks)**:
@@ -320,6 +326,7 @@ Following standard electrical engineering conventions, lower AWG numbers denote 
 
 | Item / Block | Pattern Layout | Ingredients | Output |
 | :--- | :--- | :--- | :--- |
+| **Grid Engineer's Field Manual** | Book + Copper Ingot (Shapeless) | 1x Book, 1x Copper Ingot (or Copper Wire Strand) | 1x Field Manual |
 | **Grid Engineer's Hammer** | `  I` / ` S ` / `S  ` | 1x Iron Ingot (`I`), 2x Stick (`S`) | 1x Engineer's Hammer |
 | **Grid Voltmeter** | ` C ` / `RGR` / ` I ` | 1x Copper (`C`), 2x Redstone (`R`), 1x Glass Pane (`G`), 1x Iron Ingot (`I`) | 1x Voltmeter |
 | **Insulated Wire Cutters** | `I I` / ` S ` / `S S` | 2x Iron Ingot (`I`), 3x Stick (`S`) | 1x Wire Cutters |

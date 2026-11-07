@@ -1,37 +1,41 @@
-package com.powergrid;
-
-import com.powergrid.client.renderer.PowerCableRenderer;
-import com.powergrid.client.renderer.SolarPanelRenderer;
-import com.powergrid.client.renderer.WindmillRotorRenderer;
-import com.powergrid.client.renderer.WireNodeRenderer;
-import com.powergrid.client.renderer.WoodenWaterWheelRenderer;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-
-@Mod(value = PowerGridMod.MODID, dist = Dist.CLIENT)
-public class PowerGridClient {
-
-    public PowerGridClient(IEventBus modEventBus, ModContainer modContainer) {
-        modEventBus.addListener(this::clientSetup);
-        modEventBus.addListener(this::registerRenderers);
-    }
-
-    private void clientSetup(final FMLClientSetupEvent event) {
-        PowerGridMod.LOGGER.info("Power Grid client setup initialized.");
-    }
-
-    private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(PowerGridMod.WIRE_CONNECTOR_BE.get(), WireNodeRenderer::new);
-        event.registerBlockEntityRenderer(PowerGridMod.WIRE_RELAY_BE.get(), WireNodeRenderer::new);
-        event.registerBlockEntityRenderer(PowerGridMod.BREAKER_SWITCH_BE.get(), WireNodeRenderer::new);
-        event.registerBlockEntityRenderer(PowerGridMod.POWER_CABLE_BE.get(), PowerCableRenderer::new);
-        event.registerBlockEntityRenderer(PowerGridMod.WOODEN_WATER_WHEEL_BE.get(), WoodenWaterWheelRenderer::new);
-        event.registerBlockEntityRenderer(PowerGridMod.WINDMILL_ROTOR_BE.get(), WindmillRotorRenderer::new);
-        event.registerBlockEntityRenderer(PowerGridMod.SOLAR_PANEL_BE.get(), SolarPanelRenderer::new);
-        event.registerBlockEntityRenderer(PowerGridMod.POLE_STREET_LIGHT_BE.get(), WireNodeRenderer::new);
-    }
-}
+package com.powergrid;
+
+import com.powergrid.client.renderer.PowerCableRenderer;
+import com.powergrid.client.renderer.SolarPanelRenderer;
+import com.powergrid.client.renderer.WindmillRotorRenderer;
+import com.powergrid.client.renderer.WireNodeRenderer;
+import com.powergrid.client.renderer.WoodenWaterWheelRenderer;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+
+@Mod(value = PowerGridMod.MODID, dist = Dist.CLIENT)
+public class PowerGridClient {
+
+    public PowerGridClient(IEventBus modEventBus, ModContainer modContainer) {
+        modEventBus.addListener(this::clientSetup);
+        modEventBus.addListener(this::registerRenderers);
+    }
+
+    private void clientSetup(final FMLClientSetupEvent event) {
+        PowerGridMod.LOGGER.info("Power Grid client setup initialized.");
+    }
+
+    private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(PowerGridMod.WIRE_CONNECTOR_BE.get(), WireNodeRenderer::new);
+        event.registerBlockEntityRenderer(PowerGridMod.WIRE_RELAY_BE.get(), WireNodeRenderer::new);
+        event.registerBlockEntityRenderer(PowerGridMod.BREAKER_SWITCH_BE.get(), WireNodeRenderer::new);
+        event.registerBlockEntityRenderer(PowerGridMod.POWER_CABLE_BE.get(), PowerCableRenderer::new);
+        event.registerBlockEntityRenderer(PowerGridMod.WOODEN_WATER_WHEEL_BE.get(), WoodenWaterWheelRenderer::new);
+        event.registerBlockEntityRenderer(PowerGridMod.WINDMILL_ROTOR_BE.get(), WindmillRotorRenderer::new);
+        event.registerBlockEntityRenderer(PowerGridMod.SOLAR_PANEL_BE.get(), SolarPanelRenderer::new);
+        event.registerBlockEntityRenderer(PowerGridMod.POLE_STREET_LIGHT_BE.get(), WireNodeRenderer::new);
+    }
+
+    public static void openGuideBook() {
+        net.minecraft.client.Minecraft.getInstance().setScreenAndShow(new com.powergrid.client.gui.PowerGridGuideScreen());
+    }
+}

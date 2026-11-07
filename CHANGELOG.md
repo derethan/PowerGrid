@@ -4,6 +4,30 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.7.0] - 2026-11-07
+
+### Added
+- **Grid Engineer's Field Manual (`powergrid:guide_book`)**:
+  - Interactive industrial engineering guidebook matching the visual aesthetic and architecture of the *Refinery* and *Track and Trains* manuals.
+  - **Dark Slate & Galvanized Steel Industrial Screen**:
+    - Modeled with riveted steel bezel borders (`0xFF374151`), heavy brass corner brackets (`0xFFF59E0B`, `0xFFFCD34D`), and dark slate binder styling (`0xFF0F1115`, `0xFF181B20`).
+    - Authentic page-turning audio and tactile button feedback (`SoundEvents.BOOK_PAGE_TURN`, `SoundEvents.UI_BUTTON_CLICK`).
+  - **Left Category Sidebar & Topics Table of Contents**:
+    - Category browsing across 7 dedicated sections: `All Contents`, `Power Generation`, `Overhead Grid`, `Substation & Storage`, `Indoor Wiring`, `Illumination Suite`, and `Tools & Materials`.
+    - Topic cards with live item icons, titles, subtitles, topic count badge, and smooth scrollbar.
+  - **Multiblock Layout & Blueprint Visualizer**:
+    - Full 2D top-down and front-facing layer visualizers for the `Wooden Water Wheel` and `Windmill Rotor` multiblocks.
+    - Interactive layer selection pills (`L0`), symbol grid cells, relative coordinate inspection tooltips, and block legend.
+    - Bill of Materials tab with item icons, item quantities, and total block count badges.
+  - **Engineering Overview & Recipes**:
+    - Comprehensive technical specifications, pro-tips, voltage formulas, clearance rules, and loss-free span distance references.
+    - Interactive recipe cards displaying input items $\rightarrow$ arrow $\rightarrow$ output items with full hover tooltips and crafting notes.
+  - **Survival Crafting & HD Pack**:
+    - Shapeless crafting: Book (`minecraft:book`) + Copper Ingot or Copper Wire Strand (`powergrid:copper_wire`) $\rightarrow$ Field Manual.
+    - Custom 32x32 pixel art texture and 1024x1024 Ultra-HD pack texture with dark leather cover, brass brackets, and electric lightning insignia.
+
+---
+
 ## [1.6.0] - 2026-11-07
 
 ### Added

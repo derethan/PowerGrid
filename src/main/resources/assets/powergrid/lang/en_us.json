@@ -13,7 +13,7 @@
   "block.powergrid.breaker_switch": "High Voltage Breaker Switch",
   "block.powergrid.heavy_accumulator": "Heavy Accumulator Bank",
   "item.powergrid.grid_icon": "Power Grid",
-  "item.powergrid.engineer_hammer": "Grid Engineer's Hammer",
+  "item.powergrid.guide_book": "Grid Engineer's Field Manual",`n  "tooltip.powergrid.guide_book.desc_1": "§7Comprehensive electrical engineering manual for modern power grids.§r",`n  "tooltip.powergrid.guide_book.desc_2": "§6Right-click to open Table of Contents & Blueprints.§r",`n  "item.powergrid.engineer_hammer": "Grid Engineer's Hammer",
   "item.powergrid.voltmeter": "Grid Voltmeter",
   "item.powergrid.wire_cutters": "Insulated Wire Cutters",
   "item.powergrid.lv_wire_coil": "LV Copper Wire Coil",

@@ -3,6 +3,9 @@ package com.powergrid.recipe;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.powergrid.guide.GuideBookRegistry;
+import com.powergrid.guide.GuideCategory;
+import com.powergrid.guide.GuideEntry;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -53,7 +56,8 @@ public class RecipeIntegrityTest {
             "powergrid:copper_wire",
             "powergrid:electrum_wire",
             "powergrid:steel_strand",
-            "powergrid:ceramic_insulator"
+            "powergrid:ceramic_insulator",
+            "powergrid:guide_book"
     ));
 
     @Test
@@ -133,5 +137,31 @@ public class RecipeIntegrityTest {
             String wValue = key.get("W").getAsString();
             assertTrue(wValue.contains("treated_wood"), "Windmill rotor 'W' must refer to treated_wood");
         }
+    }
+
+    @Test
+    void testGuideBookRegistryEntries() {
+        List<GuideEntry> allEntries = GuideBookRegistry.getAllEntries();
+        assertFalse(allEntries.isEmpty(), "Guide entries should not be empty");
+        assertTrue(allEntries.size() >= 10, "Should have comprehensive guide entries");
+
+        for (GuideCategory cat : GuideCategory.values()) {
+            List<GuideEntry> catEntries = GuideBookRegistry.getEntriesByCategory(cat);
+            assertNotNull(catEntries);
+        }
+
+        assertNotNull(GuideBookRegistry.getEntry("water_wheel"));
+        assertNotNull(GuideBookRegistry.getEntry("windmill_rotor"));
+        assertNotNull(GuideBookRegistry.getEntry("solar_panels"));
+        assertNotNull(GuideBookRegistry.getEntry("voltage_tiers"));
+        assertNotNull(GuideBookRegistry.getEntry("poles_and_towers"));
+        assertNotNull(GuideBookRegistry.getEntry("connectors_and_relays"));
+        assertNotNull(GuideBookRegistry.getEntry("transformer"));
+        assertNotNull(GuideBookRegistry.getEntry("heavy_accumulator"));
+        assertNotNull(GuideBookRegistry.getEntry("breaker_switch"));
+        assertNotNull(GuideBookRegistry.getEntry("awg_cables"));
+        assertNotNull(GuideBookRegistry.getEntry("lighting_suite"));
+        assertNotNull(GuideBookRegistry.getEntry("engineering_tools"));
+        assertNotNull(GuideBookRegistry.getEntry("materials_crafting"));
     }
 }
