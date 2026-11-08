@@ -4,6 +4,15 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.7.5] - 2026-11-08
+
+### Fixed
+- **Item Display Names & Translation Keys in UI Tooltips**:
+  - Resolved an issue where block items (such as the LV Wire Relay, connectors, towers, transformers, and switches) displayed unlocalized variable-like translation keys (e.g., `item.powergrid.lv_wire_relay`) in creative tabs, inventories, and modded viewers.
+  - Added full dual registration in `en_us.json` ensuring both `item.powergrid.<id>` and `block.powergrid.<id>` translations exist for every single item and block in the mod.
+  - Configured all custom BlockItem implementations (`PowerGridBlockItem`, `StreetLightBlockItem`, `PowerCableBlockItem`, `WoodenWaterWheelBlockItem`, and `WindmillRotorBlockItem`) with `properties.useBlockDescriptionPrefix()` to match standard vanilla block item naming semantics.
+
+---
 ## [1.7.3] - 2026-11-08
 
 ### Added

@@ -15,7 +15,7 @@ public class PowerGridBlockItem extends BlockItem {
     private final Supplier<List<Component>> tooltipSupplier;
 
     public PowerGridBlockItem(Block block, Properties properties, Supplier<List<Component>> tooltipSupplier) {
-        super(block, properties);
+        super(block, properties.useBlockDescriptionPrefix());
         this.tooltipSupplier = tooltipSupplier;
     }
 

@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 public class WoodenWaterWheelBlockItem extends BlockItem {
     public WoodenWaterWheelBlockItem(Block block, Properties properties) {
-        super(block, properties);
+        super(block, properties.useBlockDescriptionPrefix());
     }
 
     @Override

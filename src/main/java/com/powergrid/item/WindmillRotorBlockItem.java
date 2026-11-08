@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 public class WindmillRotorBlockItem extends BlockItem {
     public WindmillRotorBlockItem(Block block, Properties properties) {
-        super(block, properties);
+        super(block, properties.useBlockDescriptionPrefix());
     }
 
     @Override

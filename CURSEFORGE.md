@@ -137,7 +137,15 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.7.3)
+## 📦 Recent Release Notes (v1.7.5)
+- **Item Display Names & Translation Keys in UI Tooltips**:
+  - Resolved an issue where block items (such as the LV Wire Relay, connectors, towers, transformers, and switches) displayed unlocalized variable-like translation keys (e.g., `item.powergrid.lv_wire_relay`) in creative tabs, inventories, and modded viewers.
+  - Added full dual registration in `en_us.json` ensuring both `item.powergrid.<id>` and `block.powergrid.<id>` translations exist for every single item and block in the mod.
+  - Configured all custom `BlockItem` implementations (`PowerGridBlockItem`, `StreetLightBlockItem`, `PowerCableBlockItem`, `WoodenWaterWheelBlockItem`, and `WindmillRotorBlockItem`) with `properties.useBlockDescriptionPrefix()` to match standard vanilla block item naming semantics.
+
+---
+
+## 📦 Previous Release Notes (v1.7.3)
 - **Refinery Mod Petroleum Tar AWG Cable Recipes**:
   - Registered `c:tar` common item tag in data (`data/c/tags/item/tar.json` and `data/c/tags/items/tar.json`) supporting `refinery:tar` (Petroleum Tar from Industrial Refinery) and Logistics tar.
   - Added alternative crafting recipes for all 4 indoor AWG power cables using Petroleum Tar as the insulating jacket:

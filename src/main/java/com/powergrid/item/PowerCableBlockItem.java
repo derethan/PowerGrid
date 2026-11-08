@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 
 public class PowerCableBlockItem extends BlockItem {
     public PowerCableBlockItem(Block block, Properties properties) {
-        super(block, properties);
+        super(block, properties.useBlockDescriptionPrefix());
     }
 
     @Override
