@@ -23,6 +23,7 @@ public class PowerCableBlockItem extends BlockItem {
             builder.accept(Component.translatable("tooltip.powergrid.cable_gauge", gauge.getDisplayName()));
             builder.accept(Component.translatable("tooltip.powergrid.cable_rate", String.format("%,d", gauge.getTransferRate())));
             builder.accept(Component.translatable("tooltip.powergrid.cable_buffer", String.format("%,d", gauge.getBufferCapacity())));
+            builder.accept(Component.translatable("tooltip.powergrid.cable_tip"));
         }
         super.appendHoverText(itemStack, context, display, builder, tooltipFlag);
     }

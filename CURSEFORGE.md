@@ -137,7 +137,24 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.7.0)
+## 📦 Recent Release Notes (v1.7.1)
+- **Comprehensive Item & Block Tooltips**:
+  - Added rich, multi-line, color-coded informational hover text across all blocks and items in Power Grid:
+    - **Poles & Crossarms**: Added functional tooltips for Treated Wood Poles, Steel Truss Towers, and Pole Crossarms detailing structural characteristics and right-click auto-extension.
+    - **Connectors & Relays**: Added voltage tier, throughput rating (400, 2,048, 16,384 FE/t), connection limits (4 for connectors, 8 for relays), and Engineer's Hammer mode-cycling tips.
+    - **Transformers & Switchgear**: Added substation converter specifications (64,000 FE buffer, 16,384 FE/t transfer) and High Voltage Breaker Switch circuit controls.
+    - **Heavy Accumulator Bank**: Added energy storage capacities (4,000,000 FE) and auto-discharge behavior.
+    - **Solar Panels**: Added daytime generation rates (1 FE/t, 2 FE/t for Gold, 5 FE/t for Diamond), buffer capacities, and array energy-balancing notes.
+    - **Work-Site & Architectural Illumination**: Added light level output (Level 15), right-click switch behavior, and redstone automation support for Tripod Work Lights, Ceiling Shop Lights, Wall Floodlights, and Carriage Lanterns.
+    - **Indoor Power Cables**: Added tooltip hints for configuring cable face connections using the Engineer's Hammer.
+    - **Insulated Wire Cutters**: Added secondary tooltip describing instant snipping and retrieval of indoor AWG power cables.
+    - **Engineering Insignia**: Added localized tooltip description for Grid Icon.
+- **PowerGridBlockItem Framework**:
+  - Reusable BlockItem implementation supporting localized tooltip lists and varargs components for seamless item registration.
+
+---
+
+## 📦 Previous Release Notes (v1.7.0)
 - **Grid Engineer's Field Manual (`powergrid:guide_book`)**:
   - Interactive industrial engineering guidebook matching the visual aesthetic and architecture of the *Refinery* and *Track and Trains* manuals.
   - **Industrial Dark Slate & Riveted Steel UI**: Modeled with riveted steel bezel borders, heavy brass corner brackets, and authentic book page-turn and button audio (`SoundEvents.BOOK_PAGE_TURN`, `SoundEvents.UI_BUTTON_CLICK`).

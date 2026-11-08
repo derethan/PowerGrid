@@ -92,6 +92,7 @@ public class WireCuttersItem extends Item {
     @Override
     public void appendHoverText(ItemStack itemStack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
         builder.accept(Component.translatable("tooltip.powergrid.cutters.desc"));
+        builder.accept(Component.translatable("tooltip.powergrid.cutters.desc_2"));
         super.appendHoverText(itemStack, context, display, builder, tooltipFlag);
     }
 }

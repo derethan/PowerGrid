@@ -43,41 +43,71 @@ public class PowerGridMod {
     // Poles & Structure
     public static final DeferredBlock<TreatedWoodPoleBlock> TREATED_WOOD_POLE = BLOCKS.registerBlock("treated_wood_pole",
             TreatedWoodPoleBlock::new);
-    public static final DeferredItem<BlockItem> TREATED_WOOD_POLE_ITEM = ITEMS.registerSimpleBlockItem("treated_wood_pole", TREATED_WOOD_POLE);
+    public static final DeferredItem<PowerGridBlockItem> TREATED_WOOD_POLE_ITEM = ITEMS.registerItem("treated_wood_pole",
+            p -> new PowerGridBlockItem(TREATED_WOOD_POLE.get(), p,
+                    Component.translatable("tooltip.powergrid.treated_wood_pole.desc_1"),
+                    Component.translatable("tooltip.powergrid.treated_wood_pole.desc_2")));
 
     public static final DeferredBlock<SteelTrussPoleBlock> STEEL_TRUSS_POLE = BLOCKS.registerBlock("steel_truss_pole",
             SteelTrussPoleBlock::new);
-    public static final DeferredItem<BlockItem> STEEL_TRUSS_POLE_ITEM = ITEMS.registerSimpleBlockItem("steel_truss_pole", STEEL_TRUSS_POLE);
+    public static final DeferredItem<PowerGridBlockItem> STEEL_TRUSS_POLE_ITEM = ITEMS.registerItem("steel_truss_pole",
+            p -> new PowerGridBlockItem(STEEL_TRUSS_POLE.get(), p,
+                    Component.translatable("tooltip.powergrid.steel_truss_pole.desc_1"),
+                    Component.translatable("tooltip.powergrid.steel_truss_pole.desc_2")));
 
     public static final DeferredBlock<PoleCrossarmBlock> POLE_CROSSARM = BLOCKS.registerBlock("pole_crossarm",
             PoleCrossarmBlock::new);
-    public static final DeferredItem<BlockItem> POLE_CROSSARM_ITEM = ITEMS.registerSimpleBlockItem("pole_crossarm", POLE_CROSSARM);
+    public static final DeferredItem<PowerGridBlockItem> POLE_CROSSARM_ITEM = ITEMS.registerItem("pole_crossarm",
+            p -> new PowerGridBlockItem(POLE_CROSSARM.get(), p,
+                    Component.translatable("tooltip.powergrid.pole_crossarm.desc_1"),
+                    Component.translatable("tooltip.powergrid.pole_crossarm.desc_2")));
 
     // Wire Connectors
     public static final DeferredBlock<WireConnectorBlock> LV_WIRE_CONNECTOR = BLOCKS.registerBlock("lv_wire_connector",
             p -> new WireConnectorBlock(WireType.LV, p));
-    public static final DeferredItem<BlockItem> LV_WIRE_CONNECTOR_ITEM = ITEMS.registerSimpleBlockItem("lv_wire_connector", LV_WIRE_CONNECTOR);
+    public static final DeferredItem<PowerGridBlockItem> LV_WIRE_CONNECTOR_ITEM = ITEMS.registerItem("lv_wire_connector",
+            p -> new PowerGridBlockItem(LV_WIRE_CONNECTOR.get(), p,
+                    Component.translatable("tooltip.powergrid.lv_wire_connector.desc"),
+                    Component.translatable("tooltip.powergrid.lv_wire_connector.specs"),
+                    Component.translatable("tooltip.powergrid.connector.mode_tip")));
 
     public static final DeferredBlock<WireConnectorBlock> MV_WIRE_CONNECTOR = BLOCKS.registerBlock("mv_wire_connector",
             p -> new WireConnectorBlock(WireType.MV, p));
-    public static final DeferredItem<BlockItem> MV_WIRE_CONNECTOR_ITEM = ITEMS.registerSimpleBlockItem("mv_wire_connector", MV_WIRE_CONNECTOR);
+    public static final DeferredItem<PowerGridBlockItem> MV_WIRE_CONNECTOR_ITEM = ITEMS.registerItem("mv_wire_connector",
+            p -> new PowerGridBlockItem(MV_WIRE_CONNECTOR.get(), p,
+                    Component.translatable("tooltip.powergrid.mv_wire_connector.desc"),
+                    Component.translatable("tooltip.powergrid.mv_wire_connector.specs"),
+                    Component.translatable("tooltip.powergrid.connector.mode_tip")));
 
     public static final DeferredBlock<WireConnectorBlock> HV_WIRE_CONNECTOR = BLOCKS.registerBlock("hv_wire_connector",
             p -> new WireConnectorBlock(WireType.HV, p));
-    public static final DeferredItem<BlockItem> HV_WIRE_CONNECTOR_ITEM = ITEMS.registerSimpleBlockItem("hv_wire_connector", HV_WIRE_CONNECTOR);
+    public static final DeferredItem<PowerGridBlockItem> HV_WIRE_CONNECTOR_ITEM = ITEMS.registerItem("hv_wire_connector",
+            p -> new PowerGridBlockItem(HV_WIRE_CONNECTOR.get(), p,
+                    Component.translatable("tooltip.powergrid.hv_wire_connector.desc"),
+                    Component.translatable("tooltip.powergrid.hv_wire_connector.specs"),
+                    Component.translatable("tooltip.powergrid.connector.mode_tip")));
 
     // Wire Relays
     public static final DeferredBlock<WireRelayBlock> LV_WIRE_RELAY = BLOCKS.registerBlock("lv_wire_relay",
             p -> new WireRelayBlock(WireType.LV, p));
-    public static final DeferredItem<BlockItem> LV_WIRE_RELAY_ITEM = ITEMS.registerSimpleBlockItem("lv_wire_relay", LV_WIRE_RELAY);
+    public static final DeferredItem<PowerGridBlockItem> LV_WIRE_RELAY_ITEM = ITEMS.registerItem("lv_wire_relay",
+            p -> new PowerGridBlockItem(LV_WIRE_RELAY.get(), p,
+                    Component.translatable("tooltip.powergrid.lv_wire_relay.desc"),
+                    Component.translatable("tooltip.powergrid.lv_wire_relay.specs")));
 
     public static final DeferredBlock<WireRelayBlock> MV_WIRE_RELAY = BLOCKS.registerBlock("mv_wire_relay",
             p -> new WireRelayBlock(WireType.MV, p));
-    public static final DeferredItem<BlockItem> MV_WIRE_RELAY_ITEM = ITEMS.registerSimpleBlockItem("mv_wire_relay", MV_WIRE_RELAY);
+    public static final DeferredItem<PowerGridBlockItem> MV_WIRE_RELAY_ITEM = ITEMS.registerItem("mv_wire_relay",
+            p -> new PowerGridBlockItem(MV_WIRE_RELAY.get(), p,
+                    Component.translatable("tooltip.powergrid.mv_wire_relay.desc"),
+                    Component.translatable("tooltip.powergrid.mv_wire_relay.specs")));
 
     public static final DeferredBlock<WireRelayBlock> HV_WIRE_RELAY = BLOCKS.registerBlock("hv_wire_relay",
             p -> new WireRelayBlock(WireType.HV, p));
-    public static final DeferredItem<BlockItem> HV_WIRE_RELAY_ITEM = ITEMS.registerSimpleBlockItem("hv_wire_relay", HV_WIRE_RELAY);
+    public static final DeferredItem<PowerGridBlockItem> HV_WIRE_RELAY_ITEM = ITEMS.registerItem("hv_wire_relay",
+            p -> new PowerGridBlockItem(HV_WIRE_RELAY.get(), p,
+                    Component.translatable("tooltip.powergrid.hv_wire_relay.desc"),
+                    Component.translatable("tooltip.powergrid.hv_wire_relay.specs")));
 
     // Indoor AWG Power Cables
     public static final DeferredBlock<PowerCableBlock> CABLE_18_GAUGE = BLOCKS.registerBlock("cable_18_gauge",
@@ -103,16 +133,28 @@ public class PowerGridMod {
     // Transformer & Switchgear
     public static final DeferredBlock<TransformerBlock> TRANSFORMER = BLOCKS.registerBlock("transformer",
             TransformerBlock::new);
-    public static final DeferredItem<BlockItem> TRANSFORMER_ITEM = ITEMS.registerSimpleBlockItem("transformer", TRANSFORMER);
+    public static final DeferredItem<PowerGridBlockItem> TRANSFORMER_ITEM = ITEMS.registerItem("transformer",
+            p -> new PowerGridBlockItem(TRANSFORMER.get(), p,
+                    Component.translatable("tooltip.powergrid.transformer.desc_1"),
+                    Component.translatable("tooltip.powergrid.transformer.desc_2"),
+                    Component.translatable("tooltip.powergrid.transformer.desc_3")));
 
     public static final DeferredBlock<BreakerSwitchBlock> BREAKER_SWITCH = BLOCKS.registerBlock("breaker_switch",
             BreakerSwitchBlock::new);
-    public static final DeferredItem<BlockItem> BREAKER_SWITCH_ITEM = ITEMS.registerSimpleBlockItem("breaker_switch", BREAKER_SWITCH);
+    public static final DeferredItem<PowerGridBlockItem> BREAKER_SWITCH_ITEM = ITEMS.registerItem("breaker_switch",
+            p -> new PowerGridBlockItem(BREAKER_SWITCH.get(), p,
+                    Component.translatable("tooltip.powergrid.breaker_switch.desc_1"),
+                    Component.translatable("tooltip.powergrid.breaker_switch.desc_2"),
+                    Component.translatable("tooltip.powergrid.breaker_switch.desc_3")));
 
     // Storage & Generation
     public static final DeferredBlock<HeavyAccumulatorBlock> HEAVY_ACCUMULATOR = BLOCKS.registerBlock("heavy_accumulator",
             HeavyAccumulatorBlock::new);
-    public static final DeferredItem<BlockItem> HEAVY_ACCUMULATOR_ITEM = ITEMS.registerSimpleBlockItem("heavy_accumulator", HEAVY_ACCUMULATOR);
+    public static final DeferredItem<PowerGridBlockItem> HEAVY_ACCUMULATOR_ITEM = ITEMS.registerItem("heavy_accumulator",
+            p -> new PowerGridBlockItem(HEAVY_ACCUMULATOR.get(), p,
+                    Component.translatable("tooltip.powergrid.heavy_accumulator.desc_1"),
+                    Component.translatable("tooltip.powergrid.heavy_accumulator.desc_2"),
+                    Component.translatable("tooltip.powergrid.heavy_accumulator.desc_3")));
 
     public static final DeferredBlock<WoodenWaterWheelBlock> WOODEN_WATER_WHEEL = BLOCKS.registerBlock("wooden_water_wheel",
             WoodenWaterWheelBlock::new);
@@ -127,32 +169,56 @@ public class PowerGridMod {
     // Solar Generation (1x, 2x Gold, 5x Diamond)
     public static final DeferredBlock<SolarPanelBlock> SOLAR_PANEL = BLOCKS.registerBlock("solar_panel",
             p -> new SolarPanelBlock(SolarPanelTier.STANDARD, p));
-    public static final DeferredItem<BlockItem> SOLAR_PANEL_ITEM = ITEMS.registerSimpleBlockItem("solar_panel", SOLAR_PANEL);
+    public static final DeferredItem<PowerGridBlockItem> SOLAR_PANEL_ITEM = ITEMS.registerItem("solar_panel",
+            p -> new PowerGridBlockItem(SOLAR_PANEL.get(), p,
+                    Component.translatable("tooltip.powergrid.solar_panel.desc_1"),
+                    Component.translatable("tooltip.powergrid.solar_panel.desc_2"),
+                    Component.translatable("tooltip.powergrid.solar_panel.desc_3")));
 
     public static final DeferredBlock<SolarPanelBlock> GOLD_SOLAR_PANEL = BLOCKS.registerBlock("gold_solar_panel",
             p -> new SolarPanelBlock(SolarPanelTier.GOLD, p));
-    public static final DeferredItem<BlockItem> GOLD_SOLAR_PANEL_ITEM = ITEMS.registerSimpleBlockItem("gold_solar_panel", GOLD_SOLAR_PANEL);
+    public static final DeferredItem<PowerGridBlockItem> GOLD_SOLAR_PANEL_ITEM = ITEMS.registerItem("gold_solar_panel",
+            p -> new PowerGridBlockItem(GOLD_SOLAR_PANEL.get(), p,
+                    Component.translatable("tooltip.powergrid.gold_solar_panel.desc_1"),
+                    Component.translatable("tooltip.powergrid.gold_solar_panel.desc_2"),
+                    Component.translatable("tooltip.powergrid.gold_solar_panel.desc_3")));
 
     public static final DeferredBlock<SolarPanelBlock> DIAMOND_SOLAR_PANEL = BLOCKS.registerBlock("diamond_solar_panel",
             p -> new SolarPanelBlock(SolarPanelTier.DIAMOND, p));
-    public static final DeferredItem<BlockItem> DIAMOND_SOLAR_PANEL_ITEM = ITEMS.registerSimpleBlockItem("diamond_solar_panel", DIAMOND_SOLAR_PANEL);
+    public static final DeferredItem<PowerGridBlockItem> DIAMOND_SOLAR_PANEL_ITEM = ITEMS.registerItem("diamond_solar_panel",
+            p -> new PowerGridBlockItem(DIAMOND_SOLAR_PANEL.get(), p,
+                    Component.translatable("tooltip.powergrid.diamond_solar_panel.desc_1"),
+                    Component.translatable("tooltip.powergrid.diamond_solar_panel.desc_2"),
+                    Component.translatable("tooltip.powergrid.diamond_solar_panel.desc_3")));
 
     // Architectural & Work Site Lighting
     public static final DeferredBlock<TripodWorkLightBlock> TRIPOD_WORK_LIGHT = BLOCKS.registerBlock("tripod_work_light",
             TripodWorkLightBlock::new);
-    public static final DeferredItem<BlockItem> TRIPOD_WORK_LIGHT_ITEM = ITEMS.registerSimpleBlockItem("tripod_work_light", TRIPOD_WORK_LIGHT);
+    public static final DeferredItem<PowerGridBlockItem> TRIPOD_WORK_LIGHT_ITEM = ITEMS.registerItem("tripod_work_light",
+            p -> new PowerGridBlockItem(TRIPOD_WORK_LIGHT.get(), p,
+                    Component.translatable("tooltip.powergrid.tripod_work_light.desc_1"),
+                    Component.translatable("tooltip.powergrid.tripod_work_light.desc_2")));
 
     public static final DeferredBlock<CeilingShopLightBlock> CEILING_SHOP_LIGHT = BLOCKS.registerBlock("ceiling_shop_light",
             CeilingShopLightBlock::new);
-    public static final DeferredItem<BlockItem> CEILING_SHOP_LIGHT_ITEM = ITEMS.registerSimpleBlockItem("ceiling_shop_light", CEILING_SHOP_LIGHT);
+    public static final DeferredItem<PowerGridBlockItem> CEILING_SHOP_LIGHT_ITEM = ITEMS.registerItem("ceiling_shop_light",
+            p -> new PowerGridBlockItem(CEILING_SHOP_LIGHT.get(), p,
+                    Component.translatable("tooltip.powergrid.ceiling_shop_light.desc_1"),
+                    Component.translatable("tooltip.powergrid.ceiling_shop_light.desc_2")));
 
     public static final DeferredBlock<WallFloodlightBlock> WALL_FLOODLIGHT = BLOCKS.registerBlock("wall_floodlight",
             WallFloodlightBlock::new);
-    public static final DeferredItem<BlockItem> WALL_FLOODLIGHT_ITEM = ITEMS.registerSimpleBlockItem("wall_floodlight", WALL_FLOODLIGHT);
+    public static final DeferredItem<PowerGridBlockItem> WALL_FLOODLIGHT_ITEM = ITEMS.registerItem("wall_floodlight",
+            p -> new PowerGridBlockItem(WALL_FLOODLIGHT.get(), p,
+                    Component.translatable("tooltip.powergrid.wall_floodlight.desc_1"),
+                    Component.translatable("tooltip.powergrid.wall_floodlight.desc_2")));
 
     public static final DeferredBlock<CarriageLanternBlock> CARRIAGE_LANTERN = BLOCKS.registerBlock("carriage_lantern",
             CarriageLanternBlock::new);
-    public static final DeferredItem<BlockItem> CARRIAGE_LANTERN_ITEM = ITEMS.registerSimpleBlockItem("carriage_lantern", CARRIAGE_LANTERN);
+    public static final DeferredItem<PowerGridBlockItem> CARRIAGE_LANTERN_ITEM = ITEMS.registerItem("carriage_lantern",
+            p -> new PowerGridBlockItem(CARRIAGE_LANTERN.get(), p,
+                    Component.translatable("tooltip.powergrid.carriage_lantern.desc_1"),
+                    Component.translatable("tooltip.powergrid.carriage_lantern.desc_2")));
 
     // Street Lighting
     public static final DeferredBlock<StreetLightBlock> STREET_LIGHT = BLOCKS.registerBlock("street_light",
@@ -162,20 +228,15 @@ public class PowerGridMod {
 
     public static final DeferredBlock<PoleStreetLightBlock> POLE_STREET_LIGHT = BLOCKS.registerBlock("pole_street_light",
             PoleStreetLightBlock::new);
-    public static final DeferredItem<BlockItem> POLE_STREET_LIGHT_ITEM = ITEMS.registerItem("pole_street_light",
-            p -> new BlockItem(POLE_STREET_LIGHT.get(), p) {
-                @Override
-                public void appendHoverText(net.minecraft.world.item.ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, net.minecraft.world.item.component.TooltipDisplay display, Consumer<Component> tooltip, net.minecraft.world.item.TooltipFlag flag) {
-                    tooltip.accept(Component.translatable("tooltip.powergrid.pole_street_light.desc"));
-                    super.appendHoverText(stack, context, display, tooltip, flag);
-                }
-            });
+    public static final DeferredItem<PowerGridBlockItem> POLE_STREET_LIGHT_ITEM = ITEMS.registerItem("pole_street_light",
+            p -> new PowerGridBlockItem(POLE_STREET_LIGHT.get(), p,
+                    Component.translatable("tooltip.powergrid.pole_street_light.desc")));
 
     // === Tools & Usable Items ===
     public static final DeferredItem<GuideBookItem> GUIDE_BOOK = ITEMS.registerItem("guide_book",
             GuideBookItem::new);
-    public static final DeferredItem<Item> GRID_ICON = ITEMS.registerItem("grid_icon",
-            Item::new);
+    public static final DeferredItem<MaterialItem> GRID_ICON = ITEMS.registerItem("grid_icon",
+            p -> new MaterialItem(p, "tooltip.powergrid.grid_icon.desc"));
     public static final DeferredItem<EngineerHammerItem> ENGINEER_HAMMER = ITEMS.registerItem("engineer_hammer",
             EngineerHammerItem::new);
     public static final DeferredItem<VoltmeterItem> VOLTMETER = ITEMS.registerItem("voltmeter",

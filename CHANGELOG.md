@@ -4,6 +4,28 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.7.1] - 2026-11-07
+
+### Added
+- **Comprehensive Item & Block Tooltips**:
+  - Added rich, multi-line, color-coded informational tooltips to all blocks and items across Power Grid:
+    - **Poles & Crossarms**: Added functional tooltips for Treated Wood Poles, Steel Truss Towers, and Pole Crossarms detailing structural characteristics and right-click auto-extension.
+    - **Connectors & Relays**: Added voltage tier, throughput rating (400, 2,048, 16,384 FE/t), connection limits (4 for connectors, 8 for relays), and Engineer's Hammer mode-cycling tips.
+    - **Transformers & Switchgear**: Added substation converter specifications (64,000 FE buffer, 16,384 FE/t transfer) and High Voltage Breaker Switch circuit controls.
+    - **Heavy Accumulator Bank**: Added energy storage capacities (4,000,000 FE) and auto-discharge behavior.
+    - **Solar Panels**: Added daytime generation rates (1 FE/t, 2 FE/t for Gold, 5 FE/t for Diamond), buffer capacities, and array energy-balancing notes.
+    - **Work-Site & Architectural Illumination**: Added light level output (Level 15), right-click switch behavior, and redstone automation support for Tripod Work Lights, Ceiling Shop Lights, Wall Floodlights, and Carriage Lanterns.
+    - **Indoor Power Cables**: Added tooltip hints for configuring cable face connections using the Engineer's Hammer.
+    - **Insulated Wire Cutters**: Added secondary tooltip describing instant snipping and retrieval of indoor AWG power cables.
+    - **Engineering Insignia**: Added localized tooltip description for Grid Icon.
+- **PowerGridBlockItem Framework**:
+  - Created reusable `PowerGridBlockItem` component supporting static or supplier-based localized tooltips with varargs convenience constructors.
+
+### Changed
+- Standardized item hover text across the mod to match the dark industrial aesthetic of the Grid Engineer's Field Manual.
+
+---
+
 ## [1.7.0] - 2026-11-07
 
 ### Added
