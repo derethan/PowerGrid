@@ -164,4 +164,42 @@ public class RecipeIntegrityTest {
         assertNotNull(GuideBookRegistry.getEntry("engineering_tools"));
         assertNotNull(GuideBookRegistry.getEntry("materials_crafting"));
     }
+
+    @Test
+    void testTarCableRecipesAndTag() throws Exception {
+        // Test tag files exist and include refinery:tar
+        File tagItem = new File("src/main/resources/data/c/tags/item/tar.json");
+        File tagItems = new File("src/main/resources/data/c/tags/items/tar.json");
+        assertTrue(tagItem.exists(), "c/tags/item/tar.json must exist");
+        assertTrue(tagItems.exists(), "c/tags/items/tar.json must exist");
+
+        try (FileReader reader = new FileReader(tagItem)) {
+            JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
+            assertTrue(obj.has("values"));
+            boolean hasRefineryTar = obj.getAsJsonArray("values").toString().contains("refinery:tar");
+            assertTrue(hasRefineryTar, "Tag must include refinery:tar");
+        }
+
+        // Test tar cable recipes
+        String[] tarRecipes = {
+                "cable_18_gauge_from_tar.json",
+                "cable_18_gauge_from_wire_tar.json",
+                "cable_16_gauge_from_tar.json",
+                "cable_14_gauge_from_tar.json",
+                "cable_12_gauge_from_tar.json",
+                "cable_12_gauge_from_wire_tar.json"
+        };
+
+        for (String recipeName : tarRecipes) {
+            File recipeFile = new File(RECIPE_DIR, recipeName);
+            assertTrue(recipeFile.exists(), recipeName + " must exist");
+            try (FileReader reader = new FileReader(recipeFile)) {
+                JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
+                assertTrue(obj.has("neoforge:conditions"), recipeName + " must have neoforge:conditions");
+                JsonObject key = obj.getAsJsonObject("key");
+                assertTrue(key.has("T"), recipeName + " must have 'T' key for tar");
+                assertEquals("#c:tar", key.get("T").getAsString(), recipeName + " 'T' must refer to #c:tar");
+            }
+        }
+    }
 }

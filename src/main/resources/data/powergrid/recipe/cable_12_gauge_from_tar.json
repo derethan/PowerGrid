@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:tar"
+      }
+    }
+  ],
+  "result": {
+    "id": "powergrid:cable_12_gauge",
+    "count": 8
+  },
+  "category": "misc",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "TTT",
+    "GGG",
+    "TTT"
+  ],
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "T": "#c:tar"
+  }
+}

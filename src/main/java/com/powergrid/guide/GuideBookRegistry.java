@@ -432,19 +432,19 @@ public class GuideBookRegistry {
                     new GuideRecipe("18 AWG Cable (Copper - 128 FE/t)",
                             List.of(() -> mcItem("dried_kelp", 6), () -> mcItem("copper_ingot", 3)),
                             List.of(() -> new ItemStack(PowerGridMod.CABLE_18_GAUGE_ITEM.get(), 8)),
-                            "KKK / CCC / KKK with Dried Kelp or Rubber"),
+                            "KKK / CCC / KKK with Dried Kelp, Rubber, or Tar"),
                     new GuideRecipe("16 AWG Cable (Iron - 512 FE/t)",
                             List.of(() -> mcItem("dried_kelp", 6), () -> mcItem("iron_ingot", 3)),
                             List.of(() -> new ItemStack(PowerGridMod.CABLE_16_GAUGE_ITEM.get(), 8)),
-                            "KKK / III / KKK with Dried Kelp or Rubber"),
+                            "KKK / III / KKK with Dried Kelp, Rubber, or Tar"),
                     new GuideRecipe("14 AWG Cable (Steel - 2,048 FE/t)",
                             List.of(() -> mcItem("dried_kelp", 6), () -> new ItemStack(PowerGridMod.STEEL_STRAND.get(), 3)),
                             List.of(() -> new ItemStack(PowerGridMod.CABLE_14_GAUGE_ITEM.get(), 8)),
-                            "KKK / SSS / KKK with Steel Strands or Steel Ingots"),
+                            "KKK / SSS / KKK with Steel Strands, Kelp, Rubber, or Tar"),
                     new GuideRecipe("12 AWG Cable (Gold - 8,192 FE/t)",
                             List.of(() -> mcItem("dried_kelp", 6), () -> mcItem("gold_ingot", 3)),
                             List.of(() -> new ItemStack(PowerGridMod.CABLE_12_GAUGE_ITEM.get(), 8)),
-                            "KKK / GGG / KKK with Dried Kelp or Rubber")
+                            "KKK / GGG / KKK with Dried Kelp, Rubber, or Tar")
             );
 
             register(new GuideEntry(

@@ -4,6 +4,22 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.7.2] - 2026-11-07
+
+### Added
+- **Refinery Mod Petroleum Tar AWG Cable Recipes**:
+  - Registered `c:tar` common item tag in data (`data/c/tags/item/tar.json` and `data/c/tags/items/tar.json`) with support for `refinery:tar` (Petroleum Tar from Industrial Refinery) and Logistics tar.
+  - Added alternative crafting recipes for all 4 indoor AWG power cables using Petroleum Tar as the insulating jacket:
+    - **18 AWG Copper Power Cable**: Craftable with 6x Petroleum Tar (`#c:tar`) and 3x Copper Ingot or Copper Wire Strand (`cable_18_gauge_from_tar` and `cable_18_gauge_from_wire_tar`).
+    - **16 AWG Iron Power Cable**: Craftable with 6x Petroleum Tar (`#c:tar`) and 3x Iron Ingot (`cable_16_gauge_from_tar`).
+    - **14 AWG Steel Power Cable**: Craftable with 6x Petroleum Tar (`#c:tar`) and 3x Reinforced Steel Strand or Steel Ingot (`cable_14_gauge_from_tar`).
+    - **12 AWG Gold Power Cable**: Craftable with 6x Petroleum Tar (`#c:tar`) and 3x Gold Ingot or Electrum Wire Strand (`cable_12_gauge_from_tar` and `cable_12_gauge_from_wire_tar`).
+  - Added wire strand crafting recipes with rubber insulation for 18 AWG and 12 AWG cables (`cable_18_gauge_from_wire_rubber` and `cable_12_gauge_from_wire_rubber`).
+  - Implemented safe conditional recipe gating (`neoforge:conditions` with `neoforge:tag_empty` check on `c:tar`) so recipes automatically activate when Refinery is installed without throwing missing tag errors in vanilla environments.
+  - Updated the in-game Grid Engineer's Field Manual cable recipe codex cards to describe crafting cables with Dried Kelp, Rubber, or Petroleum Tar.
+
+---
+
 ## [1.7.1] - 2026-11-07
 
 ### Added

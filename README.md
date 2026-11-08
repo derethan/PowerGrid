@@ -335,10 +335,10 @@ Following standard electrical engineering conventions, lower AWG numbers denote 
 | **Electrum Wire Strand** | `GC` (Shapeless) | 1x Gold Ingot (`G`), 1x Copper Ingot (`C`) | 4x Electrum Wire Strand |
 | **Reinforced Steel Strand** | Blasting / Smelting / Crafting | 1x Iron Ingot (Furnace/Blast) or 3x Iron + 1x Coal | 1x (or 4x) Steel Strand |
 | **Ceramic Insulator**    | ` C ` / ` T ` / ` I ` | 1x Clay (`C`), 1x Terracotta (`T`), 1x Iron Ingot (`I`) | 4x Ceramic Insulator |
-| **18 AWG Power Cable**   | `KKK` / `CCC` / `KKK` | 3x Copper Ingot or Wire (`C`), 6x Kelp / Rubber (`K`) | 8x 18 AWG Cable |
-| **16 AWG Power Cable**   | `KKK` / `III` / `KKK` | 3x Iron Ingot (`I`), 6x Kelp / Rubber (`K`) | 8x 16 AWG Cable |
-| **14 AWG Power Cable**   | `KKK` / `SSS` / `KKK` | 3x Steel Strand or Steel Ingot (`S`), 6x Kelp / Rubber (`K`) | 8x 14 AWG Cable |
-| **12 AWG Power Cable**   | `KKK` / `GGG` / `KKK` | 3x Gold Ingot or Electrum Wire (`G`), 6x Kelp / Rubber (`K`) | 8x 12 AWG Cable |
+| **18 AWG Power Cable**   | `KKK` / `CCC` / `KKK` | 3x Copper Ingot or Wire (`C`), 6x Kelp / Rubber / Tar (`K`) | 8x 18 AWG Cable |
+| **16 AWG Power Cable**   | `KKK` / `III` / `KKK` | 3x Iron Ingot (`I`), 6x Kelp / Rubber / Tar (`K`) | 8x 16 AWG Cable |
+| **14 AWG Power Cable**   | `KKK` / `SSS` / `KKK` | 3x Steel Strand or Steel Ingot (`S`), 6x Kelp / Rubber / Tar (`K`) | 8x 14 AWG Cable |
+| **12 AWG Power Cable**   | `KKK` / `GGG` / `KKK` | 3x Gold Ingot or Electrum Wire (`G`), 6x Kelp / Rubber / Tar (`K`) | 8x 12 AWG Cable |
 | **LV Copper Wire Coil**  | ` C ` / `CSC` / ` C ` | 4x Copper Ingot or Wire (`C`), 1x Stick (`S`) | 4x LV Wire Coil |
 | **MV Electrum Wire Coil**| ` G ` / `CSC` / ` G ` | 2x Gold Ingot (`G`), 2x Copper Ingot (`C`) (or 4x Electrum Wire), 1x Stick (`S`) | 4x MV Wire Coil |
 | **HV Steel-Core Coil**   | ` I ` / `ISI` / ` I ` | 4x Iron Ingot or Steel Strand (`I`), 1x Stick (`S`) | 4x HV Cable Coil |
@@ -375,6 +375,7 @@ Power Grid is built directly on NeoForge's official **Transfer API**:
 - **Forge Energy Standard**: Any block registered with `Capabilities.Energy.BLOCK` can directly receive or supply power via `WireConnectorBlock` or **Indoor AWG Power Cables**.
 - **Refinery Mod Synergy**:
   - Connect HV Wire Connectors or indoor AWG cables directly to *Industrial Refinery* Diesel Generators, Steam Turbines, or industrial machines to export or supply power seamlessly.
+  - Insulate and craft all 4 indoor AWG power cable tiers (18, 16, 14, and 12 AWG) using Petroleum Tar (`refinery:tar` / `#c:tar`) from the *Industrial Refinery* mod as an alternative weather-resistant jacket.
   - Conceal indoor AWG cables within walls and floors using *Industrial Refinery* Pipe Facades (Solid Panels and Hollow Pass-Through Frames) with full dynamic textures, lighting, and collision.
   - Use the Refinery Wrench to toggle cable connections or remove attached facades.
 - **Logistics Mod Synergy**: Feed automation machinery, item pipes, and craft tables directly from indoor AWG cables or overhead drop lines.

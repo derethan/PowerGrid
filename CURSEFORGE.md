@@ -132,12 +132,26 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ## 🛠️ Mod Compatibility & Integration
 - **Universal Forge Energy (FE)**: Built natively on NeoForge's Transfer API. Fully compatible with any mod supporting standard FE capabilities (`Capabilities.Energy.BLOCK`).
-- **Industrial Refinery Synergy**: Connect HV Wire Connectors or AWG cables directly to refinery diesel generators or steam boilers to power your entire base from a central power station. Conceal AWG cables using *Industrial Refinery* Pipe Facades (both Solid and Hollow frames) with dynamic texture mapping and collision bounding boxes. Configure cables using either the Engineer's Hammer or the Refinery Wrench.
+- **Industrial Refinery Synergy**: Connect HV Wire Connectors or AWG cables directly to refinery diesel generators or steam boilers to power your entire base from a central power station. Insulate and craft all 4 indoor AWG power cable tiers using Petroleum Tar (`refinery:tar` / `#c:tar`) as a waterproof jacket. Conceal AWG cables using *Industrial Refinery* Pipe Facades (both Solid and Hollow frames) with dynamic texture mapping and collision bounding boxes. Configure cables using either the Engineer's Hammer or the Refinery Wrench.
 - **Logistics Mod Synergy**: Feed automation sorters, item pipes, and craft tables directly from indoor AWG cables or overhead wire drop lines.
 
 ---
 
-## 📦 Recent Release Notes (v1.7.1)
+## 📦 Recent Release Notes (v1.7.2)
+- **Refinery Mod Petroleum Tar AWG Cable Recipes**:
+  - Registered `c:tar` common item tag in data (`data/c/tags/item/tar.json` and `data/c/tags/items/tar.json`) supporting `refinery:tar` (Petroleum Tar from Industrial Refinery) and Logistics tar.
+  - Added alternative crafting recipes for all 4 indoor AWG power cables using Petroleum Tar as the insulating jacket:
+    - **18 AWG Copper Power Cable**: Craftable with 6x Petroleum Tar (`#c:tar`) and 3x Copper Ingot or Copper Wire Strand (`cable_18_gauge_from_tar` and `cable_18_gauge_from_wire_tar`).
+    - **16 AWG Iron Power Cable**: Craftable with 6x Petroleum Tar (`#c:tar`) and 3x Iron Ingot (`cable_16_gauge_from_tar`).
+    - **14 AWG Steel Power Cable**: Craftable with 6x Petroleum Tar (`#c:tar`) and 3x Reinforced Steel Strand or Steel Ingot (`cable_14_gauge_from_tar`).
+    - **12 AWG Gold Power Cable**: Craftable with 6x Petroleum Tar (`#c:tar`) and 3x Gold Ingot or Electrum Wire Strand (`cable_12_gauge_from_tar` and `cable_12_gauge_from_wire_tar`).
+  - Added wire strand crafting recipes with rubber insulation for 18 AWG and 12 AWG cables (`cable_18_gauge_from_wire_rubber` and `cable_12_gauge_from_wire_rubber`).
+  - Implemented safe conditional recipe gating (`neoforge:conditions` with `neoforge:tag_empty` check on `c:tar`) so recipes automatically activate when Refinery is installed without throwing missing tag errors in vanilla environments.
+  - Updated the in-game Grid Engineer's Field Manual cable recipe codex cards to describe crafting cables with Dried Kelp, Rubber, or Petroleum Tar.
+
+---
+
+## 📦 Previous Release Notes (v1.7.1)
 - **Comprehensive Item & Block Tooltips**:
   - Added rich, multi-line, color-coded informational hover text across all blocks and items in Power Grid:
     - **Poles & Crossarms**: Added functional tooltips for Treated Wood Poles, Steel Truss Towers, and Pole Crossarms detailing structural characteristics and right-click auto-extension.

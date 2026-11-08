@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/rubber"
+      }
+    }
+  ],
+  "result": {
+    "id": "powergrid:cable_18_gauge",
+    "count": 8
+  },
+  "category": "misc",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RRR",
+    "WWW",
+    "RRR"
+  ],
+  "key": {
+    "W": "powergrid:copper_wire",
+    "R": "#c:ingots/rubber"
+  }
+}
