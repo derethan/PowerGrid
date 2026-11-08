@@ -137,7 +137,7 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.7.2)
+## 📦 Recent Release Notes (v1.7.3)
 - **Refinery Mod Petroleum Tar AWG Cable Recipes**:
   - Registered `c:tar` common item tag in data (`data/c/tags/item/tar.json` and `data/c/tags/items/tar.json`) supporting `refinery:tar` (Petroleum Tar from Industrial Refinery) and Logistics tar.
   - Added alternative crafting recipes for all 4 indoor AWG power cables using Petroleum Tar as the insulating jacket:

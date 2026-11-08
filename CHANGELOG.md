@@ -4,7 +4,7 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
-## [1.7.2] - 2026-11-07
+## [1.7.3] - 2026-11-08
 
 ### Added
 - **Refinery Mod Petroleum Tar AWG Cable Recipes**:
