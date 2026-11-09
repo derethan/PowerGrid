@@ -248,10 +248,29 @@ public class CableNetworkRouter {
 
                 int maxPull = Math.min(remaining, cable.getGauge().getTransferRate());
 
-                // Simulate first to see if any sinks can actually accept energy from this source
+                // Probe sinks first to verify demand before simulating extraction from the source generator
+                int totalSinkCapacity = 0;
+                try (Transaction probeTx = Transaction.openRoot()) {
+                    int probeRemaining = maxPull;
+                    for (FoundDevice sink : sinks) {
+                        if (probeRemaining <= 0) break;
+                        int maxForSink = Math.min(probeRemaining, sink.bottleneck);
+                        if (maxForSink <= 0) continue;
+                        int accepted = sink.target.handler().insert(maxForSink, probeTx);
+                        if (accepted > 0) {
+                            totalSinkCapacity += accepted;
+                            probeRemaining -= accepted;
+                        }
+                    }
+                }
+
+                if (totalSinkCapacity <= 0) continue;
+
+                int toPull = Math.min(maxPull, totalSinkCapacity);
+                // Simulate to verify how much energy the source generator can actually supply
                 int simulatedDemand = 0;
                 try (Transaction simTx = Transaction.openRoot()) {
-                    int simExtracted = neighborHandler.extract(maxPull, simTx);
+                    int simExtracted = neighborHandler.extract(toPull, simTx);
                     if (simExtracted > 0) {
                         simulatedDemand = routeEnergy(level, cable, dir, simExtracted, simTx);
                     }

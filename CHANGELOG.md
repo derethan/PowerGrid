@@ -4,6 +4,19 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.7.6] - 2026-11-08
+
+### Fixed
+- **AWG Cable Energy Router Generator Demand Probing (CableNetworkRouter)**:
+  - Fixed an issue where distributeFromCable simulated extraction from attached power sources (such as steam turbines, diesel generators, or batteries) on every tick before verifying whether any connected sinks had available storage capacity.
+  - Sinks are now probed first; if all connected energy storage banks (such as the Heavy Accumulator Bank) are fully charged and the grid has 0 demand, the router immediately skips without querying or simulating extraction from the generator.
+  - Prevents continuous simulation calls that could trigger ghost-drain bugs in attached power generators when connected to fully-charged energy storage.
+- **Solar Panel Energy Storage Transaction Handling (SolarPanelBlockEntity)**:
+  - Replaced manual state assignments in insert and xtract with NeoForge's standard onEnergyChanged(int previousAmount) handler on SimpleEnergyHandler.
+  - Ensures simulated transactions automatically roll back without leaving phantom energy modifications or corrupting solar panel energy storage.
+
+---
+
 ## [1.7.5] - 2026-11-08
 
 ### Fixed

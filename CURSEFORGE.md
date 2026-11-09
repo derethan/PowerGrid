@@ -137,7 +137,16 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.7.5)
+## 📦 Recent Release Notes (v1.7.6)
+- **AWG Cable Energy Router Generator Demand Probing**:
+  - distributeFromCable now probes connected sinks for available storage capacity *before* querying or simulating extraction from attached generators or power sources.
+  - When energy storage banks (such as the Heavy Accumulator Bank) are fully charged, cables now immediately skip extraction without placing simulated load on attached generators, eliminating unnecessary tick overhead and preventing ghost energy loss bugs.
+- **Solar Panel Energy Storage Transaction Handling**:
+  - Replaced custom insert/xtract overrides with NeoForge's standard onEnergyChanged hook on SimpleEnergyHandler, ensuring simulated transactions cleanly roll back.
+
+---
+
+## 📦 Previous Release Notes (v1.7.5)
 - **Item Display Names & Translation Keys in UI Tooltips**:
   - Resolved an issue where block items (such as the LV Wire Relay, connectors, towers, transformers, and switches) displayed unlocalized variable-like translation keys (e.g., `item.powergrid.lv_wire_relay`) in creative tabs, inventories, and modded viewers.
   - Added full dual registration in `en_us.json` ensuring both `item.powergrid.<id>` and `block.powergrid.<id>` translations exist for every single item and block in the mod.

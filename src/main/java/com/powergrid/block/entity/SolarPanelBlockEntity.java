@@ -41,24 +41,9 @@ public class SolarPanelBlockEntity extends BlockEntity {
         int maxRate = this.tier.getMaxExportRate();
         this.energyStorage = new SimpleEnergyHandler(cap, maxRate, maxRate) {
             @Override
-            public void set(int amount) {
-                super.set(amount);
-                SolarPanelBlockEntity.this.energy = amount;
+            protected void onEnergyChanged(int previousAmount) {
+                SolarPanelBlockEntity.this.energy = this.energy;
                 setChanged();
-            }
-
-            @Override
-            public int insert(int amount, TransactionContext transaction) {
-                int inserted = super.insert(amount, transaction);
-                SolarPanelBlockEntity.this.energy = this.energy;
-                return inserted;
-            }
-
-            @Override
-            public int extract(int amount, TransactionContext transaction) {
-                int extracted = super.extract(amount, transaction);
-                SolarPanelBlockEntity.this.energy = this.energy;
-                return extracted;
             }
         };
     }
