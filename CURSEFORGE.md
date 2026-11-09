@@ -137,7 +137,7 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 
 ---
 
-## 📦 Recent Release Notes (v1.7.6)
+## 📦 Recent Release Notes (v1.7.7)
 - **AWG Cable Energy Router Generator Demand Probing**:
   - distributeFromCable now probes connected sinks for available storage capacity *before* querying or simulating extraction from attached generators or power sources.
   - When energy storage banks (such as the Heavy Accumulator Bank) are fully charged, cables now immediately skip extraction without placing simulated load on attached generators, eliminating unnecessary tick overhead and preventing ghost energy loss bugs.

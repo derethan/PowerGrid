@@ -4,7 +4,14 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
-## [1.7.6] - 2026-11-08
+## [1.7.7] - 2026-11-08
+
+### Changed
+- Mod update
+
+---
+
+## [1.7.7] - 2026-11-08
 
 ### Fixed
 - **AWG Cable Energy Router Generator Demand Probing (CableNetworkRouter)**:
