@@ -1,9 +1,11 @@
 package com.powergrid.item;
 
+import com.powergrid.grid.GridNetworkSavedData;
 import com.powergrid.grid.IWireNode;
 import com.powergrid.grid.WireType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -100,12 +102,20 @@ public class WireCoilItem extends Item {
             }
 
             BlockEntity startBE = level.getBlockEntity(startPos);
-            if (!(startBE instanceof IWireNode startNode)) {
+            IWireNode startNode = (startBE instanceof IWireNode in) ? in : null;
+            GridNetworkSavedData.SavedNode savedStart = null;
+
+            if (startNode == null && level instanceof ServerLevel serverLevel) {
+                savedStart = GridNetworkSavedData.get(serverLevel).getNode(startPos);
+            }
+
+            if (startNode == null && savedStart == null) {
                 player.sendSystemMessage(Component.translatable("message.powergrid.wire_invalid_start"));
                 return InteractionResult.FAIL;
             }
 
-            if (!startNode.isWireTypeSupported(this.wireType) || !targetNode.isWireTypeSupported(this.wireType)) {
+            boolean startSupports = startNode != null ? startNode.isWireTypeSupported(this.wireType) : (savedStart.wireType == this.wireType || savedStart.nodeType == GridNetworkSavedData.NodeType.BREAKER || savedStart.nodeType == GridNetworkSavedData.NodeType.POLE_LIGHT);
+            if (!startSupports || !targetNode.isWireTypeSupported(this.wireType)) {
                 player.sendSystemMessage(Component.translatable("message.powergrid.cannot_connect_tier", this.wireType.getDisplayName()));
                 return InteractionResult.FAIL;
             }
@@ -116,13 +126,22 @@ public class WireCoilItem extends Item {
                 return InteractionResult.FAIL;
             }
 
-            if (!startNode.canConnectWire(this.wireType, pos) || !targetNode.canConnectWire(this.wireType, startPos)) {
+            if (!targetNode.canConnectWire(this.wireType, startPos)) {
+                player.sendSystemMessage(Component.translatable("message.powergrid.cannot_connect"));
+                return InteractionResult.FAIL;
+            }
+
+            if (startNode != null && !startNode.canConnectWire(this.wireType, pos)) {
                 player.sendSystemMessage(Component.translatable("message.powergrid.cannot_connect"));
                 return InteractionResult.FAIL;
             }
 
             // Establish connection on both ends
-            startNode.addConnection(pos, this.wireType, dist);
+            if (startNode != null) {
+                startNode.addConnection(pos, this.wireType, dist);
+            } else if (level instanceof ServerLevel serverLevel) {
+                GridNetworkSavedData.get(serverLevel).addWireConnection(startPos, pos, this.wireType, dist);
+            }
             targetNode.addConnection(startPos, this.wireType, dist);
 
             level.playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.6f, 1.5f);

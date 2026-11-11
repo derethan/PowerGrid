@@ -2,6 +2,9 @@ package com.powergrid.block.entity;
 
 import com.powergrid.PowerGridMod;
 import com.powergrid.block.PoleStreetLightBlock;
+import com.powergrid.grid.ConnectorMode;
+import com.powergrid.grid.EnergyGridManager;
+import com.powergrid.grid.GridNetworkSavedData;
 import com.powergrid.grid.IWireNode;
 import com.powergrid.grid.WireConnection;
 import com.powergrid.grid.WireType;
@@ -39,6 +42,21 @@ public class PoleStreetLightBlockEntity extends BlockEntity implements IWireNode
         super(PowerGridMod.POLE_STREET_LIGHT_BE.get(), pos, state);
     }
 
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if (this.level instanceof ServerLevel serverLevel) {
+            GridNetworkSavedData savedData = GridNetworkSavedData.get(serverLevel);
+            boolean changed = savedData.syncNode(this.worldPosition, GridNetworkSavedData.NodeType.POLE_LIGHT,
+                    getSupportedWireType(), this.connections, ConnectorMode.OUTPUT, true, null);
+            if (changed) {
+                java.util.Set<BlockPos> removals = savedData.getAndClearPendingRemovals(this.worldPosition);
+                this.connections.removeIf(c -> removals.contains(c.getTargetPos()));
+                setChanged();
+            }
+        }
+    }
+
     public boolean isPhotocellEnabled() {
         return this.photocellEnabled;
     }
@@ -60,6 +78,10 @@ public class PoleStreetLightBlockEntity extends BlockEntity implements IWireNode
     }
 
     public void serverTick(Level level, BlockPos pos, BlockState state) {
+        if (level instanceof ServerLevel serverLevel) {
+            EnergyGridManager.tickUnloadedGridSources(serverLevel);
+        }
+
         boolean shouldAttemptDraw;
 
         if (this.photocellEnabled) {
@@ -128,9 +150,13 @@ public class PoleStreetLightBlockEntity extends BlockEntity implements IWireNode
 
     @Override
     public void addConnection(BlockPos targetPos, WireType type, double distance) {
+        this.connections.removeIf(conn -> conn.getTargetPos().equals(targetPos));
         this.connections.add(new WireConnection(targetPos, type, distance));
         setChanged();
         syncToClient();
+        if (this.level instanceof ServerLevel serverLevel) {
+            GridNetworkSavedData.get(serverLevel).addWireConnection(this.worldPosition, targetPos, type, distance);
+        }
     }
 
     @Override
@@ -138,6 +164,10 @@ public class PoleStreetLightBlockEntity extends BlockEntity implements IWireNode
         this.connections.removeIf(c -> c.getTargetPos().equals(targetPos));
         setChanged();
         syncToClient();
+        if (this.level instanceof ServerLevel serverLevel) {
+            boolean targetLoaded = serverLevel.hasChunkAt(targetPos);
+            GridNetworkSavedData.get(serverLevel).removeWireConnection(this.worldPosition, targetPos, true, targetLoaded);
+        }
     }
 
     @Override
@@ -145,6 +175,17 @@ public class PoleStreetLightBlockEntity extends BlockEntity implements IWireNode
         if (this.level == null || this.level.isClientSide()) return;
 
         BlockPos pos = getBlockPos();
+        if (this.level instanceof ServerLevel serverLevel) {
+            GridNetworkSavedData.get(serverLevel).removeNode(pos);
+        }
+        if (this.level instanceof ServerLevel serverLevel) {
+            GridNetworkSavedData savedData = GridNetworkSavedData.get(serverLevel);
+            for (WireConnection conn : this.connections) {
+                boolean targetLoaded = serverLevel.hasChunkAt(conn.getTargetPos());
+                savedData.removeWireConnection(pos, conn.getTargetPos(), true, targetLoaded);
+            }
+        }
+
         List<WireConnection> toSever = new ArrayList<>(this.connections);
         this.connections.clear();
         setChanged();

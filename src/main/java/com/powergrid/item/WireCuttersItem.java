@@ -1,6 +1,7 @@
 package com.powergrid.item;
 
 import com.powergrid.block.PowerCableBlock;
+import com.powergrid.grid.GridNetworkSavedData;
 import com.powergrid.grid.IWireNode;
 import com.powergrid.grid.WireConnection;
 import net.minecraft.core.BlockPos;
@@ -67,12 +68,17 @@ public class WireCuttersItem extends Item {
 
         for (WireConnection conn : conns) {
             BlockPos otherPos = conn.getTargetPos();
-            if (level.isLoaded(otherPos)) {
+            boolean otherLoaded = level.isLoaded(otherPos);
+            if (otherLoaded) {
                 BlockEntity otherBE = level.getBlockEntity(otherPos);
                 if (otherBE instanceof IWireNode otherNode) {
                     otherNode.removeConnection(pos);
                     level.sendBlockUpdated(otherPos, level.getBlockState(otherPos), level.getBlockState(otherPos), 3);
                 }
+            }
+
+            if (level instanceof ServerLevel serverLevel) {
+                GridNetworkSavedData.get(serverLevel).removeWireConnection(pos, otherPos, true, otherLoaded);
             }
 
             // Refund wire coil in survival mode

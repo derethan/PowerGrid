@@ -2,6 +2,8 @@ package com.powergrid.block.entity;
 
 import com.powergrid.PowerGridMod;
 import com.powergrid.block.BreakerSwitchBlock;
+import com.powergrid.grid.ConnectorMode;
+import com.powergrid.grid.GridNetworkSavedData;
 import com.powergrid.grid.IWireNode;
 import com.powergrid.grid.WireConnection;
 import com.powergrid.grid.WireType;
@@ -48,6 +50,21 @@ public class BreakerSwitchBlockEntity extends BlockEntity implements IWireNode {
     }
 
     @Override
+    public void onLoad() {
+        super.onLoad();
+        if (this.level instanceof ServerLevel serverLevel) {
+            GridNetworkSavedData savedData = GridNetworkSavedData.get(serverLevel);
+            boolean changed = savedData.syncNode(this.worldPosition, GridNetworkSavedData.NodeType.BREAKER,
+                    getSupportedWireType(), this.connections, ConnectorMode.AUTO, isCircuitClosed(), null);
+            if (changed) {
+                java.util.Set<BlockPos> removals = savedData.getAndClearPendingRemovals(this.worldPosition);
+                this.connections.removeIf(c -> removals.contains(c.getTargetPos()));
+                setChanged();
+            }
+        }
+    }
+
+    @Override
     public WireType getSupportedWireType() {
         return WireType.MV;
     }
@@ -77,9 +94,13 @@ public class BreakerSwitchBlockEntity extends BlockEntity implements IWireNode {
 
     @Override
     public void addConnection(BlockPos targetPos, WireType type, double distance) {
+        this.connections.removeIf(conn -> conn.getTargetPos().equals(targetPos));
         this.connections.add(new WireConnection(targetPos, type, distance));
         setChanged();
         syncToClient();
+        if (this.level instanceof ServerLevel serverLevel) {
+            GridNetworkSavedData.get(serverLevel).addWireConnection(this.worldPosition, targetPos, type, distance);
+        }
     }
 
     @Override
@@ -87,10 +108,21 @@ public class BreakerSwitchBlockEntity extends BlockEntity implements IWireNode {
         this.connections.removeIf(conn -> conn.getTargetPos().equals(targetPos));
         setChanged();
         syncToClient();
+        if (this.level instanceof ServerLevel serverLevel) {
+            boolean targetLoaded = serverLevel.hasChunkAt(targetPos);
+            GridNetworkSavedData.get(serverLevel).removeWireConnection(this.worldPosition, targetPos, true, targetLoaded);
+        }
     }
 
     @Override
     public void clearAllConnections() {
+        if (this.level instanceof ServerLevel serverLevel) {
+            GridNetworkSavedData savedData = GridNetworkSavedData.get(serverLevel);
+            for (WireConnection conn : this.connections) {
+                boolean targetLoaded = serverLevel.hasChunkAt(conn.getTargetPos());
+                savedData.removeWireConnection(this.worldPosition, conn.getTargetPos(), true, targetLoaded);
+            }
+        }
         this.connections.clear();
         setChanged();
         syncToClient();
@@ -110,6 +142,10 @@ public class BreakerSwitchBlockEntity extends BlockEntity implements IWireNode {
     public void preRemoveSideEffects(BlockPos pos, BlockState state) {
         super.preRemoveSideEffects(pos, state);
         if (this.level == null) return;
+
+        if (this.level instanceof ServerLevel serverLevel) {
+            GridNetworkSavedData.get(serverLevel).removeNode(pos);
+        }
 
         List<WireConnection> toSever = new ArrayList<>(this.connections);
         this.connections.clear();

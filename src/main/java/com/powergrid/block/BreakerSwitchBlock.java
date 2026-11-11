@@ -2,8 +2,10 @@ package com.powergrid.block;
 
 import com.powergrid.PowerGridMod;
 import com.powergrid.block.entity.BreakerSwitchBlockEntity;
+import com.powergrid.grid.GridNetworkSavedData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -89,6 +91,9 @@ public class BreakerSwitchBlock extends Block implements EntityBlock {
         boolean open = !state.getValue(OPEN);
         level.setBlock(pos, state.setValue(OPEN, open), 3);
         level.playSound(null, pos, open ? SoundEvents.LEVER_CLICK : SoundEvents.COPPER_BULB_TURN_ON, SoundSource.BLOCKS, 0.7f, open ? 0.8f : 1.2f);
+        if (level instanceof ServerLevel serverLevel) {
+            GridNetworkSavedData.get(serverLevel).setBreakerClosed(pos, !open);
+        }
         return InteractionResult.SUCCESS;
     }
 
@@ -98,6 +103,9 @@ public class BreakerSwitchBlock extends Block implements EntityBlock {
             boolean hasSignal = level.hasNeighborSignal(pos);
             if (hasSignal != state.getValue(POWERED)) {
                 level.setBlock(pos, state.setValue(POWERED, hasSignal).setValue(OPEN, hasSignal), 3);
+                if (level instanceof ServerLevel serverLevel) {
+                    GridNetworkSavedData.get(serverLevel).setBreakerClosed(pos, !hasSignal);
+                }
             }
         }
     }

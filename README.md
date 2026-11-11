@@ -50,7 +50,7 @@ In modern modded Minecraft, electricity has often been reduced to magic single-b
 - **Physical Overhead Lines**: Run catenary copper, electrum, and steel-core wires strung between utility poles, rooftops, and substation yards.
 - **Voltage Tier Progression**: Power cannot simply jump arbitrary distances without consequences. Low voltages suffer high transmission loss, demanding step-up transformation to High Voltage (HV) for long-distance cross-country spans.
 - **Industrial Transmission Focus**: Build authentic distribution networks with wooden utility poles, steel towers, crossarms, ceramic insulators, substation transformers, and high-voltage breaker switches.
-- **Native NeoForge Transfer API**: Built from the ground up for **Minecraft 26.3** and **NeoForge 26.3.0.48-beta**, natively exposing standard `Capabilities.Energy.BLOCK` for zero-lag, instant compatibility with mods like *Industrial Refinery*, *Logistics*, and all Forge Energy (FE) machines.
+- **Native NeoForge Transfer API & SavedData Wire Graph**: Built from the ground up for **Minecraft 26.3** and **NeoForge 26.3.0.48-beta**, natively exposing standard `Capabilities.Energy.BLOCK` for zero-lag compatibility with Forge Energy (FE) machines. Overhead wire networks persist in dimension-level `SavedData`, enabling power transmission across vast distances through unloaded intermediate chunks and power plants with **zero forced chunk loading**.
 
 ---
 
@@ -398,6 +398,9 @@ Power Grid is built directly on NeoForge's official **Transfer API**:
 
 **Q: Why isn't my Windmill Rotor turning or generating FE?**
 > **A**: The Windmill Rotor requires **at least 3 air blocks of open vertical clearance** directly beneath the rotor's bottom segment (`center.below(2..4)`). If placed too close to the ground, roofs, or vegetation, it stalls with 0 FE/t. Build it higher off the ground to increase wind velocity and FE output (up to 64 FE/t)!
+
+**Q: Do overhead wires continue transmitting power through unloaded chunks?**
+> **A**: Yes! Power Grid features a dimension-level `SavedData` wire graph (`GridNetworkSavedData`). Overhead power lines route through unloaded intermediate chunks (relays, poles, closed breaker switches, and substations) without requiring chunk loaders. Furthermore, source connectors cache sustainable generation output from connected water wheels, windmills, solar panels, and generator buses, keeping remote base machines powered even when the power plant chunk itself is unloaded.
 
 **Q: Do Solar Panels work indoors or during thunderstorms?**
 > **A**: Solar panels require clear access to daylight and direct sky exposure above them. During night or heavy dark weather, panels enter an idle standby state. Arrays placed together automatically balance energy and discharge power downwards or sideways into attached cables and machines.

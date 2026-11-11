@@ -4,6 +4,18 @@ All notable changes to the **Power Grid** mod are documented in this file.
 
 ---
 
+## [1.7.8] - 2026-11-11
+
+### Added
+- **Dimension-Level Wire Graph & Uninterrupted Unloaded Chunk Power Transmission (`GridNetworkSavedData`)**:
+  - Implemented dimension-level `SavedData` graph persistence (`powergrid:grid_network`) storing all overhead wire nodes, bidirectional connections, and switchgear states across unloaded chunks.
+  - Upgraded `EnergyGridManager` Breadth-First Search (BFS) to traverse through unloaded intermediate chunks containing passive wire relays, poles, closed breaker switches, and connectors without terminating or requiring chunk loaders.
+  - Implemented virtual unloaded source power delivery (`EnergyGridManager.tickUnloadedGridSources`): source wire connectors cache their sustainable FE/t generation capacity (from attached water wheels, wind turbines, solar arrays, cables, and third-party generators) so loaded factories and machines continue receiving power across long distances even when the distant power plant chunk unloads.
+  - Added pending connection removal tracking and automatic synchronization on chunk load (`onLoad`), ensuring wires cut or dismantled at one end cleanly update the opposite terminal even if that terminal was in an unloaded chunk.
+  - Enhanced `WireCoilItem` to validate distant starting terminals using `GridNetworkSavedData` if their chunk unloads while the player walks across long spans (e.g. 64-block HV lines) to connect the second terminal.
+
+---
+
 ## [1.7.7] - 2026-11-08
 
 ### Changed

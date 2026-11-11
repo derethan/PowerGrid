@@ -61,6 +61,7 @@ From running early copper Low-Voltage lines to your first workshop machines, to 
 - **Pole Crossarms**: Modular rounded horizontal timber crossarms that automatically clamp to adjacent poles with forged iron collars and connect seamlessly across neighboring crossarms. Right-clicking automatically extends the beam horizontally!
 
 ### 4. Connectors, Relays, & Substation Gear
+- **Dimension-Level Wire Graph (No Chunk Loaders Required!)**: Overhead wire topology is saved directly in world `SavedData`. Long cross-country power lines maintain full connectivity and power flow through unloaded intermediate chunks, relays, and switches.
 - **32x32 Textures & 1024x1024 Ultra-HD Pack**: Default 32x32 textures with creosote grain and glazed porcelain sheens, plus an included 1024x1024 Ultra-HD resource pack.
 - **3D Element Models**: True 3D geometry for wire relays and connectors with multi-tiered porcelain insulator bells and conductor saddle clamps.
 - **Wire Connectors**: Placed directly on machines, batteries, or generators. Automatically interfaces with NeoForge's standard `Capabilities.Energy.BLOCK` to push or pull line energy.
